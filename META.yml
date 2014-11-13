@@ -16,8 +16,6 @@ provides:
   Metabrik:
     file: lib/Metabrik.pm
     version: 1.00_09
-  Metabrik::Brik::Search:
-    file: lib/Metabrik/Brik/Search.pm
   Metabrik::Core::Context:
     file: lib/Metabrik/Core/Context.pm
   Metabrik::Core::Global:

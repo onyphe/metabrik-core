@@ -7,7 +7,8 @@ Metabrik - Do IT Once.
 -> Metabrik: make class Commands begin with an upper case letter?
 
 -> merge: brik::search to core::global?
--> merge: perl::module to core::global?
+
+-> make a standalone repository 'main' separated from trunk
 
 -> pod/help
 
