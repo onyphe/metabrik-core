@@ -212,7 +212,8 @@ sub call {
       my @list = caller();
       my $file = $list[1];
       my $line = $list[2];
-      return $self->log->error("call: $@ (source file [$file] at line [$line])");
+      #return $self->log->error("call: $@ (source file [$file] at line [$line])");
+      return $self->log->error("call: $@");
    }
 
    return $res;
@@ -237,20 +238,13 @@ sub variables {
    return $res;
 }
 
-sub find_available {
+# Extracted from file::find Brik
+sub _file_find {
    my $self = shift;
-
-   # Read from @INC, exclude current directory
-   my @path_list = ();
-   for (@INC) {
-      next if /^\.$/;
-      push @path_list, $_;
-   }
+   my ($path_list) = @_;
 
    my $dirpattern = 'Metabrik/';
    my $filepattern = '.pm$';
-
-   # Extracted from file::find Brik
 
    # Escape if we are searching for a directory hierarchy
    $dirpattern =~ s/\//\\\//g;
@@ -275,16 +269,30 @@ sub find_available {
 
    {
       no warnings;
-      File::Find::find($sub, @path_list);
+      File::Find::find($sub, @$path_list);
    };
 
    my %uniq_files = map { $_ => 1 } @files;
+   @files = map { s/^\.\///; $_ } @files;  # Remove leading dot slash
    @files = sort { $a cmp $b } keys %uniq_files;
 
-   # /extract
+   return \@files;
+}
+
+sub find_available {
+   my $self = shift;
+
+   # Read from @INC, exclude current directory
+   my @path_list = ();
+   for (@INC) {
+      next if /^\.$/;
+      push @path_list, $_;
+   }
+
+   my $found = $self->_file_find(\@path_list);
 
    my %available = ();
-   for my $this (@files) {
+   for my $this (@$found) {
       my $brik = $this;
       $brik =~ s/\//::/g;
       $brik =~ s/^.*::Metabrik::(.*?)$/$1/;

@@ -225,14 +225,15 @@ sub _log_verbose {
 
 sub brik_check_properties {
    my $self = shift;
+   my ($properties, $use_properties) = @_;
 
    my $name = $self->brik_name;
    if (! $self->can('brik_properties')) {
       return $self->_log_error("brik_check_properties: Brik [$name] has no brik_properties");
    }
 
-   my $properties = $self->brik_properties;
-   my $use_properties = $self->brik_use_properties;
+   $properties ||= $self->brik_properties;
+   $use_properties ||= $self->brik_use_properties;
 
    my $error = 0;
 
@@ -319,13 +320,14 @@ sub brik_check_properties {
 
 sub brik_check_use_properties {
    my $self = shift;
+   my ($use_properties) = @_;
 
    my $name = $self->brik_name;
    if (! $self->can('brik_use_properties')) {
       return 1;
    }
 
-   my $use_properties = $self->brik_use_properties;
+   $use_properties ||= $self->brik_use_properties;
 
    my $error = 0;
 
@@ -477,9 +479,10 @@ sub brik_set_default_attributes {
 
 sub brik_check_require_modules {
    my $self = shift;
+   my ($modules) = @_;
 
    # Module check
-   my $modules = $self->brik_properties->{require_modules};
+   $modules ||= $self->brik_properties->{require_modules};
    for my $module (keys %$modules) {
       eval("require $module;");
       if ($@) {
@@ -501,6 +504,7 @@ sub brik_check_require_modules {
 
 sub brik_check_require_used {
    my $self = shift;
+   my ($require_used) = @_;
 
    my $context = $self->context;
 
@@ -509,7 +513,7 @@ sub brik_check_require_used {
    if (defined($context) && $context->can('used')) {
       my $error = 0;
       my $used = $context->used;
-      my $require_used = $self->brik_properties->{require_used};
+      $require_used ||= $self->brik_properties->{require_used};
       for my $brik (keys %$require_used) {
          if (! $context->is_used($brik)) {
             if ($self->global->auto_use_on_require) {
@@ -540,8 +544,9 @@ sub brik_check_require_used {
 
 sub brik_check_require_binaries {
    my $self = shift;
+   my ($binaries) = @_;
 
-   my $binaries = $self->brik_properties->{require_binaries};
+   $binaries ||= $self->brik_properties->{require_binaries};
    my %binaries_found = ();
    for my $binary (keys %$binaries) {
       $binaries_found{$binary} = 0;

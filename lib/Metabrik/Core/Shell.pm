@@ -52,6 +52,7 @@ sub brik_properties {
          'Data::Dump' => [ qw(dump) ],
          'File::HomeDir' => [ qw(home) ],
          'Cwd' => [ ],
+         'IO::All' => [ ],
       },
    };
 }
@@ -141,9 +142,7 @@ EOF
 #
 use Cwd;
 use File::HomeDir qw(home);
-
-use Metabrik;
-use Metabrik::File::Find;
+use IO::All;
 
 our $AUTOLOAD;
 
@@ -814,6 +813,62 @@ sub catch_run {
    return $self->run_code(@args);
 }
 
+# Taken from file::find Brik, to make core::shell independant from it.
+sub _file_find {
+   my $self = shift;
+   my ($path) = @_;
+
+   my @dirs = ();
+   my @files = ();
+
+   my $dirpattern = '.*';
+   my $filepattern = '.*';
+
+   # Handle finding of directories
+   my @tmp_dirs = ();
+   eval {
+      @tmp_dirs = io($path)->all_dirs;
+   };
+   if ($@) {
+      if ($self->debug) {
+         chomp($@);
+         $self->log->debug("all: $path: dirs: $@");
+      }
+      return { directories => [], files => [] };
+   }
+   for my $this (@tmp_dirs) {
+      if ($this =~ /$dirpattern/) {
+         push @dirs, "$this/";
+      }
+   }
+
+   # Handle finding of files
+   my @tmp_files = ();
+   eval {
+      @tmp_files = io($path)->all_files;
+   };
+   if ($@) {
+      if ($self->debug) {
+         chomp($@);
+         $self->log->debug("all: $path: files: $@");
+      }
+      return { directories => [], files => [] };
+   }
+   for my $this (@tmp_files) {
+      if ($this =~ /$filepattern/) {
+         push @files, "$this";
+      }
+   }
+
+   @dirs = map { s/^\.\///; $_ } @dirs;  # Remove leading dot slash
+   @files = map { s/^\.\///; $_ } @files;  # Remove leading dot slash
+
+   return {
+      directories => \@dirs,
+      files => \@files,
+   };
+}
+
 # 1. $word - The word the user is trying to complete.
 # 2. $line - The line as typed by the user so far.
 # 3. $start - The offset into $line where $word starts.
@@ -868,12 +923,7 @@ sub catch_comp_sub {
 
       #$self->debug && $self->log->debug("path[$path]");
 
-      my $find = Metabrik::File::Find->new or return $self->log->error("file::fine: new");
-      $find->brik_init;
-      $find->path([ $path ]);
-      $find->recursive(0);
-
-      my $found = $find->all('.*', '.*');
+      my $found = $self->_file_find($path);
 
       for my $this (@{$found->{files}}, @{$found->{directories}}) {
          #$self->debug && $self->log->debug("check[$this]");
@@ -942,12 +992,7 @@ sub catch_comp {
       }
       $self->debug && $self->log->debug("path[$path]");
 
-      my $find = Metabrik::File::Find->new or return $self->log->error("file::fine: new");
-      $find->brik_init;
-      $find->path([ $path ]);
-      $find->recursive(0);
-
-      my $found = $find->all('.*', '.*');
+      my $found = $self->_file_find($path);
 
       for my $this (@{$found->{files}}, @{$found->{directories}}) {
          #$self->debug && $self->log->debug("check[$this]");
