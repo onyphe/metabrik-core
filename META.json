@@ -23,7 +23,7 @@
    "provides" : {
       "Metabrik" : {
          "file" : "lib/Metabrik.pm",
-         "version" : "1.00_09"
+         "version" : "1.00_10"
       },
       "Metabrik::Core::Context" : {
          "file" : "lib/Metabrik/Core/Context.pm"
@@ -56,5 +56,5 @@
          "http://www.perlfoundation.org/artistic_license_1_0"
       ]
    },
-   "version" : "1.00_09"
+   "version" : "1.00_10"
 }
