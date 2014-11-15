@@ -13,11 +13,10 @@ BEGIN {
    push @INC, $home_local; # CPAN Perl modules "standard" directory
    push @INC, "$FindBin::Bin/../lib"; # Metabrik Perl modules
    push @INC, "$FindBin::Bin/../cpan"; # CPAN Perl modules Metabrik requires
-   push @INC, "$FindBin::Bin/../local"; # CPAN Perl modules Metabrik will install if needed
    push @INC, "$FindBin::Bin/../repository"; # Metabrik main repository for Briks
 
    # Check for local::lib variables
-   eval('use local::lib "'."$FindBin::Bin/../local".'"');
+   eval('use local::lib "'.$home_local.'"');
    if ($@) {
       die("[F] metabrik: unable to use local::lib:\n\n".
           "ERROR: $@\n"

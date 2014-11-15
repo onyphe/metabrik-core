@@ -52,7 +52,6 @@ sub brik_properties {
          'Data::Dump' => [ qw(dump) ],
          'File::HomeDir' => [ qw(home) ],
          'Cwd' => [ ],
-         'IO::All' => [ ],
       },
    };
 }
@@ -140,8 +139,6 @@ EOF
 #
 # Term::Shell stuff
 #
-use Cwd;
-use File::HomeDir qw(home);
 use IO::All;
 
 our $AUTOLOAD;
