@@ -4,11 +4,9 @@ Metabrik - Do IT Once.
 
 ### 1.00
 
--> Metabrik: make class Commands begin with an upper case letter?
+-> make another svn repository for OBSSI stuff
 
--> merge: brik::search to core::global?
-
--> make a standalone repository 'main' separated from trunk
+-> check bin/metabrik is really standalone
 
 -> pod/help
 
@@ -23,12 +21,8 @@ Metabrik - Do IT Once.
 
 ### BRIKS
 
--> new: file::xml
-=> use file::read and encoding::xml
-
 -> new: encoding::csv encode/decode with Attributes separator, format like CSV::Hashify
 
--> rename: numbers::iana => iana::countrycodes
 -> new: iana::servicenames
 => http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml
 
@@ -222,6 +216,7 @@ ipv4|6_address
 ip_address
 port
 INTERNAL
+|OPTIONAL
 yyyy.mm.dd
 
 Doc:

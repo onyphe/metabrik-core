@@ -32,6 +32,8 @@ sub brik_properties {
          is_not_used => [ qw(Brik) ],
          status => [ ],
          reuse => [ ],
+         save_state => [ qw(Brik) ],
+         restore_state => [ qw(Brik) ],
       },
       require_modules => {
          'Lexical::Persistence' => [ ],
@@ -678,6 +680,74 @@ sub run {
 
       return $RUN;
    }, brik => $brik, command => $command, args => \@args);
+
+   return $r;
+}
+
+sub save_state {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('save_state'));
+   }
+
+   my $r = $self->call(sub {
+      my %args = @_;
+
+      my $__ctx_brik = $args{brik};
+
+      my $ERR = 0;
+
+      if (! $CON->is_used($__ctx_brik)) {
+         $ERR = 1;
+         my $MSG = "save_state: Brik [$__ctx_brik] not used";
+         die("$MSG\n");
+      }
+
+      my $__ctx_state;
+      my $__ctx_attributes = $CON->{used}->{$__ctx_brik}->brik_properties->{attributes} || {};
+      for my $__ctx_this (keys %$__ctx_attributes) {
+         $__ctx_state->{$__ctx_this} = $CON->{used}->{$__ctx_brik}->$__ctx_this;
+      }
+      $CON->{used}->{$__ctx_brik}->{"__ctx_state"} = $__ctx_state;
+
+      return $ERR;
+   }, brik => $brik);
+
+   return $r;
+}
+
+sub restore_state {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('restore_state'));
+   }
+
+   my $r = $self->call(sub {
+      my %args = @_;
+
+      my $__ctx_brik = $args{brik};
+
+      my $ERR = 0;
+
+      if (! $CON->is_used($__ctx_brik)) {
+         $ERR = 1;
+         my $MSG = "restore_state: Brik [$__ctx_brik] not used";
+         die("$MSG\n");
+      }
+
+      my $__ctx_state = $CON->{used}->{$__ctx_brik}->{"__ctx_state"};
+      if (defined($__ctx_state)) {
+         for my $__ctx_this (keys %$__ctx_state) {
+            $CON->{used}->{$__ctx_brik}->$__ctx_this($__ctx_state->{$__ctx_this});
+         }
+      }
+
+      return $ERR;
+   }, brik => $brik);
 
    return $r;
 }
