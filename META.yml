@@ -15,7 +15,7 @@ name: Metabrik
 provides:
   Metabrik:
     file: lib/Metabrik.pm
-    version: 1.00_10
+    version: '1.00'
   Metabrik::Core::Context:
     file: lib/Metabrik/Core/Context.pm
   Metabrik::Core::Global:
@@ -34,4 +34,4 @@ provides:
     file: lib/Metabrik/Shell/Script.pm
 resources:
   license: http://opensource.org/licenses/BSD-3-Clause
-version: 1.00_10
+version: '1.00'

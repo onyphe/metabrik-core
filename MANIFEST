@@ -37,6 +37,7 @@ cpan/Term/Shell.pm
 examples/dot-metabrik_rc-sample
 examples/multiline.brik
 examples/netmask.brik
+INSTALL
 lib/Metabrik.pm
 lib/Metabrik/Core/Context.pm
 lib/Metabrik/Core/Global.pm

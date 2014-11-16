@@ -1,16 +1,16 @@
-apt-get install libncurses-dev libreadline-dev cpanminus libssl-dev libssh2-1-dev
+INSTALLATION UNDER UBUNTU LINUX
 
-cpanm File::HomeDir
-cpanm Lexical::Persistence
-cpanm Term::ReadLine::Gnu
-cpanm Bundle::Zoidberg
-cpanm Net::SSLeay
-cpanm Net::SSH2
+# apt-get install liblexical-persistence-perl libterm-readline-gnu-perl libnet-ssh2-perl
 
-export PERL_RL=Gnu
+COMMON TO ALL OPERATING SYSTEM
 
+$ mkdir ~/metabrik
+$ svn co http://svn.metabrik.org:81/core/tags/METABRIK_1_00 ~/metabrik/core
+$ svn co http://svn.metabrik.org:81/repository/trunk ~/metabrik/repository
 
-# Cygwin
+$ export PATH=$PATH:~/metabrik/core/bin
+$ export PERL_RL=Gnu
 
-=> setup.exe --no-admin
+$ metabrik
 
+Enjoy.

@@ -5,7 +5,7 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.00_10';
+our $VERSION = '1.00';
 
 use base qw(Class::Gomor::Hash);
 

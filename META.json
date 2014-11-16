@@ -23,7 +23,7 @@
    "provides" : {
       "Metabrik" : {
          "file" : "lib/Metabrik.pm",
-         "version" : "1.00_10"
+         "version" : "1.00"
       },
       "Metabrik::Core::Context" : {
          "file" : "lib/Metabrik/Core/Context.pm"
@@ -50,11 +50,11 @@
          "file" : "lib/Metabrik/Shell/Script.pm"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "license" : [
          "http://opensource.org/licenses/BSD-3-Clause"
       ]
    },
-   "version" : "1.00_10"
+   "version" : "1.00"
 }
