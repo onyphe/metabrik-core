@@ -46,6 +46,7 @@ lib/Metabrik/Shell/Command.pm
 lib/Metabrik/Shell/History.pm
 lib/Metabrik/Shell/Rc.pm
 lib/Metabrik/Shell/Script.pm
+LICENSE
 Makefile.PL
 MANIFEST
 META.json

@@ -1,5 +1,5 @@
 ---
-abstract: 'Knowledge is in your Head, Detail is in the Code'
+abstract: 'There is Brik for that.'
 author:
   - 'GomoR <gomor_at_metabrik.org>'
 build_requires: {}
@@ -7,7 +7,7 @@ configure_requires:
   Module::Build: '0'
 dynamic_config: 1
 generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.142060'
-license: artistic
+license: bsd
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: '1.4'
@@ -33,5 +33,5 @@ provides:
   Metabrik::Shell::Script:
     file: lib/Metabrik/Shell/Script.pm
 resources:
-  license: http://www.perlfoundation.org/artistic_license_1_0
+  license: http://opensource.org/licenses/BSD-3-Clause
 version: 1.00_10

@@ -800,94 +800,14 @@ __END__
 
 =head1 NAME
 
-Metabrik - Knowledge is in your Head, Detail is in the Code
-
-=head1 SYNOPSIS
-
-   use base qw(Metabrik);
-
-=head1 DESCRIPTION
-
-Base class for Metabrik Briks.
-
-=head2 ATTRIBUTES
-
-=head3 <debug>
-
-=head3 <init_done>
-
-=head3 <context>
-
-=head3 <global>
-
-=head3 <log>
-
-=head3 <shell>
-
-=head2 COMMANDS
-
-=head3 <new>
-
-=head3 <brik_version>
-
-=head3 <brik_properties>
-
-=head3 <brik_use_properties>
-
-=head3 <brik_help_set>
-
-=head3 <brik_help_run>
-
-=head3 <brik_check_properties>
-
-=head3 <brik_check_use_properties>
-
-=head3 <brik_create_attributes>
-
-=head3 <brik_set_default_attributes>
-
-=head3 <brik_check_require_modules>
-
-=head3 <brik_check_require_used>
-
-=head3 <brik_check_require_binaries>
-
-=head3 <brik_repository>
-
-=head3 <brik_category>
-
-=head3 <brik_name>
-
-=head3 <brik_class>
-
-=head3 <brik_classes>
-
-=head3 <brik_tags>
-
-=head3 <brik_has_tag>
-
-=head3 <brik_commands>
-
-=head3 <brik_has_command>
-
-=head3 <brik_attributes>
-
-=head3 <brik_has_attribute>
-
-=head3 <brik_preinit>
-
-=head3 <brik_init>
-
-=head3 <brik_self>
-
-=head3 <brik_fini>
+Metabrik - There is Brik for that.
 
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2014, Patrice E<lt>GomoRE<gt> Auffret
 
-You may distribute this module under the terms of the Artistic license.
-See LICENSE.Artistic file in the source distribution archive.
+You may distribute this module under the terms of The BSD 3-Clause License.
+See LICENSE file in the source distribution archive.
 
 =head1 AUTHOR
 
