@@ -2,11 +2,13 @@
 
 Metabrik - Do IT Once.
 
+Scenario:
+-> wlan/wps crack
+-> vfeed
+
 ### 1.00
 
--> make another svn repository for OBSSI stuff
-
--> check bin/metabrik is really standalone
+-> choose licence: https://github.com/rapid7/metasploit-framework/blob/master/LICENSE
 
 -> pod/help
 
