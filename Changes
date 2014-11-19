@@ -1,0 +1,6 @@
+1.01
+   - bugfix: correctly create accessors when a Brik is subclassed
+
+1.00 Sun Nov 16 17:07:12 CET 2014
+   - first public release
+

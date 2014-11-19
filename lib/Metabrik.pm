@@ -5,7 +5,7 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 use base qw(Class::Gomor::Hash);
 
@@ -398,12 +398,6 @@ sub new {
    $r = $self->brik_check_use_properties;
    return unless $r;
 
-   $r = $self->brik_create_attributes;
-   return unless $r;
-
-   $r = $self->brik_set_default_attributes;
-   return unless $r;
-
    $r = $self->brik_check_require_modules;
    return unless $r;
 
@@ -411,6 +405,12 @@ sub new {
    return unless $r;
 
    $r = $self->brik_check_require_binaries;
+   return unless $r;
+
+   $r = $self->brik_create_attributes;
+   return unless $r;
+
+   $r = $self->brik_set_default_attributes;
    return unless $r;
 
    return $self->brik_preinit;
