@@ -36,6 +36,7 @@ sub brik_properties {
       },
       commands => {
          splash => [ ],
+         pwd => [ ],
          cmd => [ qw(Cmd) ],
          cmdloop => [ ],
          run_use => [ qw(Brik) ],
@@ -50,7 +51,7 @@ sub brik_properties {
       },
       require_modules => {
          'Data::Dump' => [ qw(dump) ],
-         'File::HomeDir' => [ qw(home) ],
+         'File::HomeDir' => [ ],
          'Cwd' => [ ],
       },
    };
@@ -77,9 +78,7 @@ sub new {
 }
 
 sub brik_init {
-   my $self = shift->SUPER::brik_init(
-      @_,
-   ) or return 1; # Init already done
+   my $self = shift;
 
    my $context = $self->context;
 
@@ -96,7 +95,7 @@ sub brik_init {
 
    $self->debug && $self->log->debug("brik_init: done");
 
-   return $self;
+   return $self->SUPER::brik_init;
 }
 
 sub splash {
@@ -134,6 +133,12 @@ EOF
 ;
 
    return 1;
+}
+
+sub pwd {
+   my $self = shift;
+
+   return $self->{path_cwd};
 }
 
 #
@@ -179,11 +184,14 @@ sub _convert_path {
 #
 # Term::Shell::main stuff
 #
+use Cwd;
+use File::HomeDir;
+
 sub _update_path_home {
    my $self = shift;
 
    #$self->path_home(_convert_path(home()));
-   $self->{path_home} = _convert_path(home());
+   $self->{path_home} = _convert_path(File::HomeDir->my_home);
 
    return 1;
 }
@@ -191,9 +199,11 @@ sub _update_path_home {
 sub _update_path_cwd {
    my $self = shift;
 
-   my $cwd = _convert_path(getcwd());
+   my $cwd = _convert_path(Cwd::getcwd());
+   $self->debug && $self->log->debug("cwd [$cwd]");
    #my $home = $self->path_home;
    my $home = $self->{path_home};
+   $self->debug && $self->log->debug("home [$home]");
    $cwd =~ s/^$home/~/;
 
    #$self->path_cwd($cwd);
