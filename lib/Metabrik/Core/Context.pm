@@ -5,6 +5,8 @@ package Metabrik::Core::Context;
 use strict;
 use warnings;
 
+our $VERSION = '1.02';
+
 use base qw(Metabrik);
 
 sub brik_properties {
@@ -662,7 +664,8 @@ sub run {
       my $__ctx_run = $CON->{used}->{$__ctx_brik};
 
       # Will brik_init() only if not already done
-      if (! $__ctx_run->init_done) {
+      # And only for Brik's Commands, not base class Commands
+      if (! $__ctx_run->init_done && $__ctx_command !~ /^brik_/) {
          if (! $__ctx_run->brik_init) {
             $ERR = 1;
             my $MSG = "run: Brik [$__ctx_brik] init failed";

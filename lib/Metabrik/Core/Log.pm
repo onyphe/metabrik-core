@@ -7,6 +7,8 @@ package Metabrik::Core::Log;
 use strict;
 use warnings;
 
+our $VERSION = '1.02';
+
 use base qw(Metabrik);
 
 sub brik_properties {

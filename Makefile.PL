@@ -7,6 +7,7 @@ require v5.6.1;
 
 WriteMakefile(
    NAME => 'Metabrik',
+   MIN_PERL_VERSION => '5.6.1',
    VERSION_FROM => 'lib/Metabrik.pm',
    LICENSE => 'bsd',
    ABSTRACT_FROM => 'lib/Metabrik.pm',

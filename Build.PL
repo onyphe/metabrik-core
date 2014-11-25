@@ -12,6 +12,7 @@ my $builder = Module::Build->new(
    dist_author => 'GomoR <gomor_at_metabrik.org>',
    dist_version_from => 'lib/Metabrik.pm',
    requires => {
+      'perl' => '5.6.1',
       'local::lib' => 0,
       'Class::Gomor' => 0,
       'IO::All' => 0,

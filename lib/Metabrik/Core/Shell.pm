@@ -7,6 +7,8 @@ package Metabrik::Core::Shell;
 use strict;
 use warnings;
 
+our $VERSION = '1.02';
+
 use base qw(Term::Shell Metabrik);
 
 sub brik_properties {
