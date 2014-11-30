@@ -248,7 +248,7 @@ sub init {
    $|++;
 
    $SIG{INT} = sub {
-      $self->debug && $self->log->debug("signal: INT caught");
+      $self->debug && $self->log->debug("init: INT caught");
       $self->run_exit;
       return 1;
    };

@@ -154,7 +154,7 @@ sub brik_init {
    my $self = shift;
 
    my $on_int = sub {
-       $self->debug && $self->log->debug("INT captured");
+       $self->debug && $self->log->debug("brik_init: INT captured");
        return 1;
    };
 

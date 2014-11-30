@@ -412,6 +412,27 @@ sub new {
    return $self->brik_preinit;
 }
 
+sub new_from_brik {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->_log_error("new_from_brik: you must give a Brik object as argument");
+   }
+
+   my $log = $brik->log;
+   my $global = $brik->global;
+   my $context = $brik->context;
+   my $shell = $brik->shell;
+
+   return $self->new(
+      log => $log,
+      global => $global,
+      context => $context,
+      shell => $shell,
+   );
+}
+
 # Build Attributes, Class::Gomor style
 sub brik_create_attributes {
    my $self = shift;
