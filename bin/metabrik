@@ -120,8 +120,16 @@ if (defined($lopts{script})) {
       or die("[F] metabrik: use: shell::script: failed\n");
 
    if ($lopts{rc}) {
-      $context->set('shell::rc', 'rc_file', $lopts{rc})
+      $context->use('shell::rc')
+         or die("[F] metabrik: use: shell::rc: failed\n");
+      $context->set('shell::rc', 'rc_file', $lopts{rc});
    }
+   elsif (-f $ENV{HOME}."/.metabrik_script_rc") {
+      $context->use('shell::rc')
+         or die("[F] metabrik: use: shell::rc: failed\n");
+      $context->set('shell::rc', 'rc_file', $ENV{HOME}."/.metabrik_script_rc");
+   }
+
    $context->set('shell::script', 'debug', $lopts{debug});
    $context->set('shell::script', 'file', $lopts{script});
 
