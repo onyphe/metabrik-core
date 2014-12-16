@@ -492,40 +492,31 @@ sub run_help {
    }
    else {
       if ($context->is_used($brik)) {
-         if ($self->help_show_inherited) {
-            my $attributes = $context->run($brik, 'brik_attributes');
-            my $commands = $context->run($brik, 'brik_commands');
+         my $attributes = $context->run($brik, 'brik_attributes');
+         my $commands = $context->run($brik, 'brik_commands');
 
-            my $brik_attributes = Metabrik->brik_properties->{attributes};
-            for my $attribute (keys %$attributes) {
-               if (! $context->get('core::shell', 'help_show_brik_attributes')) {
-                  next if exists($brik_attributes->{$attribute});
-               }
-               my $help = $context->run($brik, 'brik_help_set', $attribute);
-               $self->log->info($help) if defined($help);
-            }
-
-            my $brik_commands = Metabrik->brik_properties->{commands};
-            for my $command (keys %$commands) {
-               if (! $context->get('core::shell', 'help_show_brik_commands')) {
-                  next if exists($brik_commands->{$command});
-               }
-               my $help = $context->run($brik, 'brik_help_run', $command);
-               $self->log->info($help) if defined($help);
-            }
+         if (! $self->help_show_inherited) {
+            $attributes = $context->used->{$brik}->brik_properties->{attributes};
+            $commands = $context->used->{$brik}->brik_properties->{commands};
          }
-         else {
-            my $brik_attributes = $context->used->{$brik}->brik_properties->{attributes};
-            for my $attribute (keys %$brik_attributes) {
-               my $help = $context->run($brik, 'brik_help_set', $attribute);
-               $self->log->info($help) if defined($help);
-            }
 
-            my $brik_commands = $context->used->{$brik}->brik_properties->{commands};
-            for my $command (keys %$brik_commands) {
-               my $help = $context->run($brik, 'brik_help_run', $command);
-               $self->log->info($help) if defined($help);
+         my $brik_attributes = Metabrik->brik_properties->{attributes};
+         my $brik_commands = Metabrik->brik_properties->{commands};
+
+         for my $attribute (keys %$attributes) {
+            if (! $context->get('core::shell', 'help_show_brik_attributes')) {
+               next if exists($brik_attributes->{$attribute});
             }
+            my $help = $context->run($brik, 'brik_help_set', $attribute);
+            $self->log->info($help) if defined($help);
+         }
+
+         for my $command (keys %$commands) {
+            if (! $context->get('core::shell', 'help_show_brik_commands')) {
+               next if exists($brik_commands->{$command});
+            }
+            my $help = $context->run($brik, 'brik_help_run', $command);
+            $self->log->info($help) if defined($help);
          }
       }
       else {
