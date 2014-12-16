@@ -7,7 +7,7 @@ package Metabrik::Core::Log;
 use strict;
 use warnings;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use base qw(Metabrik);
 
