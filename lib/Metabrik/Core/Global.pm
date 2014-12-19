@@ -36,6 +36,7 @@ sub brik_properties {
          encoding => [ qw(utf8|ascii) ],
          auto_use_on_require => [ qw(0|1) ],
          auto_install_on_require => [ qw(0|1) ],
+         exit_on_sigint => [ qw(0|1) ],
       },
       attributes_default => {
          device => 'eth0',
@@ -58,6 +59,7 @@ sub brik_properties {
          encoding => 'utf8',
          auto_use_on_require => 1,
          auto_install_on_require => 0,
+         exit_on_sigint => 0,
       },
       commands => {
          sleep => [ ],

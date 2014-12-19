@@ -154,8 +154,11 @@ sub brik_init {
    my $self = shift;
 
    my $on_int = sub {
-       $self->debug && $self->log->debug("brik_init: INT captured");
-       return 1;
+      $self->debug && $self->log->debug("brik_init: INT captured");
+      if ($self->global->exit_on_sigint) {
+         exit(1);
+      }
+      return 1;
    };
 
    $SIG{INT} = $on_int;
