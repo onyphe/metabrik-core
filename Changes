@@ -1,4 +1,4 @@
-1.03
+1.03 Sat Dec 20 17:48:44 CET 2014
    - bugfix: shell::script: return proper values from run cmds
    - bugfix: shell::script: disable SIGINT when running a script
    - update: core::shell: always complete Briks on use, even when Brik is already used
