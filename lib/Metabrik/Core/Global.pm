@@ -33,6 +33,7 @@ sub brik_properties {
          domainname => [ qw(domainname) ],
          homedir => [ qw(directory) ],
          port => [ qw(port) ],
+         # encoding: see `perldoc Encode::Supported' for other types
          encoding => [ qw(utf8|ascii) ],
          auto_use_on_require => [ qw(0|1) ],
          auto_install_on_require => [ qw(0|1) ],
