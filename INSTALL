@@ -5,8 +5,8 @@ INSTALLATION UNDER UBUNTU LINUX
 COMMON TO ALL OPERATING SYSTEM
 
 $ mkdir ~/metabrik
-$ svn co http://svn.metabrik.org:81/core/tags/METABRIK_1_00 ~/metabrik/core
-$ svn co http://svn.metabrik.org:81/repository/trunk ~/metabrik/repository
+$ svn co http://svn.metabrik.org:81/core/tags/METABRIK_1_03 ~/metabrik/core
+$ svn co http://svn.metabrik.org:81/repository/tags/METABRIK_REPOSITORY_20141220 ~/metabrik/repository
 
 $ export PATH=$PATH:~/metabrik/core/bin
 $ export PERL_RL=Gnu
