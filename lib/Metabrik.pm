@@ -23,7 +23,7 @@ sub brik_version {
    my $self = shift;
 
    my $revision = $self->brik_properties->{revision};
-   $revision =~ s/^.*?(\d+).*?$/$1/;
+   $revision =~ s/^.*\s([a-f0-9]+)\s.*$/$1/;
 
    return $VERSION.'.'.$revision;
 }
