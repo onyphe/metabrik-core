@@ -1,6 +1,6 @@
 INSTALLATION UNDER UBUNTU LINUX
 
-# apt-get install liblexical-persistence-perl liblocal-lib-perl libterm-readline-gnu-perl libnet-ssh2-perl
+# apt-get install liblexical-persistence-perl liblocal-lib-perl libterm-readline-gnu-perl libnet-ssh2-perl libnet-pcap-perl libnet-libdnet-perl libnet-libdnet6-perl
 
 COMMON TO ALL OPERATING SYSTEM
 

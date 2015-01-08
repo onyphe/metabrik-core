@@ -5,7 +5,7 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use base qw(Class::Gomor::Hash);
 
@@ -625,7 +625,7 @@ sub brik_check_require_binaries {
    my $error = 0;
    for my $binary (keys %binaries_found) {
       if (! $binaries_found{$binary}) {
-         $self->_log_error("brik_check_require_modules: binary [$binary] not found in \$PATH");
+         $self->_log_error("brik_check_require_binaries: binary [$binary] not found in \$PATH");
          $error++;
       }
    }
@@ -816,6 +816,34 @@ sub brik_has_attribute {
 sub brik_preinit {
    my $self = shift;
 
+   if ($self->brik_has_attribute('datadir')) {
+      my $datadir = $self->datadir;
+
+      my $dir;
+      # If datadir is set by user, we use it blindly.
+      # Usually, only core::global will have it set.
+      if (defined($datadir)) {
+         $dir = $datadir;
+      }
+      # Else, we build it.
+      else {
+         my $global_datadir = $self->global->datadir;
+         $dir = $global_datadir;
+
+         (my $subdir = $self->brik_name) =~ s/::/-/g;
+         if (length($subdir)) {
+            $dir .= '/'.$subdir;
+         }
+
+         $self->datadir($dir);
+      }
+
+      if (! -d $dir) {
+         mkdir($dir)
+            or return $self->_log_error("brik_preinit: mkdir [$dir] failed: $!");
+      }
+   }
+
    return $self;
 }
 
@@ -841,7 +869,7 @@ sub brik_fini {
 sub DESTROY {
    my $self = shift;
 
-   return $self->brik_fini;
+   return $self->brik_fini(@_);
 }
 
 1;

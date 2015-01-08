@@ -7,7 +7,7 @@ package Metabrik::Core::Global;
 use strict;
 use warnings;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use base qw(Metabrik);
 
@@ -41,21 +41,15 @@ sub brik_properties {
       },
       attributes_default => {
          device => 'eth0',
-         input => '/tmp/input.txt',
-         output => '/tmp/output.txt',
-         db => '/tmp/db.db',
-         file => '/tmp/file.txt',
          uri => 'http://www.example.com',
          target => 'localhost',
          family => 'ipv4',
          protocol => 'tcp',
          ctimeout => 5,
          rtimeout => 5,
-         datadir => '/tmp',
          username => $ENV{USER} || 'root',
          hostname => 'localhost',
          domainname => 'example.com',
-         homedir => $ENV{HOME} || '/tmp',
          port => 80,
          encoding => 'utf8',
          auto_use_on_require => 1,
@@ -68,12 +62,22 @@ sub brik_properties {
    };
 }
 
-sub sleep {
+sub brik_use_properties {
    my $self = shift;
 
-   sleep(5);
+   my $homedir = $ENV{HOME} || '/tmp';
+   my $datadir = $homedir.'/metabrik';
 
-   return 1;
+   return {
+      attributes_default => {
+         homedir => $homedir,
+         datadir => $datadir,
+         input => $datadir.'/input.txt',
+         output => $datadir.'/output.txt',
+         db => $datadir.'/db.db',
+         file => $datadir.'/file.txt',
+      },
+   };
 }
 
 1;

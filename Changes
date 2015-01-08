@@ -1,3 +1,10 @@
+Revision history for Perl extension Metabrik.
+
+1.05
+   - new: Metabrik: brik_preinit() creates a datadir directory per Brik 
+          if datadir property exists.
+   - update: Metabrik: default directory is set to $HOME/metabrik i/o /tmp
+
 1.04 Sun Jan  4 13:07:56 CET 2015
    - bugfix: core::context: don't overwrite $RUN when run Command fails
    - bugfix: core::shell: help Command must not overwrite $RUN variable
