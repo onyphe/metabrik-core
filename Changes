@@ -1,6 +1,7 @@
 Revision history for Perl extension Metabrik.
 
 1.05
+   - bugfix: shell::command: check for error code from `` call
    - new: Metabrik: brik_preinit() creates a datadir directory per Brik 
           if datadir property exists.
    - update: Metabrik: default directory is set to $HOME/metabrik i/o /tmp
