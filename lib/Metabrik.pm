@@ -89,7 +89,7 @@ sub brik_help_set {
 
    my $classes = $self->brik_classes;
 
-   for my $class (@$classes) {
+   for my $class (reverse @$classes) {
       my $attributes = $class->brik_attributes;
 
       if (exists($attributes->{$attribute})) {
@@ -116,7 +116,7 @@ sub brik_help_run {
 
    my $classes = $self->brik_classes;
 
-   for my $class (@$classes) {
+   for my $class (reverse @$classes) {
       my $commands = $class->brik_commands;
 
       if (exists($commands->{$command})) {
@@ -481,6 +481,7 @@ sub brik_set_default_attributes {
 
    my $classes = $self->brik_classes;
 
+   # Set default Attributes from brik_properties hierarchy
    for my $class (@$classes) {
       # brik_properties() is the general value to use for the default_attributes
       if (exists($class->brik_properties->{attributes_default})) {
@@ -491,10 +492,13 @@ sub brik_set_default_attributes {
       }
    }
 
-   # Then we look at standard default attributes
+   # Set default Attributes from brik_use_properties, no hierarchy, just inheritance
+   my $class = $self->brik_class;
    if ($self->can('brik_use_properties') && exists($self->brik_use_properties->{attributes_default})) {
       for my $attribute (keys %{$self->brik_use_properties->{attributes_default}}) {
          #next unless defined($self->$attribute); # Do not overwrite if set on new
+         # Do not overwrite if Attribute is set by brik_properties
+         next if exists($class->brik_properties->{attributes_default}->{$attribute});
          $self->$attribute($self->brik_use_properties->{attributes_default}->{$attribute});
       }
    }

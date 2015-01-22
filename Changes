@@ -2,6 +2,9 @@ Revision history for Perl extension Metabrik.
 
 1.05
    - bugfix: shell::command: check for error code from `` call
+   - bugfix: Metabrik: do not override default Attributes with brik_use_properties
+             if already set by brik_properties
+   - bugfix: Metabrik: correctly prints help Command details when overriden by subclass
    - new: Metabrik: brik_preinit() creates a datadir directory per Brik 
           if datadir property exists.
    - update: Metabrik: default directory is set to $HOME/metabrik i/o /tmp
