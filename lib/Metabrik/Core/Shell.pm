@@ -59,6 +59,7 @@ sub brik_properties {
          'Data::Dump' => [ qw(dump) ],
          'File::HomeDir' => [ ],
          'Cwd' => [ ],
+         'PPI' => [ ],
       },
    };
 }
@@ -275,6 +276,39 @@ sub prompt_str {
    return $self->{prompt};
 }
 
+sub cmd_is_complete {
+   my $self = shift;
+   my ($lines) = @_;
+
+   my $string = join("\n", @$lines);
+
+   my $document = PPI::Document->new(\$string);
+   if (! $document) {
+      return $self->log->error("cmd_complete: cannot parse Perl string");
+   }
+
+   # Courtesy of Perl::Shell complete() function
+   my $r = $document->find_any(sub {
+      $_[1]->isa('PPI::Structure') and ! $_[1]->finish
+   });
+
+   return $r ? 0 : 1;
+}
+
+sub cmd_to_perl {
+   my $self = shift;
+   my ($line) = @_;
+
+   if ($line =~ /^\s*set\s+/
+   ||  $line =~ /^\s*get\s+/
+   ||  $line =~ /^\s*run\s+/) {
+      $line =~ s/^\s*(.*)\s*$/\$SHE->cmd("$1");/;
+      $self->debug && $self->log->debug("cmd_metabrik: [$line]");
+   }
+
+   return $line;
+}
+
 sub cmdloop {
    my $self = shift;
 
@@ -283,16 +317,15 @@ sub cmdloop {
 
    my @lines = ();
    while (defined(my $line = $self->readline($self->prompt_str))) {
+      # If it looks like a Metabrik command, we rewrite it to a Perl string
+      $line = $self->cmd_to_perl($line);
+
       push @lines, $line;
 
-      if ($line =~ /\\\s*$/) {
+      # If a brace is open, we are in multiline mode
+      if (! $self->cmd_is_complete(\@lines)) {
          $self->_update_prompt('.. ');
          next;
-      }
-
-      # Multiline edition finished, we can remove the `\' char before joining
-      for (@lines) {
-         s/\\\s*$//;
       }
 
       $self->debug && $self->log->debug("cmdloop: lines[@lines]");

@@ -1,6 +1,9 @@
 Revision history for Perl extension Metabrik.
 
 1.05
+   - FEATURE: core::shell: multiline mode do not require lines to end with `\' anymore
+   - FEATURE: core::shell: Metabrik commands are directly translated to Perl strings
+              => Note: no alias support for now, only set, get and run are handled
    - bugfix: shell::command: check for error code from `` call
    - bugfix: Metabrik: do not override default Attributes with brik_use_properties
              if already set by brik_properties

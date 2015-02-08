@@ -24,5 +24,6 @@ WriteMakefile(
       'Term::ANSIColor' => 0,
       'File::Find' => 0,
       'Cwd' => 0,
+      'PPI' => 0,
    },
 );
