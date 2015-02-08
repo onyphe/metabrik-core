@@ -301,6 +301,7 @@ sub cmd_to_perl {
 
    if ($line =~ /^\s*set\s+/
    ||  $line =~ /^\s*get\s+/
+   ||  $line =~ /^\s*use\s+/
    ||  $line =~ /^\s*run\s+/) {
       $line =~ s/^\s*(.*)\s*$/\$SHE->cmd("$1");/;
       $self->debug && $self->log->debug("cmd_metabrik: [$line]");
