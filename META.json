@@ -29,6 +29,7 @@
             "IO::All" : "0",
             "Lexical::Persistence" : "0",
             "Module::Reload" : "0",
+            "PPI" : "0",
             "Term::ANSIColor" : "0",
             "Term::Shell" : "0",
             "local::lib" : "0",
@@ -77,7 +78,7 @@
    "release_status" : "stable",
    "resources" : {
       "license" : [
-         "http://opensource.org/licenses/BSD-3-Clause"
+         "http://opensource.org/licenses/bsd-license.php"
       ]
    },
    "version" : "1.05"
