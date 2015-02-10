@@ -94,10 +94,8 @@ sub brik_init {
    if ($context->is_used('shell::rc')) {
       $self->debug && $self->log->debug("brik_init: load rc file");
 
-      my $cmd = $context->run('shell::rc', 'load');
-      for (@$cmd) {
-         $self->cmd($_);
-      }
+      my $lines = $context->run('shell::rc', 'load');
+      $self->cmdloop($lines);
    }
 
    $self->debug && $self->log->debug("brik_init: done");
@@ -295,7 +293,7 @@ sub cmd_is_complete {
    return $r ? 0 : 1;
 }
 
-sub cmd_to_perl {
+sub cmd_to_code {
    my $self = shift;
    my ($line) = @_;
 
@@ -304,38 +302,80 @@ sub cmd_to_perl {
    ||  $line =~ /^\s*use\s+/
    ||  $line =~ /^\s*run\s+/) {
       $line =~ s/^\s*(.*)\s*$/\$SHE->cmd("$1");/;
-      $self->debug && $self->log->debug("cmd_metabrik: [$line]");
+      $self->debug && $self->log->debug("cmd_to_code: [$line]");
    }
 
    return $line;
 }
 
+sub process_line {
+   my $self = shift;
+   my ($line, $lines) = @_;
+
+   $self->debug && $self->log->debug("process_line: [$line]");
+
+   # Skip comments
+   if ($line =~ /^\s*#/) {
+      return 0;
+   }
+   # Skip blank lines
+   if ($line =~ /^\s*$/) {
+      return 0;
+   }
+
+   push @$lines, $line;
+
+   # If a closure is open, we are in multiline mode
+   if (! $self->cmd_is_complete($lines)) {
+      # If it looks like a Metabrik command, we rewrite it to a Perl code string
+      $lines->[-1] = $self->cmd_to_code($line);
+      $self->_update_prompt('.. ');
+      return 1;
+   }
+
+   $self->debug && $self->log->debug("cmdloop: lines[@$lines]");
+
+   $self->cmd(join('', @$lines));
+
+   $self->_update_prompt;
+
+   return 0;
+}
+
 sub cmdloop {
    my $self = shift;
+   my ($lines) = @_;
 
    $self->{stop} = 0;
    $self->preloop;
 
    my @lines = ();
-   while (defined(my $line = $self->readline($self->prompt_str))) {
-      # If it looks like a Metabrik command, we rewrite it to a Perl string
-      $line = $self->cmd_to_perl($line);
 
-      push @lines, $line;
+   # User provided lines to execute (script)
+   if (defined($lines)) {
+      for my $line (@$lines) {
+         if ($self->process_line($line, \@lines)) {
+            next;   # We are in multiline mode
+         }
+         else {
+            @lines = ();  # Command is complete, we ran it and now reset line buffer.
+         }
 
-      # If a brace is open, we are in multiline mode
-      if (! $self->cmd_is_complete(\@lines)) {
-         $self->_update_prompt('.. ');
-         next;
+         last if $self->{stop};
       }
+   }
+   # Or we are in interactive mode (shell)
+   else {
+      while (defined(my $line = $self->readline($self->prompt_str))) {
+         if ($self->process_line($line, \@lines)) {
+            next;   # We are in multiline mode
+         }
+         else {
+            @lines = ();  # Command is complete, we ran it and now reset line buffer.
+         }
 
-      $self->debug && $self->log->debug("cmdloop: lines[@lines]");
-
-      $self->cmd(join('', @lines));
-      @lines = ();
-      $self->_update_prompt;
-
-      last if $self->{stop};
+         last if $self->{stop};
+      }
    }
 
    $self->run_exit;
