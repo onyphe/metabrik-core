@@ -1,3 +1,6 @@
-for (1..10) { \
-   print "line[$_]\n"; \
+for (1..10) {
+   set core::shell echo $_
 }
+
+get core::shell echo
+$GET
