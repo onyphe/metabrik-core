@@ -7,7 +7,7 @@ package Metabrik::Core::Shell;
 use strict;
 use warnings;
 
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 use base qw(Term::Shell Metabrik);
 
@@ -100,7 +100,7 @@ sub brik_init {
 
    $self->debug && $self->log->debug("brik_init: done");
 
-   return $self->SUPER::brik_init;
+   return $self->SUPER::brik_init(@_);
 }
 
 sub splash {
@@ -297,11 +297,11 @@ sub cmd_to_code {
    my $self = shift;
    my ($line) = @_;
 
-   if ($line =~ /^\s*set\s+/
-   ||  $line =~ /^\s*get\s+/
-   ||  $line =~ /^\s*use\s+/
-   ||  $line =~ /^\s*run\s+/) {
-      $line =~ s/^\s*(.*)\s*$/\$SHE->cmd("$1");/;
+   while ($line =~ /'\s*(?:use|set|get|run)\s.*?'/) {
+      #$self->log->info("cmd_to_code: before: [$line]");
+      $line =~ s/'\s*((?:use|set|get|run)\s.*?)\s*'/\$SHE->cmd("$1")/;
+      #$self->log->info("cmd_to_code: after: [$line]");
+
       $self->debug && $self->log->debug("cmd_to_code: [$line]");
    }
 
@@ -366,6 +366,12 @@ sub cmdloop {
    }
    # Or we are in interactive mode (shell)
    else {
+      # Allow user to break out of multiline mode
+      $SIG{INT} = sub {
+         $self->_update_prompt;
+         return 0;
+      };
+
       while (defined(my $line = $self->readline($self->prompt_str))) {
          if ($self->process_line($line, \@lines)) {
             next;   # We are in multiline mode
