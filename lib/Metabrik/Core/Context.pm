@@ -153,17 +153,6 @@ sub new {
 sub brik_init {
    my $self = shift;
 
-   my $on_int = sub {
-      $self->debug && $self->log->debug("brik_init: INT captured");
-      if ($self->global->exit_on_sigint) {
-         exit(1);
-      }
-      return 1;
-   };
-
-   $SIG{INT} = $on_int;
-   $SIG{TERM} = $on_int;
-
    my $r = $self->update_available;
    if (! defined($r)) {
       return $self->log->error("brik_init: unable to init Brik [core::context]: ".
@@ -171,7 +160,7 @@ sub brik_init {
       );
    }
 
-   return $self->SUPER::brik_init;
+   return $self->SUPER::brik_init(@_);
 }
 
 sub do {

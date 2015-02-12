@@ -87,6 +87,18 @@ sub new {
 sub brik_init {
    my $self = shift;
 
+   # Allow user to break out of multiline mode or run Commands
+   # Note: Gnu readline() is blocking SIGs, we have to hit enter so 
+   #       Ctrl+C is executed.
+   $SIG{INT} = sub {
+      $self->debug && $self->log->debug("brik_init: INT captured");
+      $self->_update_prompt;
+      if ($self->global->exit_on_sigint) {
+         $self->run_exit;
+      }
+      return 1;
+   };
+
    my $context = $self->context;
 
    $self->debug && $self->log->debug("brik_init: start");
@@ -250,12 +262,6 @@ sub init {
 
    $|++;
 
-   $SIG{INT} = sub {
-      $self->debug && $self->log->debug("init: INT caught");
-      $self->run_exit;
-      return 1;
-   };
-
    $self->_update_path_home;
    $self->_update_path_cwd;
    $self->_update_prompt;
@@ -346,9 +352,6 @@ sub cmdloop {
    my $self = shift;
    my ($lines) = @_;
 
-   $self->{stop} = 0;
-   $self->preloop;
-
    my @lines = ();
 
    # User provided lines to execute (script)
@@ -366,11 +369,8 @@ sub cmdloop {
    }
    # Or we are in interactive mode (shell)
    else {
-      # Allow user to break out of multiline mode
-      $SIG{INT} = sub {
-         $self->_update_prompt;
-         return 0;
-      };
+      $self->{stop} = 0;
+      $self->preloop;
 
       while (defined(my $line = $self->readline($self->prompt_str))) {
          if ($self->process_line($line, \@lines)) {
@@ -382,11 +382,13 @@ sub cmdloop {
 
          last if $self->{stop};
       }
+
+      $self->run_exit;
+
+      return $self->postloop;
    }
 
-   $self->run_exit;
-
-   return $self->postloop;
+   return 1;
 }
 
 #
@@ -484,7 +486,19 @@ sub run_code {
 
    $self->debug && $self->log->debug("run_code: code[$line]");
 
-   my $r = $context->do($line);
+   my $r;
+   eval {
+      # So we can interrupt the do($line) execution
+      local $SIG{INT} = sub {
+         $self->debug && $self->log->debug("run_code: SIG received");
+         if ($self->global->exit_on_sigint) {
+            $self->debug && $self->log->debug("run_code: exiting");
+            $self->run_exit;
+         }
+         die("interrupted by user");
+      };
+      $r = $context->do($line);
+   };
    if (! defined($r)) {
       return $self->log->error("run_code: unable to execute Code [$line]");
    }
