@@ -99,19 +99,6 @@ sub brik_init {
       return 1;
    };
 
-   my $context = $self->context;
-
-   $self->debug && $self->log->debug("brik_init: start");
-
-   if ($context->is_used('shell::rc')) {
-      $self->debug && $self->log->debug("brik_init: load rc file");
-
-      my $lines = $context->run('shell::rc', 'load');
-      $self->cmdloop($lines);
-   }
-
-   $self->debug && $self->log->debug("brik_init: done");
-
    return $self->SUPER::brik_init(@_);
 }
 

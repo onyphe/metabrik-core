@@ -94,10 +94,13 @@ my %lopts = (
    verbose => 2,
    debug => 0,
    no_splash => 0,
+   rc => $ENV{HOME}."/.metabrik_rc",
+   script_rc => $ENV{HOME}."/.metabrik_script_rc",
 );
 GetOptions(
    "script=s" => \$lopts{script},
    "rc=s" => \$lopts{rc},
+   "script-rc=s" => \$lopts{script_rc},
    "verbose=i" => \$lopts{verbose},
    "debug=i" => \$lopts{debug},
    "no-splash" => \$lopts{no_splash},
@@ -116,37 +119,44 @@ $context->set('core::shell', 'debug', $lopts{debug});
 $context->set('core::global', 'debug', $lopts{debug});
 
 if (defined($lopts{script})) {
+   if (-f $lopts{script_rc}) {
+      $context->use('shell::rc')
+         or die("[F] metabrik: use: shell::rc: failed\n");
+
+      $context->set('shell::rc', 'file', $ENV{HOME}."/.metabrik_script_rc");
+      $context->set('shell::rc', 'debug', $lopts{debug});
+
+      $context->run('shell::rc', 'load')
+         or die("[F] metabrik: run: shell::rc: load: failed\n");
+      $context->run('shell::rc', 'exec', '$RUN')
+         or die("[F] metabrik: run: shell::rc: exec: failed\n");
+   }
+   else {
+      print("[!] metabrik: script-rc: file not found: $lopts{script_rc}\n");
+   }
+
    $context->use('shell::script')
       or die("[F] metabrik: use: shell::script: failed\n");
-
-   if ($lopts{rc}) {
-      $context->use('shell::rc')
-         or die("[F] metabrik: use: shell::rc: failed\n");
-      $context->set('shell::rc', 'rc_file', $lopts{rc});
-   }
-   elsif (-f $ENV{HOME}."/.metabrik_script_rc") {
-      $context->use('shell::rc')
-         or die("[F] metabrik: use: shell::rc: failed\n");
-      $context->set('shell::rc', 'rc_file', $ENV{HOME}."/.metabrik_script_rc");
-   }
 
    $context->set('shell::script', 'debug', $lopts{debug});
    $context->set('shell::script', 'file', $lopts{script});
 
-   my $lines = $context->run('shell::script', 'load')
+   $context->run('shell::script', 'load')
       or die("[F] metabrik: run: shell::script: load: failed\n");
-
-   $context->run('shell::script', 'exec', $lines)
+   $context->run('shell::script', 'exec', '$RUN')
       or die("[F] metabrik: run: shell::script: exec: failed\n");
 }
 else {
    $context->use('shell::rc')
       or die("[F] metabrik: use: shell::rc: failed\n");
 
-   if ($lopts{rc}) {
-      $context->set('shell::rc', 'rc_file', $lopts{rc})
-   }
+   $context->set('shell::rc', 'file', $lopts{rc});
    $context->set('shell::rc', 'debug', $lopts{debug});
+
+   $context->run('shell::rc', 'load')
+      or die("[F] metabrik: run: shell::rc: load: failed\n");
+   $context->run('shell::rc', 'exec', '$RUN')
+      or die("[F] metabrik: run: shell::rc: exec: failed\n");
 
    unless ($lopts{no_splash}) {
       $context->run('core::shell', 'splash')
@@ -166,6 +176,7 @@ Usage: metabrik [options]
    --script <file>       execute given script
    --no-splash           don't print the splash screen
    --rc <file>           use specified rc file (default: ~/.metabrik_rc)
+   --script-rc <file>    use specified script rc file (default: ~/.metabrik_script_rc)
    --verbose <0|1|2|3>   verbosity level (default: 2)
    --debug <0|1>         enable debugging (default: 0)
 

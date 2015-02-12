@@ -1,11 +1,13 @@
 Revision history for Perl extension Metabrik.
 
 1.06 
-   - bugfix: core::*: on SIGINT handling, now allows to break multiline and run Commands
+   - bugfix: core::shell: on SIGINT handling, now allows to break multiline and run Commands
    - bugfix: core::shell: allow user to get out of multiline mode by hitting Ctrl+C
    - bugfix: core::shell: better management of Metabrik Commands in multiline mode
    => you can put Metabrik Commands within single quotes anywhere
    - update: shell::script: load Command can take an optional file parameter
+   - update: metabrik, shell::rc/script, core::shell: easier handling of rc file loading
+   - new: metabrik: --script-rc argument to load a specific rc file for scripts
 
 1.05 Tue Feb 10 08:01:53 CET 2015
    - FEATURE: core::shell: multiline mode do not require lines to end with `\' anymore
