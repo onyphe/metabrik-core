@@ -482,7 +482,7 @@ sub run_code {
             $self->debug && $self->log->debug("run_code: exiting");
             $self->run_exit;
          }
-         die("interrupted by user");
+         die("interrupted by user\n");
       };
       $r = $context->do($line);
    };
