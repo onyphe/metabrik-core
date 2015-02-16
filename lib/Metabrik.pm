@@ -526,15 +526,18 @@ sub brik_check_require_modules {
       for my $module (keys %$require_modules) {
          eval("require $module;");
          if ($@) {
-            return $self->_log_error("brik_check_require_modules: you have to install Module [$module]");
+            chomp($@);
+            return $self->_log_error("brik_check_require_modules: you have to install "
+               "Module [$module]: $@");
          }
 
          my @imports = @{$require_modules->{$module}};
          if (@imports > 0) {
             eval('$module->import(@imports);');
             if ($@) {
-               return $self->_log_error("brik_check_require_modules: unable to import functions ".
-                  "[@imports] from Module [$module]: $@");
+            chomp($@);
+               return $self->_log_error("brik_check_require_modules: unable to import "
+                  "functions [@imports] from Module [$module]: $@");
             }
          }
       }
