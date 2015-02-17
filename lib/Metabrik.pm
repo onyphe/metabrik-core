@@ -527,7 +527,7 @@ sub brik_check_require_modules {
          eval("require $module;");
          if ($@) {
             chomp($@);
-            return $self->_log_error("brik_check_require_modules: you have to install "
+            return $self->_log_error("brik_check_require_modules: you have to install ".
                "Module [$module]: $@");
          }
 
@@ -536,7 +536,7 @@ sub brik_check_require_modules {
             eval('$module->import(@imports);');
             if ($@) {
             chomp($@);
-               return $self->_log_error("brik_check_require_modules: unable to import "
+               return $self->_log_error("brik_check_require_modules: unable to import ".
                   "functions [@imports] from Module [$module]: $@");
             }
          }

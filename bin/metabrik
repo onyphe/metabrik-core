@@ -108,12 +108,12 @@ sub usage {
 
 Usage: metabrik [options]
 
-   --script <file>       execute given script
-   --no-splash           don't print the splash screen
    --rc <file>           use specified rc file (default: ~/.metabrik_rc)
-   --script-rc <file>    use specified script rc file (default: ~/.metabrik_script_rc)
+   --no-splash           don't print the splash screen
    --verbose <0|1|2|3>   verbosity level (default: 2)
    --debug <0|1>         enable debugging (default: 0)
+   --script <file>       execute given script
+   --script-rc <file>    use specified script rc file (default: ~/.metabrik_script_rc)
 
 EOF
 ;
