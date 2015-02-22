@@ -1,6 +1,7 @@
 Revision history for Perl extension Metabrik.
 
 1.06 
+   - bugfix: shell::command: go trough PATH to find a cmd to run (like less PAGER)
    - bugfix: core::shell: on SIGINT handling, now allows to break multiline and run Commands
    - bugfix: core::shell: allow user to get out of multiline mode by hitting Ctrl+C
    - bugfix: core::shell: better management of Metabrik Commands in multiline mode
