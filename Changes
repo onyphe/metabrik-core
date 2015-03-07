@@ -1,5 +1,9 @@
 Revision history for Perl extension Metabrik.
 
+1.07
+   - new: brik::search and perl::module Briks integrated in main distribution
+   - remove: no more metabrik-cpanm, enforce use of standard cpanm
+
 1.06 Fri Feb 27 07:17:59 CET 2015
    - bugfix: shell::command: go trough PATH to find a cmd to run (like less PAGER)
    - bugfix: core::shell: on SIGINT handling, now allows to break multiline and run Commands

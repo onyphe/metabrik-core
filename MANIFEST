@@ -1,5 +1,4 @@
 bin/metabrik
-bin/metabrik-cpanm
 Build.PL
 Changes
 examples/dot-metabrik_rc-sample
@@ -7,10 +6,12 @@ examples/multiline.brik
 examples/netmask.brik
 INSTALL
 lib/Metabrik.pm
+lib/Metabrik/Brik/Search.pm
 lib/Metabrik/Core/Context.pm
 lib/Metabrik/Core/Global.pm
 lib/Metabrik/Core/Log.pm
 lib/Metabrik/Core/Shell.pm
+lib/Metabrik/Perl/Module.pm
 lib/Metabrik/Shell/Command.pm
 lib/Metabrik/Shell/History.pm
 lib/Metabrik/Shell/Rc.pm

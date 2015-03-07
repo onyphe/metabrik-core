@@ -1,15 +1,16 @@
 INSTALLATION INSTRUCTIONS
 
-1. Ubuntu/Linux
+An up-to-date installation guide can be found at: http://www.metabrik.org/metabrik/install/ .
 
-XXX: to complete
+
+1. Ubuntu
 
 # apt-get install liblexical-persistence-perl liblocal-lib-perl \
      libterm-readline-gnu-perl libnet-ssh2-perl libnet-pcap-perl \
      libnet-libdnet-perl libnet-libdnet6-perl libppi-perl
 
 
-2. Mac OS X (Tested on 10.9.5/Mavericks)
+2. Mac OS X
 
 2.1. Install Xcode/MacPorts
 

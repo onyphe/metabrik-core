@@ -40,7 +40,10 @@
    "provides" : {
       "Metabrik" : {
          "file" : "lib/Metabrik.pm",
-         "version" : "1.06"
+         "version" : "1.07"
+      },
+      "Metabrik::Brik::Search" : {
+         "file" : "lib/Metabrik/Brik/Search.pm"
       },
       "Metabrik::Core::Context" : {
          "file" : "lib/Metabrik/Core/Context.pm",
@@ -57,6 +60,9 @@
       "Metabrik::Core::Shell" : {
          "file" : "lib/Metabrik/Core/Shell.pm",
          "version" : "1.06"
+      },
+      "Metabrik::Perl::Module" : {
+         "file" : "lib/Metabrik/Perl/Module.pm"
       },
       "Metabrik::Shell::Command" : {
          "file" : "lib/Metabrik/Shell/Command.pm",
@@ -81,5 +87,5 @@
          "http://opensource.org/licenses/bsd-license.php"
       ]
    },
-   "version" : "1.06"
+   "version" : "1.07"
 }
