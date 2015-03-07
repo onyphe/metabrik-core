@@ -1,4 +1,5 @@
 bin/metabrik
+bin/metabrik.sh
 Build.PL
 Changes
 examples/dot-metabrik_rc-sample
