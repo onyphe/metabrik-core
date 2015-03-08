@@ -26,6 +26,7 @@ DEPENDENCIES
    Module::Reload
    Term::Shell
    Term::ANSIColor
+   Term::ReadLine::Gnu
    File::Find
    Cwd
    PPI

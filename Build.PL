@@ -22,6 +22,7 @@ my $builder = Module::Build->new(
       'Module::Reload' => 0,
       'Term::Shell' => 0,
       'Term::ANSIColor' => 0,
+      'Term::ReadLine::Gnu' => 0,
       'File::Find' => 0,
       'Cwd' => 0,
       'PPI' => 0,
