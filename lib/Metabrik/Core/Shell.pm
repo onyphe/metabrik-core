@@ -7,7 +7,7 @@ package Metabrik::Core::Shell;
 use strict;
 use warnings;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 use base qw(Term::Shell Metabrik);
 
@@ -91,7 +91,9 @@ sub brik_init {
    # Note: Gnu readline() is blocking SIGs, we have to hit enter so 
    #       Ctrl+C is executed.
    $SIG{INT} = sub {
-      $self->debug && $self->log->debug("brik_init: INT captured");
+      $self->debug && $self->log->debug("SIGINT: captured for pid[$$] ".
+         ($$ == $self->global->pid ? '(main process)' : '')
+      );
       $self->_update_prompt;
       if ($self->global->exit_on_sigint) {
          $self->run_exit;

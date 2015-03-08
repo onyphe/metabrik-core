@@ -7,7 +7,7 @@ package Metabrik::Core::Global;
 use strict;
 use warnings;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 use base qw(Metabrik);
 
@@ -38,6 +38,7 @@ sub brik_properties {
          auto_use_on_require => [ qw(0|1) ],
          auto_install_on_require => [ qw(0|1) ],
          exit_on_sigint => [ qw(0|1) ],
+         pid => [ qw(metabrik_main_pid) ],
       },
       attributes_default => {
          device => 'eth0',
@@ -55,6 +56,7 @@ sub brik_properties {
          auto_use_on_require => 1,
          auto_install_on_require => 0,
          exit_on_sigint => 0,
+         pid => $$,
       },
       commands => {
          sleep => [ ],
