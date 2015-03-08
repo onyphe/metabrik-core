@@ -1,6 +1,7 @@
 Revision history for Perl extension Metabrik.
 
 1.07
+   - bugfix: shell::history: correctly writes $* variables when calling history Commands
    - new: shell::rc: create an alias to make it easy to switch to root from Shell
    - new: brik::search and perl::module Briks integrated in main distribution
    - remove: no more metabrik-cpanm, enforce use of standard cpanm
