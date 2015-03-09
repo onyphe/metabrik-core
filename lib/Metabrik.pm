@@ -5,7 +5,7 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.07';
+our $VERSION = '1.08';
 
 use base qw(Class::Gomor::Hash);
 
@@ -522,13 +522,16 @@ sub brik_check_require_modules {
       }
    }
 
+   my $error = 0;
    for my $require_modules (@require_modules_list) {
       for my $module (keys %$require_modules) {
          eval("require $module;");
          if ($@) {
             chomp($@);
-            return $self->_log_error("brik_check_require_modules: you have to install ".
+            $self->_log_error("brik_check_require_modules: you have to install ".
                "Module [$module]: $@");
+            $error++;
+            next;
          }
 
          my @imports = @{$require_modules->{$module}};
@@ -536,14 +539,16 @@ sub brik_check_require_modules {
             eval('$module->import(@imports);');
             if ($@) {
             chomp($@);
-               return $self->_log_error("brik_check_require_modules: unable to import ".
+               $self->_log_error("brik_check_require_modules: unable to import ".
                   "functions [@imports] from Module [$module]: $@");
+               $error++;
+               next;
             }
          }
       }
    }
 
-   return 1;
+   return $error ? 0 : 1;
 }
 
 sub brik_check_require_used {
@@ -570,8 +575,8 @@ sub brik_check_require_used {
 
    my $used = $context->used;
 
+   my $error = 0;
    for my $require_used (@require_used_list) {
-      my $error = 0;
       for my $brik (keys %$require_used) {
          next if $context->is_used($brik);
 
@@ -589,15 +594,12 @@ sub brik_check_require_used {
          else {
             $self->_log_error("brik_check_require_used: you must use Brik [$brik] first");
             $error++;
+            next;
          }
-      }
-
-      if ($error) {
-         return;
       }
    }
 
-   return 1;
+   return $error ? 0 : 1;
 }
 
 sub brik_check_require_binaries {

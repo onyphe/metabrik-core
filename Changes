@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.08
+   - update: Metabrik: display every missing items from brik_require_*_check() before erroring
+
 1.07 Sun Mar  8 17:52:37 CET 2015
    - bugfix: shell::history: correctly writes $* variables when calling history Commands
    - new: shell::rc: create an alias to make it easy to switch to root from Shell
