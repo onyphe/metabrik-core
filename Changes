@@ -1,7 +1,10 @@
 Revision history for Perl extension Metabrik.
 
 1.08
+   - UPDATE: shell::command: now use IPC::Run3 to capture shell commands output
+   - update: shell::command: system Command now returns $? on success
    - update: Metabrik: display every missing items from brik_require_*_check() before erroring
+   - update: new dependance on IPC::Run3
 
 1.07 Sun Mar  8 17:52:37 CET 2015
    - bugfix: shell::history: correctly writes $* variables when calling history Commands
