@@ -24,6 +24,7 @@ my $builder = Module::Build->new(
       'Term::ANSIColor' => 0,
       'Term::ReadLine::Gnu' => 0,
       'File::Find' => 0,
+      'IPC::Run3' => 0,
       'Cwd' => 0,
       'PPI' => 0,
    },
