@@ -219,6 +219,28 @@ sub _log_verbose {
    return 1;
 }
 
+sub _log_debug {
+   my $self = shift;
+   my ($msg) = @_;
+
+   if (! $self->debug) {
+      return 1;
+   }
+
+   chomp($msg);
+
+   my $class = $self->brik_class;
+
+   if (defined($self->{log})) {
+      return $self->log->debug($msg, $class);
+   }
+   else {
+      print("[D] $class: $msg\n");
+   }
+
+   return 1;
+}
+
 sub brik_check_properties {
    my $self = shift;
    my ($properties, $use_properties) = @_;
@@ -529,7 +551,8 @@ sub brik_check_require_modules {
          if ($@) {
             chomp($@);
             $self->_log_error("brik_check_require_modules: you have to install ".
-               "Module [$module]: $@");
+               "Module [$module]");
+            $self->_log_debug("brik_check_require_modules: $@");
             $error++;
             next;
          }
@@ -540,7 +563,8 @@ sub brik_check_require_modules {
             if ($@) {
             chomp($@);
                $self->_log_error("brik_check_require_modules: unable to import ".
-                  "functions [@imports] from Module [$module]: $@");
+                  "functions [@imports] from Module [$module]");
+               $self->_log_debug("brik_check_require_modules: $@");
                $error++;
                next;
             }

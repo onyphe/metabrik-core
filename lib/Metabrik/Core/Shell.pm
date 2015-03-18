@@ -11,6 +11,8 @@ our $VERSION = '1.08';
 
 use base qw(Term::Shell Metabrik);
 
+use IO::All;
+
 sub brik_properties {
    return {
       revision => '$Revision$',
@@ -29,6 +31,7 @@ sub brik_properties {
          #path_cwd => [ qw(directory) ],
          #prompt => [ qw(string) ],
          #_aliases => [ qw(INTERNAL) ],
+         #_executables => [ qw(INTERNAL) ],
       },
       attributes_default => {
          echo => 1,
@@ -101,6 +104,32 @@ sub brik_init {
       return 1;
    };
 
+   # Gather executable files from PATH
+   my @path = split(':', ($ENV{PATH} || ''));
+   my %executables = ();
+   for my $path (@path) {
+      my @files = ();
+      eval {
+         @files = io($path)->all_files;
+      };
+      if ($@) {
+         chomp($@);
+         $self->debug && $self->log->debug("brik_init: $path: all_files: $@");
+         next;
+      };
+      for my $file (@files) {
+         if ($file->is_executable) {
+            my $filename = $file->filename;
+            $executables{$filename}++;
+
+            # Without a handler, we would not be able to autoload the run Command
+            $self->add_handler("run_$filename");
+         }
+      }
+   }
+
+   $self->{_executables} = \%executables;
+
    return $self->SUPER::brik_init(@_);
 }
 
@@ -150,29 +179,38 @@ sub pwd {
 #
 # Term::Shell stuff
 #
-use IO::All;
-
 our $AUTOLOAD;
 
 sub AUTOLOAD {
    my $self = shift;
    my (@args) = @_;
 
+   $self->debug && $self->log->debug("autoload[$AUTOLOAD]");
+
    if ($AUTOLOAD !~ /^Metabrik::Core::Shell::run_/) {
       return 1;
    }
 
-   (my $alias = $AUTOLOAD) =~ s/^Metabrik::Core::Shell:://;
+   (my $command = $AUTOLOAD) =~ s/^Metabrik::Core::Shell:://;
 
-   if ($self->debug) {
-      $self->log->debug("autoload[$AUTOLOAD] alias[$alias] args[@args]");
-   }
+   $self->debug && $self->log->debug("command[$command] args[@args]");
 
    #my $aliases = $self->_aliases;
    my $aliases = $self->{_aliases};
-   if (exists($aliases->{$alias})) {
-      my $cmd = $aliases->{$alias};
+   if (exists($aliases->{$command})) {
+      my $cmd = $aliases->{$command};
       return $self->cmd(join(' ', $cmd, @args));
+   }
+
+   my $context = $self->context;
+
+   if ($context->is_used('shell::command')) {
+      (my $exec = $command) =~ s/^run_//;
+      my $executables = $self->{_executables};
+      if (exists($executables->{$exec})) {
+         my $cmd = "run shell::command system $exec";
+         return $self->cmd(join(' ', $cmd, @args));
+      }
    }
 
    return 1;
