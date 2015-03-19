@@ -1,6 +1,6 @@
 Revision history for Perl extension Metabrik.
 
-1.08
+1.08 Thu Mar 19 06:48:34 CET 2015
    - FEATURE: core::shell: run executable commands found in PATH through system Command
    - UPDATE: shell::command: now use IPC::Run3 to capture shell commands output
    - update: shell::command: system Command now returns $? on success
