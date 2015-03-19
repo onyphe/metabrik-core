@@ -5,7 +5,7 @@ package Metabrik::Core::Context;
 use strict;
 use warnings;
 
-our $VERSION = '1.08';
+our $VERSION = '1.09';
 
 use base qw(Metabrik);
 
