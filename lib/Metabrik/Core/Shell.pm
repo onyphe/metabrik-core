@@ -46,6 +46,8 @@ sub brik_properties {
       commands => {
          splash => [ ],
          pwd => [ ],
+         get_available_help => [ ],
+         # Term::Shell stuff
          cmd => [ qw(Cmd) ],
          cmdloop => [ ],
          run_use => [ qw(Brik) ],
@@ -176,6 +178,24 @@ sub pwd {
    return $self->{path_cwd};
 }
 
+sub get_available_help {
+   my $self = shift;
+
+   my @used = sort { $a cmp $b } keys %{$self->context->used};
+   my @aliases = sort { $a cmp $b } keys %{$self->{_aliases}};
+   my @commands = sort { $a cmp $b } keys %{$self->brik_commands};
+
+   # Skip class functions
+   @commands = grep (!/^brik_/, @commands);
+
+   # Remove leading run_ string
+   for (@aliases, @commands) {
+      s/^run_//;
+   }
+
+   return { briks => \@used, aliases => \@aliases, commands => \@commands };
+}
+
 #
 # Term::Shell stuff
 #
@@ -297,6 +317,10 @@ sub init {
    # See also Term::ReadLine LoadTermCap() and ornaments() subs.
    $self->term->ornaments('md,me');
 
+   # Force Commands to be entered entirely to avoid ambiguity.
+   # Example: type 'my' will result in excuting Perl code, and not 'mymeta-cpanfile'.
+   $self->{API}{match_uniq} = 0;
+
    return $self;
 }
 
@@ -366,7 +390,7 @@ sub process_line {
       return 1;
    }
 
-   $self->debug && $self->log->debug("cmdloop: lines[@$lines]");
+   $self->debug && $self->log->debug("process_line: lines[@$lines]");
 
    $self->cmd(join('', @$lines));
 
@@ -445,10 +469,16 @@ sub run_alias {
    my $aliases = $self->{_aliases};
 
    if (! defined($alias)) {
-      for my $this (keys %$aliases) {
-         (my $alias = $this) =~ s/^run_//;
+      for my $this (sort { $a cmp $b } keys %$aliases) {
+         ($alias = $this) =~ s/^run_//;
          $self->log->info(sprintf("%-10s \"%s\"", $alias, $aliases->{$this}));
       }
+
+      return 1;
+   }
+   elsif (length($alias) && @cmd == 0) {
+      $alias =~ s/^run_//;
+      $self->log->info(sprintf("%-10s \"%s\"", $alias, $aliases->{"run_$alias"}));
 
       return 1;
    }
@@ -604,16 +634,38 @@ sub comp_use {
 
 sub run_help {
    my $self = shift;
-   my ($brik) = @_;
+   my ($arg) = @_;
 
    my $context = $self->context;
 
-   if (! defined($brik)) {
-      return $self->SUPER::run_help;
+   my $help = $self->get_available_help;
+   my %aliases = map { $_ => 1 } @{$help->{aliases}};
+   my %briks = map { $_ => 1 } @{$help->{briks}};
+   my %commands = map { $_ => 1 } @{$help->{commands}};
+
+   # Print the list of available Briks, Aliases, Commands
+   if (! defined($arg)) {
+      $self->log->info("For more help, print help <Command>:");
+      $self->log->info(" ");
+
+      for my $this (@{$help->{briks}}) {
+         $self->log->info("   $this - Brik");
+      }
+
+      for my $this (@{$help->{aliases}}) {
+         $self->log->info("   $this - Alias");
+      }
+
+      for my $this (@{$help->{commands}}) {
+         $self->log->info("   $this - Command");
+      }
+
+      return 1;
    }
    else {
-      if ($context->is_used($brik)) {
-         my $used_brik = $context->used->{$brik};
+      # Help for a Brik
+      if (exists($briks{$arg})) {
+         my $used_brik = $context->used->{$arg};
 
          my $attributes = $used_brik->brik_attributes;
          my $commands = $used_brik->brik_commands;
@@ -642,9 +694,18 @@ sub run_help {
             $self->log->info($help) if defined($help);
          }
       }
+      # Help for a Command
+      elsif (exists($commands{$arg})) {
+         for my $this (sort { $a cmp $b } keys %commands) {
+            return $self->log->info("$arg - core::shell Command, see 'help core::shell'");
+         }
+      }
+      # Help for an Alias
+      elsif (exists($aliases{$arg})) {
+         return $self->log->info("$arg - no help for Aliases");
+      }
       else {
-         # We return to standard help() method
-         return $self->SUPER::run_help($brik);
+         return $self->log->info("Command [$arg] not found");
       }
    }
 
@@ -664,12 +725,10 @@ sub comp_help {
 
    my @comp = ();
 
-   # We want to find help for used briks by using completion
-   if (($count == 1)
-   ||  ($count == 2 && length($word) > 0)) {
-      my @handlers = keys %{$self->{handlers}};
-      my @used = keys %{$self->context->used};
-      for my $a (@handlers, @used) {
+   # We want to find help for used Briks by using completion
+   if ($count == 1 || ($count == 2 && length($word) > 0)) {
+      my $help = $self->get_available_help;
+      for my $a (@{$help->{briks}}, @{$help->{aliases}}, @{$help->{commands}}) {
          next unless length($a);
          push @comp, $a if $a =~ /^$word/;
       }
