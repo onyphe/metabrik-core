@@ -686,14 +686,14 @@ sub get_help_attributes {
    if ($self->help_show_base_attributes || $self->help_show_base_all
    ||  $self->show_base_attributes || $self->show_base_all
    ||  $self->help_show_all || $self->show_all) {
-      $base_attributes = $brik->brik_base_attributes;
+      $base_attributes = $used->{$brik}->brik_base_attributes;
    }
 
    my $inherited_attributes = {};
    if ($self->help_show_inherited_attributes || $self->help_show_inherited_all
    ||  $self->show_inherited_attributes || $self->show_inherited_all
    ||  $self->help_show_all || $self->show_all) {
-      $inherited_attributes = $brik->brik_inherited_attributes;
+      $inherited_attributes = $used->{$brik}->brik_inherited_attributes;
    }
 
    for my $attribute (keys %$base_attributes) {
@@ -729,14 +729,14 @@ sub get_help_commands {
    if ($self->help_show_base_commands || $self->help_show_base_all
    ||  $self->show_base_commands || $self->show_base_all
    ||  $self->help_show_all || $self->show_all) {
-      $base_commands = $brik->brik_base_commands;
+      $base_commands = $used->{$brik}->brik_base_commands;
    }
 
    my $inherited_commands = {};
    if ($self->help_show_inherited_commands || $self->help_show_inherited_all
    ||  $self->show_inherited_commands || $self->show_inherited_all
    ||  $self->help_show_all || $self->show_all) {
-      $inherited_commands = $brik->brik_inherited_commands;
+      $inherited_commands = $used->{$brik}->brik_inherited_commands;
    }
 
    for my $command (keys %$base_commands) {
@@ -772,14 +772,14 @@ sub get_comp_attributes {
    if ($self->comp_show_base_attributes || $self->comp_show_base_all
    ||  $self->show_base_attributes || $self->show_base_all
    ||  $self->comp_show_all || $self->show_all) {
-      $base_attributes = $brik->brik_base_attributes;
+      $base_attributes = $used->{$brik}->brik_base_attributes;
    }
 
    my $inherited_attributes = {};
    if ($self->comp_show_inherited_attributes || $self->comp_show_inherited_all
    ||  $self->show_inherited_attributes || $self->show_inherited_all
    ||  $self->comp_show_all || $self->show_all) {
-      $inherited_attributes = $brik->brik_inherited_attributes;
+      $inherited_attributes = $used->{$brik}->brik_inherited_attributes;
    }
 
    for my $attribute (keys %$base_attributes) {
@@ -815,14 +815,14 @@ sub get_comp_commands {
    if ($self->comp_show_base_commands || $self->comp_show_base_all
    ||  $self->show_base_commands || $self->show_base_all
    ||  $self->comp_show_all || $self->show_all) {
-      $base_commands = $brik->brik_base_commands;
+      $base_commands = $used->{$brik}->brik_base_commands;
    }
 
    my $inherited_commands = {};
    if ($self->comp_show_inherited_commands || $self->comp_show_inherited_all
    ||  $self->show_inherited_commands || $self->show_inherited_all
    ||  $self->comp_show_all || $self->show_all) {
-      $inherited_commands = $brik->brik_inherited_commands;
+      $inherited_commands = $used->{$brik}->brik_inherited_commands;
    }
 
    for my $command (keys %$base_commands) {
