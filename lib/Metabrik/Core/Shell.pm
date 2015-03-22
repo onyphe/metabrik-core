@@ -634,7 +634,7 @@ sub comp_use {
 
 sub run_help {
    my $self = shift;
-   my ($arg) = @_;
+   my ($arg1, $arg2) = @_;
 
    my $context = $self->context;
 
@@ -644,7 +644,7 @@ sub run_help {
    my %commands = map { $_ => 1 } @{$help->{commands}};
 
    # Print the list of available Briks, Aliases, Commands
-   if (! defined($arg)) {
+   if (! defined($arg1)) {
       $self->log->info("For more help, print help <Command>:");
       $self->log->info(" ");
 
@@ -662,10 +662,10 @@ sub run_help {
 
       return 1;
    }
-   else {
+   elsif (! defined($arg2)) {
       # Help for a Brik
-      if (exists($briks{$arg})) {
-         my $used_brik = $context->used->{$arg};
+      if (exists($briks{$arg1})) {
+         my $used_brik = $context->used->{$arg1};
 
          my $attributes = $used_brik->brik_attributes;
          my $commands = $used_brik->brik_commands;
@@ -695,17 +695,45 @@ sub run_help {
          }
       }
       # Help for a Command
-      elsif (exists($commands{$arg})) {
+      elsif (exists($commands{$arg1})) {
          for my $this (sort { $a cmp $b } keys %commands) {
-            return $self->log->info("$arg - core::shell Command, see 'help core::shell'");
+            return $self->log->info("$arg1 - core::shell Command, see 'help core::shell'");
          }
       }
       # Help for an Alias
-      elsif (exists($aliases{$arg})) {
-         return $self->log->info("$arg - no help for Aliases");
+      elsif (exists($aliases{$arg1})) {
+         return $self->log->info("$arg1 - no help for Aliases");
       }
       else {
-         return $self->log->info("Command [$arg] not found");
+         return $self->log->info("Command [$arg1] not found");
+      }
+   }
+   # Both arg1 and arg2 are defined
+   else {
+      if (exists($briks{$arg1})) {
+         my $used_brik = $context->used->{$arg1};
+
+         my $attributes = $used_brik->brik_attributes;
+         my $commands = $used_brik->brik_commands;
+
+         my $brik_attributes = Metabrik->brik_properties->{attributes};
+         my $brik_commands = Metabrik->brik_properties->{commands};
+
+         my $help;
+         if (exists($attributes->{$arg2})) {
+            $help = $used_brik->brik_help_set($arg2);
+         }
+         elsif (exists($commands->{$arg2})) {
+            $help = $used_brik->brik_help_run($arg2);
+         }
+         else {
+            $help = "Attribute or Command [$arg2] not found for Brik [$arg1]";
+         }
+
+         return $self->log->info($help);
+      }
+      else {
+         return $self->log->info("Command [$arg1] not found");
       }
    }
 
@@ -725,13 +753,19 @@ sub comp_help {
 
    my @comp = ();
 
-   # We want to find help for used Briks by using completion
+   # We want to find help for used Briks/Aliases/Commands by using completion
    if ($count == 1 || ($count == 2 && length($word) > 0)) {
       my $help = $self->get_available_help;
       for my $a (@{$help->{briks}}, @{$help->{aliases}}, @{$help->{commands}}) {
          next unless length($a);
          push @comp, $a if $a =~ /^$word/;
       }
+   }
+   # We want to complete entered Command and Attributes
+   else {
+      push @comp, $self->comp_run(@_);
+      push @comp, $self->comp_set(@_);
+      return @comp;
    }
 
    return @comp;
