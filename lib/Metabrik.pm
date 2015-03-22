@@ -55,9 +55,15 @@ sub brik_properties {
          brik_category => [ ],
          brik_tags => [ ],
          brik_has_tag => [ qw(Tag) ],
-         brik_commands => [ ],
+         brik_commands => [ ],             # Return full list of Commands
+         brik_base_commands => [ ],        # Return only base class Commands
+         brik_inherited_commands => [ ],   # Return only inherited Commands
+         brik_own_commands => [ ],         # Return only own Commands
          brik_has_command => [ qw(Command) ],
-         brik_attributes => [ ],
+         brik_attributes => [ ],            # Return full list of Attributes
+         brik_base_attributes => [ ],       # Return only base class Attributes
+         brik_inherited_attributes => [ ],  # Return only inherited Attributes
+         brik_own_attributes => [ ],        # Return only own Attributes
          brik_has_attribute => [ qw(Attribute) ],
          brik_self => [ ],
          brik_create_attributes => [ ],
@@ -765,6 +771,7 @@ sub brik_has_tag {
    return 0;
 }
 
+# Will return all Commands, base, inherited, and own ones.
 sub brik_commands {
    my $self = shift;
 
@@ -792,6 +799,75 @@ sub brik_commands {
    return $commands;
 }
 
+# Will return only base Commands
+sub brik_base_commands {
+   my $self = shift;
+
+   my $commands = { };
+
+   for my $command (keys %{Metabrik->brik_properties->{commands}}) {
+      next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
+      next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
+      next if $command =~ /^_/; # Internal stuff
+      next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+
+      #$self->_log_info("command[$command]");
+
+      $commands->{$command} = Metabrik->brik_properties->{commands}->{$command};
+   }
+
+   return $commands;
+}
+
+# Will return only inherited Commands
+sub brik_inherited_commands {
+   my $self = shift;
+
+   my $commands = { };
+
+   my $classes = $self->brik_classes;
+   my $own_class = ref($self);
+
+   for my $class (@$classes) {
+      next if $class eq 'Metabrik'; # Skip base class Commands
+      next if $class eq $own_class; # Skip own class Commands
+      if (exists($class->brik_properties->{commands})) {
+         for my $command (keys %{$class->brik_properties->{commands}}) {
+            next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
+            next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
+            next if $command =~ /^_/; # Internal stuff
+            next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+
+            $commands->{$command} = $class->brik_properties->{commands}->{$command};
+         }
+      }
+   }
+
+   return $commands;
+}
+
+# Will return only own Commands
+sub brik_own_commands {
+   my $self = shift;
+
+   my $commands = { };
+
+   if (exists($self->brik_properties->{commands})) {
+      for my $command (keys %{$self->brik_properties->{commands}}) {
+         next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
+         next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
+         next if $command =~ /^_/; # Internal stuff
+         next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+
+         #$self->_log_info("command[$command]");
+
+         $commands->{$command} = $self->brik_properties->{commands}->{$command};
+      }
+   }
+
+   return $commands;
+}
+
 sub brik_has_command {
    my $self = shift;
    my ($command) = @_;
@@ -807,6 +883,7 @@ sub brik_has_command {
    return 0;
 }
 
+# Will return all Attributes, base, inherited, and own ones.
 sub brik_attributes {
    my $self = shift;
 
@@ -824,6 +901,65 @@ sub brik_attributes {
 
             $attributes->{$attribute} = $class->brik_properties->{attributes}->{$attribute};
          }
+      }
+   }
+
+   return $attributes;
+}
+
+# Will return only base Attributes
+sub brik_base_attributes {
+   my $self = shift;
+
+   my $attributes = { };
+
+   for my $attribute (keys %{Metabrik->brik_properties->{attributes}}) {
+      next unless $attribute =~ /^[a-z]/; # Brik Attributes always begin with a minuscule
+      next if $attribute =~ /^_/;         # Internal stuff
+
+      $attributes->{$attribute} = Metabrik->brik_properties->{attributes}->{$attribute};
+   }
+
+   return $attributes;
+}
+
+# Will return only inherited Attributes
+sub brik_inherited_attributes {
+   my $self = shift;
+
+   my $attributes = { };
+
+   my $classes = $self->brik_classes;
+   my $own_class = ref($self);
+
+   for my $class (@$classes) {
+      next if $class eq 'Metabrik';  # Skip base class Attributes
+      next if $class eq $own_class;  # Skip own class Attributes
+      if (exists($class->brik_properties->{attributes})) {
+         for my $attribute (keys %{$class->brik_properties->{attributes}}) {
+            next unless $attribute =~ /^[a-z]/; # Brik Attributes always begin with a minuscule
+            next if $attribute =~ /^_/;         # Internal stuff
+
+            $attributes->{$attribute} = $class->brik_properties->{attributes}->{$attribute};
+         }
+      }
+   }
+
+   return $attributes;
+}
+
+# Will return only own Attributes
+sub brik_own_attributes {
+   my $self = shift;
+
+   my $attributes = { };
+
+   if (exists($self->brik_properties->{attributes})) {
+      for my $attribute (keys %{$self->brik_properties->{attributes}}) {
+         next unless $attribute =~ /^[a-z]/; # Brik Attributes always begin with a minuscule
+         next if $attribute =~ /^_/;         # Internal stuff
+
+         $attributes->{$attribute} = $self->brik_properties->{attributes}->{$attribute};
       }
    }
 

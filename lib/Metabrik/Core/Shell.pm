@@ -19,13 +19,27 @@ sub brik_properties {
       tags => [ qw(core main shell) ],
       attributes => {
          echo => [ qw(0|1) ],
-         help_show_brik_commands => [ qw(0|1) ],
-         help_show_brik_attributes => [ qw(0|1) ],
-         comp_show_brik_attributes => [ qw(0|1) ],
-         comp_show_brik_commands => [ qw(0|1) ],
-         get_show_brik_attributes => [ qw(0|1) ],
-         help_show_inherited => [ qw(0|1) ],
-         comp_show_inherited => [ qw(0|1) ],
+         help_show_base_attributes => [ qw(0|1) ],
+         help_show_base_commands => [ qw(0|1) ],
+         help_show_base_all => [ qw(0|1) ],   # Both Attributes and Commands
+         help_show_inherited_attributes => [ qw(0|1) ],
+         help_show_inherited_commands => [ qw(0|1) ],
+         help_show_inherited_all => [ qw(0|1) ],  # Both Attributes and Commands
+         help_show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
+         comp_show_base_attributes => [ qw(0|1) ],
+         comp_show_base_commands => [ qw(0|1) ],
+         comp_show_base_all => [ qw(0|1) ],
+         comp_show_inherited_attributes => [ qw(0|1) ],
+         comp_show_inherited_commands => [ qw(0|1) ],
+         comp_show_inherited_all => [ qw(0|1) ],  # Both Attributes and Commands
+         comp_show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
+         show_base_attributes => [ qw(0|1) ],
+         show_base_commands => [ qw(0|1) ],
+         show_base_all => [ qw(0|1) ],
+         show_inherited_attributes => [ qw(0|1) ],
+         show_inherited_commands => [ qw(0|1) ],
+         show_inherited_all => [ qw(0|1) ],
+         show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
          # These are used by Term::Shell
          #path_home => [ qw(directory) ],
          #path_cwd => [ qw(directory) ],
@@ -35,18 +49,36 @@ sub brik_properties {
       },
       attributes_default => {
          echo => 1,
-         help_show_brik_commands => 0,
-         help_show_brik_attributes => 0,
-         comp_show_brik_attributes => 0,
-         comp_show_brik_commands => 0,
-         get_show_brik_attributes => 0,
-         help_show_inherited => 0,
-         comp_show_inherited => 0,
+         help_show_base_attributes => 0,
+         help_show_base_commands => 0,
+         help_show_base_all => 0,
+         help_show_inherited_attributes => 0,
+         help_show_inherited_commands => 0,
+         help_show_inherited_all => 0,
+         help_show_all => 0,
+         comp_show_base_attributes => 0,
+         comp_show_base_commands => 0,
+         comp_show_base_all => 0,
+         comp_show_inherited_attributes => 0,
+         comp_show_inherited_commands => 0,
+         comp_show_inherited_all => 0,
+         comp_show_all => 0,
+         show_base_attributes => 0,
+         show_base_commands => 0,
+         show_base_all => 0,
+         show_inherited_attributes => 0,
+         show_inherited_commands => 0,
+         show_inherited_all => 0,
+         show_all => 0,
       },
       commands => {
          splash => [ ],
          pwd => [ ],
          get_available_help => [ ],
+         get_help_attributes => [ qw(Brik) ],
+         get_help_commands => [ qw(Brik) ],
+         get_comp_attributes => [ qw(Brik) ],
+         get_comp_commands => [ qw(Brik) ],
          # Term::Shell stuff
          cmd => [ qw(Cmd) ],
          cmdloop => [ ],
@@ -632,6 +664,178 @@ sub comp_use {
    return @comp;
 }
 
+sub get_help_attributes {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('get_help_attributes'));
+   }
+
+   my $context = $self->context;
+
+   if (! $context->is_used($brik)) {
+      return {};
+   }
+
+   my $used = $context->used;
+
+   my $attributes = $used->{$brik}->brik_own_attributes;
+
+   my $base_attributes = {};
+   if ($self->help_show_base_attributes || $self->help_show_base_all
+   ||  $self->show_base_attributes || $self->show_base_all
+   ||  $self->help_show_all || $self->show_all) {
+      $base_attributes = $brik->brik_base_attributes;
+   }
+
+   my $inherited_attributes = {};
+   if ($self->help_show_inherited_attributes || $self->help_show_inherited_all
+   ||  $self->show_inherited_attributes || $self->show_inherited_all
+   ||  $self->help_show_all || $self->show_all) {
+      $inherited_attributes = $brik->brik_inherited_attributes;
+   }
+
+   for my $attribute (keys %$base_attributes) {
+      $attributes->{$attribute} = $base_attributes->{$attribute};
+   }
+
+   for my $attribute (keys %$inherited_attributes) {
+      $attributes->{$attribute} = $inherited_attributes->{$attribute};
+   }
+
+   return $attributes;
+}
+
+sub get_help_commands {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('get_help_commands'));
+   }
+
+   my $context = $self->context;
+
+   if (! $context->is_used($brik)) {
+      return {};
+   }
+
+   my $used = $context->used;
+
+   my $commands = $used->{$brik}->brik_own_commands;
+
+   my $base_commands = {};
+   if ($self->help_show_base_commands || $self->help_show_base_all
+   ||  $self->show_base_commands || $self->show_base_all
+   ||  $self->help_show_all || $self->show_all) {
+      $base_commands = $brik->brik_base_commands;
+   }
+
+   my $inherited_commands = {};
+   if ($self->help_show_inherited_commands || $self->help_show_inherited_all
+   ||  $self->show_inherited_commands || $self->show_inherited_all
+   ||  $self->help_show_all || $self->show_all) {
+      $inherited_commands = $brik->brik_inherited_commands;
+   }
+
+   for my $command (keys %$base_commands) {
+      $commands->{$command} = $base_commands->{$command};
+   }
+
+   for my $command (keys %$inherited_commands) {
+      $commands->{$command} = $inherited_commands->{$command};
+   }
+
+   return $commands;
+}
+
+sub get_comp_attributes {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('get_comp_attributes'));
+   }
+
+   my $context = $self->context;
+
+   if (! $context->is_used($brik)) {
+      return {};
+   }
+
+   my $used = $context->used;
+
+   my $attributes = $used->{$brik}->brik_own_attributes;
+
+   my $base_attributes = {};
+   if ($self->comp_show_base_attributes || $self->comp_show_base_all
+   ||  $self->show_base_attributes || $self->show_base_all
+   ||  $self->comp_show_all || $self->show_all) {
+      $base_attributes = $brik->brik_base_attributes;
+   }
+
+   my $inherited_attributes = {};
+   if ($self->comp_show_inherited_attributes || $self->comp_show_inherited_all
+   ||  $self->show_inherited_attributes || $self->show_inherited_all
+   ||  $self->comp_show_all || $self->show_all) {
+      $inherited_attributes = $brik->brik_inherited_attributes;
+   }
+
+   for my $attribute (keys %$base_attributes) {
+      $attributes->{$attribute} = $base_attributes->{$attribute};
+   }
+
+   for my $attribute (keys %$inherited_attributes) {
+      $attributes->{$attribute} = $inherited_attributes->{$attribute};
+   }
+
+   return $attributes;
+}
+
+sub get_comp_commands {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('get_comp_commands'));
+   }
+
+   my $context = $self->context;
+
+   if (! $context->is_used($brik)) {
+      return {};
+   }
+
+   my $used = $context->used;
+
+   my $commands = $used->{$brik}->brik_own_commands;
+
+   my $base_commands = {};
+   if ($self->comp_show_base_commands || $self->comp_show_base_all
+   ||  $self->show_base_commands || $self->show_base_all
+   ||  $self->comp_show_all || $self->show_all) {
+      $base_commands = $brik->brik_base_commands;
+   }
+
+   my $inherited_commands = {};
+   if ($self->comp_show_inherited_commands || $self->comp_show_inherited_all
+   ||  $self->show_inherited_commands || $self->show_inherited_all
+   ||  $self->comp_show_all || $self->show_all) {
+      $inherited_commands = $brik->brik_inherited_commands;
+   }
+
+   for my $command (keys %$base_commands) {
+      $commands->{$command} = $base_commands->{$command};
+   }
+
+   for my $command (keys %$inherited_commands) {
+      $commands->{$command} = $inherited_commands->{$command};
+   }
+
+   return $commands;
+}
+
 sub run_help {
    my $self = shift;
    my ($arg1, $arg2) = @_;
@@ -648,15 +852,15 @@ sub run_help {
       $self->log->info("For more help, print help <Command>:");
       $self->log->info(" ");
 
-      for my $this (@{$help->{briks}}) {
+      for my $this (sort { $a cmp $b } @{$help->{briks}}) {
          $self->log->info("   $this - Brik");
       }
 
-      for my $this (@{$help->{aliases}}) {
+      for my $this (sort { $a cmp $b } @{$help->{aliases}}) {
          $self->log->info("   $this - Alias");
       }
 
-      for my $this (@{$help->{commands}}) {
+      for my $this (sort { $a cmp $b } @{$help->{commands}}) {
          $self->log->info("   $this - Command");
       }
 
@@ -664,32 +868,18 @@ sub run_help {
    }
    elsif (! defined($arg2)) {
       # Help for a Brik
-      if (exists($briks{$arg1})) {
+      if ($context->is_used($arg1)) {
          my $used_brik = $context->used->{$arg1};
 
-         my $attributes = $used_brik->brik_attributes;
-         my $commands = $used_brik->brik_commands;
+         my $attributes = $self->get_help_attributes($arg1);
+         my $commands = $self->get_help_commands($arg1);
 
-         if (! $self->help_show_inherited) {
-            $attributes = $used_brik->brik_properties->{attributes};
-            $commands = $used_brik->brik_properties->{commands};
-         }
-
-         my $brik_attributes = Metabrik->brik_properties->{attributes};
-         my $brik_commands = Metabrik->brik_properties->{commands};
-
-         for my $attribute (keys %$attributes) {
-            if (! $context->get('core::shell', 'help_show_brik_attributes')) {
-               next if exists($brik_attributes->{$attribute});
-            }
+         for my $attribute (sort { $a cmp $b } keys %$attributes) {
             my $help = $used_brik->brik_help_set($attribute);
             $self->log->info($help) if defined($help);
          }
 
-         for my $command (keys %$commands) {
-            if (! $context->get('core::shell', 'help_show_brik_commands')) {
-               next if exists($brik_commands->{$command});
-            }
+         for my $command (sort { $a cmp $b } keys %$commands) {
             my $help = $used_brik->brik_help_run($command);
             $self->log->info($help) if defined($help);
          }
@@ -716,14 +906,14 @@ sub run_help {
          my $attributes = $used_brik->brik_attributes;
          my $commands = $used_brik->brik_commands;
 
-         my $brik_attributes = Metabrik->brik_properties->{attributes};
-         my $brik_commands = Metabrik->brik_properties->{commands};
+         my $base_attributes = $used_brik->brik_base_attributes;
+         my $base_commands = $used_brik->brik_base_commands;
 
          my $help;
-         if (exists($attributes->{$arg2})) {
+         if (exists($attributes->{$arg2}) || exists($base_attributes->{$arg2})) {
             $help = $used_brik->brik_help_set($arg2);
          }
-         elsif (exists($commands->{$arg2})) {
+         elsif (exists($commands->{$arg2}) || exists($base_commands->{$arg2})) {
             $help = $used_brik->brik_help_run($arg2);
          }
          else {
@@ -756,7 +946,9 @@ sub comp_help {
    # We want to find help for used Briks/Aliases/Commands by using completion
    if ($count == 1 || ($count == 2 && length($word) > 0)) {
       my $help = $self->get_available_help;
-      for my $a (@{$help->{briks}}, @{$help->{aliases}}, @{$help->{commands}}) {
+      # No need to complete aliases, there is no help
+      #for my $a (@{$help->{briks}}, @{$help->{aliases}}, @{$help->{commands}}) {
+      for my $a (@{$help->{briks}}, @{$help->{commands}}) {
          next unless length($a);
          push @comp, $a if $a =~ /^$word/;
       }
@@ -829,17 +1021,9 @@ sub comp_set {
          }
       }
 
-      my $brik_attributes = Metabrik->brik_properties->{attributes};
-      my $attributes = $used->{$brik}->brik_attributes;
-
-      if (! $self->comp_show_inherited) {
-         $attributes = $used->{$brik}->brik_properties->{attributes};
-      }
+      my $attributes = $self->get_comp_attributes($brik);
 
       for my $attribute (keys %$attributes) {
-         if (! $context->get('core::shell', 'comp_show_brik_attributes')) {
-            next if exists($brik_attributes->{$attribute});
-         }
          push @comp, $attribute;
       }
    }
@@ -852,17 +1036,9 @@ sub comp_set {
          }
       }
 
-      my $brik_attributes = Metabrik->brik_properties->{attributes};
-      my $attributes = $used->{$brik}->brik_attributes;
-
-      if (! $self->comp_show_inherited) {
-         $attributes = $used->{$brik}->brik_properties->{attributes};
-      }
+      my $attributes = $self->get_comp_attributes($brik);
 
       for my $attribute (keys %$attributes) {
-         if (! $context->get('core::shell', 'comp_show_brik_attributes')) {
-            next if exists($brik_attributes->{$attribute});
-         }
          if ($attribute =~ /^$word/) {
             push @comp, $attribute;
          }
@@ -887,13 +1063,9 @@ sub run_get {
       my $used = $context->used or return;
 
       for my $brik (sort { $a cmp $b } keys %$used) {
-         my $attributes = $used->{$brik}->brik_attributes or next;
+         my $attributes = $self->get_help_attributes($brik);
+
          for my $attribute (sort { $a cmp $b } keys %$attributes) {
-            if (! $context->get('core::shell', 'get_show_brik_attributes')) {
-               if ($attribute =~ /^(?:shell|context|log|global|init_done|debug)$/) {
-                  next;
-               }
-            }
             $self->log->info("$brik $attribute ".$context->get($brik, $attribute));
          }
       }
@@ -906,17 +1078,10 @@ sub run_get {
          return $self->log->error("get: Brik [$brik] not used");
       }
 
-      my %printed = ();
-      my $attributes = $used->{$brik}->brik_attributes;
+      my $attributes = $self->get_help_attributes($brik);
+
       for my $attribute (sort { $a cmp $b } keys %$attributes) {
-         if (! $context->get('core::shell', 'get_show_brik_attributes')) {
-            if ($attribute =~ /^(?:shell|context|log|global|init_done|debug)$/) {
-               next;
-            }
-         }
-         my $print = "$brik $attribute ".$context->get($brik, $attribute);
-         $self->log->info($print) if ! exists($printed{$print});
-         $printed{$print}++;
+         $self->log->info("$brik $attribute ".$context->get($brik, $attribute));
       }
    }
    # get is called with is a Brik and an Attribute
@@ -975,7 +1140,10 @@ sub comp_run {
    my $count = scalar(@words);
    my $last = $words[-1];
 
-   $self->debug && $self->log->debug("comp_run: words[@words] | word[$word] line[$line] start[$start] | last[$last]");
+   if ($self->debug) {
+      $self->log->debug("comp_run: words[@words] | word[$word] line[$line] ".
+         "start[$start] | last[$last]");
+   }
 
    # Completion is for used Briks only
    my $used = $context->used;
@@ -1004,17 +1172,9 @@ sub comp_run {
          }
       }
 
-      my $brik_commands = Metabrik->brik_properties->{commands};
-      my $commands = $used->{$brik}->brik_commands;
-
-      if (! $self->comp_show_inherited) {
-         $commands = $used->{$brik}->brik_properties->{commands};
-      }
+      my $commands = $self->get_comp_commands($brik);
 
       for my $command (keys %$commands) {
-         if (! $context->get('core::shell', 'comp_show_brik_commands')) {
-            next if exists($brik_commands->{$command});
-         }
          push @comp, $command;
       }
    }
@@ -1027,17 +1187,9 @@ sub comp_run {
          }
       }
 
-      my $brik_commands = Metabrik->brik_properties->{commands};
-      my $commands = $used->{$brik}->brik_commands;
-
-      if (! $self->comp_show_inherited) {
-         $commands = $used->{$brik}->brik_properties->{commands};
-      }
+      my $commands = $self->get_comp_commands($brik);
 
       for my $command (keys %$commands) {
-         if (! $context->get('core::shell', 'comp_show_brik_commands')) {
-            next if exists($brik_commands->{$command});
-         }
          if ($command =~ /^$word/) {
             push @comp, $command;
          }
