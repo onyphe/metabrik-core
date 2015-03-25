@@ -206,7 +206,9 @@ sub call {
       my @list = caller();
       my $file = $list[1];
       my $line = $list[2];
-      #return $self->log->error("call: $@ (source file [$file] at line [$line])");
+      if ($self->debug) {
+         return $self->log->error("call: $@ (source file [$file] at line [$line])");
+      }
       return $self->log->error("call: $@");
    }
 
@@ -666,8 +668,15 @@ sub run {
       }
 
       for (@__ctx_args) {
+         # Support variable lookups like '$array' as an Argument
+         # Example: run <Brik> <Command> $Arg1 Arg2
          if (/^(\$.*)$/) {
             $_ = eval("\$CON->_lp->{context}->{_}->{'$1'}");
+         }
+         # Support passing ARRAYs or HASHs or Perl code as an Argument
+         # Example: run <Brik> <Command> "[ qw(a b c) ]"
+         else {
+            $_ = eval($_) || $_;
          }
       }
 

@@ -387,9 +387,9 @@ sub cmd_to_code {
    my ($line) = @_;
 
    while ($line =~ /'\s*(?:use|set|get|run)\s.*?'/) {
-      #$self->log->info("cmd_to_code: before: [$line]");
+      $self->debug && $self->log->debug("cmd_to_code: before: [$line]");
       $line =~ s/'\s*((?:use|set|get|run)\s.*?)\s*'/\$SHE->cmd("$1")/;
-      #$self->log->info("cmd_to_code: after: [$line]");
+      $self->debug && $self->log->debug("cmd_to_code: after: [$line]");
 
       $self->debug && $self->log->debug("cmd_to_code: [$line]");
    }
@@ -417,6 +417,7 @@ sub process_line {
    # If a closure is open, we are in multiline mode
    if (! $self->cmd_is_complete($lines)) {
       # If it looks like a Metabrik command, we rewrite it to a Perl code string
+      # This is to support 'run <Brik> <Command> <Args>' within multiline.
       $lines->[-1] = $self->cmd_to_code($line);
       $self->_update_prompt('.. ');
       return 1;
