@@ -672,11 +672,23 @@ sub run {
          # Example: run <Brik> <Command> $Arg1 Arg2
          if (/^(\$.*)$/) {
             $_ = eval("\$CON->_lp->{context}->{_}->{'$1'}");
+            if ($@) {
+               chomp($@);
+               $ERR = 1;
+               my $MSG = "run: Brik [$__ctx_brik] has invalid argument [$_]";
+               die("$MSG\n");
+            }
          }
          # Support passing ARRAYs or HASHs or Perl code as an Argument
          # Example: run <Brik> <Command> "[ qw(a b c) ]"
-         else {
+         elsif (/^\[.*\]$/ || /^\{.*\}$/) {
             $_ = eval($_) || $_;
+            if ($@) {
+               chomp($@);
+               $ERR = 1;
+               my $MSG = "run: Brik [$__ctx_brik] has invalid argument [$_]";
+               die("$MSG\n");
+            }
          }
       }
 
