@@ -888,7 +888,7 @@ sub run_help {
       # Help for a Command
       elsif (exists($commands{$arg1})) {
          for my $this (sort { $a cmp $b } keys %commands) {
-            return $self->log->info("$arg1 - core::shell Command, see 'help core::shell'");
+            return $self->log->info("$arg1 - core::shell Command, see 'help core::shell $arg1'");
          }
       }
       # Help for an Alias
