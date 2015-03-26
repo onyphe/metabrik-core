@@ -409,9 +409,46 @@ sub use {
 sub reuse {
    my $self = shift;
 
-   my $reused = Module::Reload->check;
-   if ($reused) {
-      $self->log->info("reuse: some modules were reused");
+   my %stat = ();
+   my @reloaded = ();
+   # Taken from Module::Reload
+   for my $entry (map { [ $_, $INC{$_} ] } keys %INC) {
+      my ($module, $file) = @$entry;
+
+      if ($file eq $INC{"Module/Reload.pm"}) {
+         next;   # Too confusing
+      }
+
+      local $^W = 0;  # Disable 'use warnings';
+      my $mtime = (stat $file)[9];
+      if (! defined($stat{$file})) {
+         $stat{$file} = $^T;
+      }
+
+      if ($mtime > $stat{$file}) {
+         delete $INC{$module};
+         eval { 
+            $SIG{__WARN__} = sub {};
+            require $module;
+         };
+         if ($@) {
+            chomp($@);
+            if ($self->debug) {
+               $self->log->error("reuse: reloading module [$module] failed: [$@]");
+            }
+            else {
+               $self->log->error("reuse: reloading module [$module] failed");
+            }
+         }
+         else {
+            push @reloaded, $module;
+         }
+      }
+      $stat{$file} = $mtime;
+   }
+
+   for (@reloaded) {
+      $self->log->verbose("reuse: module [$_] successfully reloaded");
    }
 
    return 1;

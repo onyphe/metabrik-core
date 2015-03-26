@@ -23,7 +23,6 @@ DEPENDENCIES
    Data::Dump
    Lexical::Persistence
    File::HomeDir
-   Module::Reload
    Term::Shell
    Term::ANSIColor
    Term::ReadLine::Gnu

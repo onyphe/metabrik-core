@@ -19,7 +19,6 @@ WriteMakefile(
       'Data::Dump' => 0,
       'Lexical::Persistence' => 0,
       'File::HomeDir' => 0,
-      'Module::Reload' => 0,
       'Term::Shell' => 0,
       'Term::ANSIColor' => 0,
       'Term::ReadLine::Gnu' => 0,

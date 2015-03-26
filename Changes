@@ -10,6 +10,7 @@ Revision history for Perl extension Metabrik.
    - UPDATE: core::shell: rework of help/completion scheme
    - UPDATE: core::shell: help Command rewritten to show help for Metabrik only (not Term:Shell)
    - bugfix: core::shell: use unique match to run Commands
+   - bugfix: shell::command: correctly check return value from system Command for errors
    - new: core::shell: get_help/comp_attributes and get_help/comp_commands Commands
    - new: Metabrik: brik_base_attributes, brik_inherited_attributes, brik_own_attributes Commands
    - new: Metabrik: brik_base_commands, brik_inherited_commands, brik_own_commands Commands
