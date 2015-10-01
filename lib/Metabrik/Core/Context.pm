@@ -768,7 +768,7 @@ sub save_state {
       }
 
       my $__ctx_state;
-      my $__ctx_attributes = $CON->{used}->{$__ctx_brik}->brik_properties->{attributes} || {};
+      my $__ctx_attributes = $CON->{used}->{$__ctx_brik}->brik_attributes || {};
       for my $__ctx_this (keys %$__ctx_attributes) {
          $__ctx_state->{$__ctx_this} = $CON->{used}->{$__ctx_brik}->$__ctx_this;
       }

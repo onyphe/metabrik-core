@@ -1,5 +1,12 @@
 Revision history for Perl extension Metabrik.
 
+1.10
+   - FEATURE: shell::command: use_sudo Attribute to launch sudo on executing external command
+   - new: shell::command: execute Command to use capture_mode Attribute to launch either 
+     capture or system Command
+   - bugfix: core::context: save_state to use Metabrik brik_attributes Command to correctly 
+     retrieve all Brik Attributes even those inherited
+
 1.09
    - FEATURE: core::shell/core::context: supports passing Perl code directly as Commands
               Arguments. Example: run database::sqlite create MyTable "[ qw(field1 field2) ]"
