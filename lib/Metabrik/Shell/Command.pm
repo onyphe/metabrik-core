@@ -21,6 +21,9 @@ sub brik_properties {
          capture_stderr => [ qw(0|1) ],
          capture_mode => [ qw(0|1) ],
          ignore_error => [ qw(0|1) ],
+         use_sudo => [ qw(0|1) ],
+         sudo_args => [ qw(args) ],
+         sudo_keep_env => [ qw(0|1) ],
       },
       commands => {
          system => [ qw(command) ],
@@ -43,6 +46,9 @@ sub brik_use_properties {
          capture_stderr => 1,
          capture_mode => 0,
          ignore_error => 0,
+         use_sudo => 0,
+         sudo_args => '',
+         sudo_keep_env => 1,
       },
    };
 }
@@ -83,6 +89,21 @@ sub system {
    }
 
    $command = join(' ', @toks);
+
+   if ($self->use_sudo) {
+      my @sudo = ( "sudo" );
+      if (! ref($self->sudo_args) && length($self->sudo_args)) {
+         my @args = split(/\s+/, $self->sudo_args);
+         push @sudo, @args;
+      }
+      if ($self->sudo_keep_env) {
+         push @sudo, '-E';
+      }
+      $command = join(' ', @sudo)." $command";
+      @toks = ( @sudo, @toks );
+      $self->log->verbose("system: using sudo: running [$command]");
+   }
+
    my $r = CORE::system($command);
 
    $self->debug && $self->log->debug("system: return code [$r] with status [$?]");
@@ -136,6 +157,20 @@ sub capture {
    }
 
    $command = join(' ', @toks);
+
+   if ($self->use_sudo) {
+      my @sudo = ( "sudo" );
+      if (! ref($self->sudo_args) && length($self->sudo_args)) {
+         my @args = split(/\s+/, $self->sudo_args);
+         push @sudo, @args;
+      }
+      if ($self->sudo_keep_env) {
+         push @sudo, '-E';
+      }
+      $command = join(' ', @sudo)." $command";
+      @toks = ( @sudo, @toks );
+      $self->log->verbose("capture: using sudo: running [$command]");
+   }
 
    my $out;
    my $err;
