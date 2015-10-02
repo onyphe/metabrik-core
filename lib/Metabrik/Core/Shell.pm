@@ -7,7 +7,7 @@ package Metabrik::Core::Shell;
 use strict;
 use warnings;
 
-our $VERSION = '1.09';
+our $VERSION = '1.10';
 
 use base qw(Term::Shell Metabrik);
 
