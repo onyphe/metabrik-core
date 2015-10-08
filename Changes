@@ -9,6 +9,8 @@ Revision history for Perl extension Metabrik.
    - bugfix: core::context: save_state to use Metabrik brik_attributes Command to correctly 
      retrieve all Brik Attributes even those inherited
    - bugfix: core::shell: display error on chdir() failure
+   - bugfix: Metabrik: error checking within new_from_brik_init Command
+   - bugfix: Metabrik: logging correctly on class calls to _log_*()
 
 1.09
    - FEATURE: core::shell/core::context: supports passing Perl code directly as Commands

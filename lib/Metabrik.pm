@@ -143,7 +143,7 @@ sub _log_info {
 
    chomp($msg);
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       $self->log->info($msg);
    }
    else {
@@ -161,7 +161,7 @@ sub _log_error {
 
    my $class = $self->brik_class;
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       return $self->log->error($msg, $class);
    }
    else {
@@ -179,7 +179,7 @@ sub _log_fatal {
 
    my $class = $self->brik_class;
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       return $self->log->fatal($msg, $class);
    }
    else {
@@ -197,7 +197,7 @@ sub _log_warning {
 
    my $class = $self->brik_class;
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       return $self->log->warning($msg, $class);
    }
    else {
@@ -215,7 +215,7 @@ sub _log_verbose {
 
    my $class = $self->brik_class;
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       return $self->log->verbose($msg, $class);
    }
    else {
@@ -237,7 +237,7 @@ sub _log_debug {
 
    my $class = $self->brik_class;
 
-   if (defined($self->{log})) {
+   if (ref($self) && defined($self->{log})) {
       return $self->log->debug($msg, $class);
    }
    else {
@@ -464,8 +464,10 @@ sub new_from_brik {
 sub new_from_brik_init {
    my $self = shift;
 
-   my $brik = $self->new_from_brik(@_);
-   $brik->brik_init or $self->_log_error("new_from_brik_init: brik_init failed");
+   my $brik = $self->new_from_brik(@_)
+      or return $self->_log_error("new_from_brik_init: new_from_brik failed");
+   $brik->brik_init
+      or return $self->_log_error("new_from_brik_init: brik_init failed");
 
    return $brik;
 }
