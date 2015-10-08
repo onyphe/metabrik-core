@@ -541,12 +541,14 @@ sub run_cd {
       if (! -d $dir) {
          return $self->log->error("cd: $dir: can't cd to this");
       }
-      chdir($dir);
+      chdir($dir)
+         or return $self->log->error("cd: $dir: $!");
       $self->_update_path_cwd;
    }
    else {
       #chdir($self->path_home);
-      chdir($self->{path_home});
+      chdir($self->{path_home})
+         or return $self->log->error("cd: $dir: $!");
       $self->_update_path_cwd;
    }
 
