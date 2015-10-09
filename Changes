@@ -5,6 +5,8 @@ Revision history for Perl extension Metabrik.
    - FEATURE: shell::command: file globbing enabled with capture Command
    - UPDATE: moved attributes_default() from brik_use_properties to brik_properties when 
      there is no need to use $self. It allows instanciated Attributes inheritage to work.
+   - UPDATE: shell::command: do not print STDERR when using capture Command when there is no 
+     STDERR string captured.
    - new: shell::command: execute Command to use capture_mode Attribute to launch either 
      capture or system Command
    - bugfix: core::context: save_state to use Metabrik brik_attributes Command to correctly 
