@@ -10,6 +10,12 @@ Revision history for Perl extension Metabrik.
    - bugfix: core::context: save_state to use Metabrik brik_attributes Command to correctly 
      retrieve all Brik Attributes even those inherited
    - bugfix: core::shell: display error on chdir() failure
+   - bugfix: core::shell: escapes " character when executing a multiline Perl/Metabrik Code
+             example:
+             my $test = 'root'
+             for (0..1) {
+                'run shell::command system "ls /$test"'
+             }
    - bugfix: Metabrik: error checking within new_from_brik_init Command
    - bugfix: Metabrik: logging correctly on class calls to _log_*()
 
