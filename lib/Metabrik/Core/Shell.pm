@@ -386,17 +386,18 @@ sub cmd_to_code {
    my $self = shift;
    my ($line) = @_;
 
-   while ($line =~ /^\s*'\s*(?:use|set|get|run)\s.*?'\s*$/) {
-      $self->debug && $self->log->debug("cmd_to_code: before: [$line]");
-      if ($line =~ /^\s*'\s*((?:use|set|get|run)\s.*?)\s*'\s*$/) {
-         (my $new = $1) =~ s/"/\\"/g;
-         $self->debug && $self->log->debug("cmd_to_code: new: [$new]");
-         $line = '$SHE->cmd("'.$new.'")';
-      }
-      $self->debug && $self->log->debug("cmd_to_code: after: [$line]");
+   # Example: a run Command converted to Perl Code:
+   #  'run shell::command system "echo $_"';
+   #  $SHE->cmd("run shell::command system \"echo $_\"");
 
-      $self->debug && $self->log->debug("cmd_to_code: [$line]");
+   $self->debug && $self->log->debug("cmd_to_code: before: [$line]");
+   if ($line =~ /^\s*'\s*((?:use|set|get|run)\s.*?)\s*'\s*;?\s*$/) {
+      # We have to escape " chars
+      (my $new = $1) =~ s/"/\\"/g;
+      $self->debug && $self->log->debug("cmd_to_code: new: [$new]");
+      $line = '$SHE->cmd("'.$new.'");';
    }
+   $self->debug && $self->log->debug("cmd_to_code: after: [$line]");
 
    return $line;
 }

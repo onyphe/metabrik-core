@@ -1,8 +1,9 @@
-print "Running script address::netmask\n"
+run core::log info "Running script network::address"
 
-use address::netmask
+use network::address
 
-set address::netmask subnet 192.168.0.0/24
-run address::netmask block
+set network::address subnet 192.168.0.0/24
+run network::address ipv4_list
 
+set core::shell echo 1
 $RUN

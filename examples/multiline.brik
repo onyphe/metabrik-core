@@ -1,6 +1,17 @@
-for (1..10) {
-   set core::shell echo $_
-}
+use shell::command
 
-get core::shell echo
-$GET
+set core::log level 3
+set core::shell debug 1
+
+# We have to put Metabrik Commands in '' because in multiline we switch into Perl Code
+# Using '' says to core::shell to convert the string into a Metabrik Command executable 
+# like Perl Code
+# Example:
+#  'run shell::command system "echo $_"'
+#  Is rewritten as:
+#  $SHE->cmd("run shell::command system \"echo $_\"");
+for (1..10) {
+   'run shell::command system "echo $_"'
+   'run shell::command system "echo @{[$_+1]}"'
+   'run shell::command system "echo"'
+}

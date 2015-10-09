@@ -17,11 +17,11 @@ set core::global rtimeout 20
 
 use brik::search
 use shell::history
-use www::client
+use client::www
 use file::read
 use file::write
 use file::csv
-use http::proxy
+use proxy::http
 
 my $publickey = $home."/.ssh/id_rsa.pub"
 my $privatekey = $home."/.ssh/id_rsa"

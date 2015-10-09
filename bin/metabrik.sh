@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# $Id$
+#
 
 PERL_RL=Gnu
 PAGER=less
