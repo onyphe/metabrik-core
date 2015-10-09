@@ -3,8 +3,8 @@ bin/metabrik.sh
 Build.PL
 Changes
 examples/dot-metabrik_rc-sample
-examples/multiline.brik
-examples/netmask.brik
+examples/multiline.meta
+examples/netmask.meta
 INSTALL
 lib/Metabrik.pm
 lib/Metabrik/Brik/Search.pm
