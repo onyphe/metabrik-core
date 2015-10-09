@@ -2,6 +2,7 @@ Revision history for Perl extension Metabrik.
 
 1.10
    - FEATURE: shell::command: use_sudo Attribute to launch sudo on executing external command
+   - FEATURE: shell::command: file globbing enabled with capture Command
    - UPDATE: moved attributes_default() from brik_use_properties to brik_properties when 
      there is no need to use $self. It allows instanciated Attributes inheritage to work.
    - new: shell::command: execute Command to use capture_mode Attribute to launch either 
