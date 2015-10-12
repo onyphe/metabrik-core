@@ -425,6 +425,8 @@ sub reuse {
          $stat{$file} = $^T;
       }
 
+      next unless defined($mtime);
+
       if ($mtime > $stat{$file}) {
          delete $INC{$module};
          eval { 
