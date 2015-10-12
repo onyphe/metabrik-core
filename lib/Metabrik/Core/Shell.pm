@@ -285,7 +285,7 @@ sub rl_complete {
       $self->debug && $self->log->debug("rl_complete: comp[@comp]");
 
       # If we found something and it's an alias, we complete with the original command
-      if ($self->comp_aliases && exists($self->{_aliases}{"run_".$comp[0]})) {
+      if (defined($comp[0]) && $self->comp_aliases && exists($self->{_aliases}{"run_".$comp[0]})) {
          $self->debug && $self->log->debug("rl_complete: original[".$self->{_aliases}{"run_$comp[0]"}."]");
 
          my @words = split(/\s+/, $self->{_aliases}{"run_$comp[0]"});
