@@ -40,6 +40,7 @@ sub brik_properties {
          show_inherited_commands => [ qw(0|1) ],
          show_inherited_all => [ qw(0|1) ],
          show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
+         aliases_completion => [ qw(0|1) ], # Complete aliases to show original Command
          # These are used by Term::Shell
          #path_home => [ qw(directory) ],
          #path_cwd => [ qw(directory) ],
@@ -70,6 +71,7 @@ sub brik_properties {
          show_inherited_commands => 0,
          show_inherited_all => 0,
          show_all => 0,
+         aliases_completion => 1,
       },
       commands => {
          splash => [ ],
@@ -245,7 +247,7 @@ sub AUTOLOAD {
 
    (my $command = $AUTOLOAD) =~ s/^Metabrik::Core::Shell:://;
 
-   $self->debug && $self->log->debug("command[$command] args[@args]");
+   $self->debug && $self->log->debug("AUTOLOAD: command[$command] args[@args]");
 
    #my $aliases = $self->_aliases;
    my $aliases = $self->{_aliases};
@@ -266,6 +268,46 @@ sub AUTOLOAD {
    }
 
    return 1;
+}
+
+# We overwrite inherited Term::Shell rl_complete() sub to have control
+sub rl_complete {
+   my $self = shift;
+   my ($word, $line, $start) = @_;
+
+   my @comp = ();
+
+   # If it's a command, complete 'run_':
+   if ($start == 0 || substr($line, 0, $start) =~ /^\s*$/) {
+      $self->debug && $self->log->debug("rl_complete: word[$word] start[$start] line[$line]");
+      @comp = $self->complete('', $word, $line, $start);
+
+      $self->debug && $self->log->debug("rl_complete: comp[@comp]");
+
+      # If we found something and it's an alias, we complete with the original command
+      if ($self->comp_aliases && exists($self->{_aliases}{"run_".$comp[0]})) {
+         $self->debug && $self->log->debug("rl_complete: original[".$self->{_aliases}{"run_$comp[0]"}."]");
+
+         my @words = split(/\s+/, $self->{_aliases}{"run_$comp[0]"});
+         if (exists($self->{_aliases}{"run_$words[0]"})) {
+            @comp = $self->{_aliases}{"run_".$words[0]};
+         }
+         else {
+            @comp = $self->{_aliases}{"run_$comp[0]"};
+         }
+      }
+   }
+   # If it's a subcommand, send it to any custom completion function for the
+   # function:
+   else {
+      my $command = ($self->line_parsed($line))[0];
+      $self->debug && $self->log->debug("rl_complete: send to custom completion");
+      @comp = $self->complete($command, $word, $line, $start);
+   }
+
+   $self->debug && $self->log->debug("rl_complete: return comp[@comp]");
+
+   return @comp;
 }
 
 # Converts Windows path
@@ -496,6 +538,10 @@ sub run_exit {
 }
 
 sub comp_exit {
+   my $self = shift;
+
+   $self->debug && $self->log->debug("comp_exit: true");
+
    return ();
 }
 
@@ -531,6 +577,10 @@ sub run_alias {
 }
 
 sub comp_alias {
+   my $self = shift;
+
+   $self->debug && $self->log->debug("comp_alias: true");
+
    return ();
 }
 
@@ -565,6 +615,8 @@ sub run_cd {
 sub comp_cd {
    my $self = shift;
    my ($word, $line, $start) = @_;
+
+   $self->debug && $self->log->debug("comp_cd: true");
 
    return $self->catch_comp_sub($word, $start, $line);
 }
@@ -611,6 +663,8 @@ sub comp_code {
    my $self = shift;
    my ($word, $line, $start) = @_;
 
+   $self->debug && $self->log->debug("comp_code: true");
+
    return $self->catch_comp_sub($word, $start, $line);
 }
 
@@ -643,6 +697,8 @@ sub run_use {
 sub comp_use {
    my $self = shift;
    my ($word, $line, $start) = @_;
+
+   $self->debug && $self->log->debug("comp_use: true");
 
    my $context = $self->context;
 
@@ -942,6 +998,8 @@ sub comp_help {
    my $self = shift;
    my ($word, $line, $start) = @_;
 
+   $self->debug && $self->log->debug("comp_help: true");
+
    my @words = $self->line_parsed($line);
    my $count = scalar(@words);
 
@@ -992,6 +1050,8 @@ sub run_set {
 sub comp_set {
    my $self = shift;
    my ($word, $line, $start) = @_;
+
+   $self->debug && $self->log->debug("comp_set: true");
 
    my $context = $self->context;
 
@@ -1113,6 +1173,8 @@ sub run_get {
 sub comp_get {
    my $self = shift;
 
+   $self->debug && $self->log->debug("comp_get: true");
+
    return $self->comp_set(@_);
 }
 
@@ -1141,6 +1203,8 @@ sub run_run {
 sub comp_run {
    my $self = shift;
    my ($word, $line, $start) = @_;
+
+   $self->debug && $self->log->debug("comp_run: true");
 
    my $context = $self->context;
 
@@ -1286,6 +1350,8 @@ sub catch_comp_sub {
    # Strange, we had to reverse order for $start and $line only for catch_comp() method.
    my ($word, $start, $line) = @_;
 
+   $self->debug && $self->log->debug("catch_comp_sub: true");
+
    my $context = $self->context;
 
    my $attribs = $self->term->Attribs;
@@ -1313,7 +1379,7 @@ sub catch_comp_sub {
 
       for my $this (@$variables) {
          $this =~ s/^\$//;
-         #$self->debug && $self->log->debug("variable[$this] start[$start]");
+         $self->debug && $self->log->debug("variable[$this] start[$start]");
          if ($this =~ /^$word/) {
             push @comp, $this;
          }
@@ -1330,12 +1396,12 @@ sub catch_comp_sub {
          $path = $1 || '/';
       }
 
-      #$self->debug && $self->log->debug("path[$path]");
+      $self->debug && $self->log->debug("path[$path]");
 
       my $found = $self->_file_find($path);
 
       for my $this (@{$found->{files}}, @{$found->{directories}}) {
-         #$self->debug && $self->log->debug("check[$this]");
+         $self->debug && $self->log->debug("check[$this]");
          if ($this =~ /^$word/) {
             push @comp, $this;
          }
@@ -1355,6 +1421,8 @@ sub catch_comp {
    my $self = shift;
    # Strange, we had to reverse order for $start and $line only for catch_comp() method.
    my ($word, $start, $line) = @_;
+
+   $self->debug && $self->log->debug("catch_comp: true");
 
    my $context = $self->context;
 
@@ -1383,12 +1451,17 @@ sub catch_comp {
 
       for my $this (@$variables) {
          $this =~ s/^\$//;
-         #$self->debug && $self->log->debug("variable[$this] start[$start]");
+         $self->debug && $self->log->debug("variable[$this] start[$start]");
          if ($this =~ /^$start/) {
             push @comp, $this;
          }
       }
    }
+   # If we just finished completing an alias, we return the full command
+   elsif (exists($self->{_aliases}{"run_$last"})) {
+      push @comp, $self->{_aliases}{"run_$last"};
+   }
+   # Otherwise, we complete relative filenames
    else {
       my $path = '.';
 
@@ -1404,12 +1477,14 @@ sub catch_comp {
       my $found = $self->_file_find($path);
 
       for my $this (@{$found->{files}}, @{$found->{directories}}) {
-         #$self->debug && $self->log->debug("check[$this]");
+         $self->debug && $self->log->debug("check[$this]");
          if ($this =~ /^$start/) {
             push @comp, $this;
          }
       }
    }
+
+   $self->debug && $self->log->debug("catch_comp: possible [@comp]");
 
    return @comp;
 }

@@ -18,6 +18,7 @@ my $builder = Module::Build->new(
       'IO::All' => 0,
       'Data::Dump' => 0,
       'Lexical::Persistence' => 0,
+      'Module::Reload' => 0,
       'File::HomeDir' => 0,
       'Term::Shell' => 0,
       'Term::ANSIColor' => 0,

@@ -1,6 +1,8 @@
 Revision history for Perl extension Metabrik.
 
 1.10
+   - FEATURE: core::shell: allow to complete aliases (can be disabled via
+     aliases_completion Attribute
    - FEATURE: shell::command: use_sudo Attribute to launch sudo on executing external command
    - FEATURE: shell::command: file globbing enabled with capture Command
    - UPDATE: moved attributes_default() from brik_use_properties to brik_properties when 
