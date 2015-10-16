@@ -435,7 +435,9 @@ sub cmd_to_code {
    $self->debug && $self->log->debug("cmd_to_code: before: [$line]");
    if ($line =~ /^\s*'\s*((?:use|set|get|run)\s.*?)\s*'\s*;?\s*$/) {
       # We have to escape " chars
-      (my $new = $1) =~ s/"/\\"/g;
+      (my $new = $1) =~ s{"}{\\"}g;
+      # We have to escape $ variables too so they are completed
+      $new =~ s{\$}{\\\$}g;
       $self->debug && $self->log->debug("cmd_to_code: new: [$new]");
       $line = '$SHE->cmd("'.$new.'");';
    }
