@@ -9,4 +9,3 @@ LC_ALL=en_GB.UTF-8
 export PERL_RL PAGER LC_ALL
 
 metabrik $@
-
