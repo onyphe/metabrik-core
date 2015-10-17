@@ -9,9 +9,11 @@ set core::shell debug 1
 # Example:
 #  'run shell::command system "echo $_"'
 #  Is rewritten as:
-#  $SHE->cmd("run shell::command system \"echo $_\"");
+#  $SHE->cmd("run shell::command system echo $count");
+my $count = 0;
 for (1..10) {
-   'run shell::command system "echo $_"'
-   'run shell::command system "echo @{[$_+1]}"'
-   'run shell::command system "echo"'
+   $count = $_;
+   'run shell::command system echo $count';
+   'run shell::command system echo $count+1';
+   'run shell::command system echo';
 }
