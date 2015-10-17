@@ -607,8 +607,16 @@ sub set {
          die("$MSG\n");
       }
 
-      if ($__ctx_value =~ /^(\$.*)$/) {
-         $__ctx_value = eval("\$CON->_lp->{context}->{_}->{'$1'}");
+      if ($__ctx_value =~ /^\$\w+/) {
+         eval {
+            $__ctx_value = $CON->_lp->do($__ctx_value);
+         };
+         if ($@) {
+            chomp($@);
+            $ERR = 1;
+            my $MSG = "set: Brik [$__ctx_brik] has invalid argument [$__ctx_value]";
+            die("$MSG\n");
+         }
       }
 
       $CON->{used}->{$__ctx_brik}->$__ctx_attribute($__ctx_value);
@@ -709,8 +717,10 @@ sub run {
       for (@__ctx_args) {
          # Support variable lookups like '$array' as an Argument
          # Example: run <Brik> <Command> $Arg1 Arg2
-         if (/^(\$.*)$/) {
-            $_ = eval("\$CON->_lp->{context}->{_}->{'$1'}");
+         if (/^\$\w+/) {
+            eval {
+               $_ = $CON->_lp->do($_);
+            };
             if ($@) {
                chomp($@);
                $ERR = 1;
