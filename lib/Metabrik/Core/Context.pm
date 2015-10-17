@@ -731,7 +731,9 @@ sub run {
          # Support passing ARRAYs or HASHs or Perl code as an Argument
          # Example: run <Brik> <Command> "[ qw(a b c) ]"
          elsif (/^\[.*\]$/ || /^\{.*\}$/) {
-            $_ = eval($_) || $_;
+            eval {
+               $_ = $CON->_lp->do($_);
+            };
             if ($@) {
                chomp($@);
                $ERR = 1;

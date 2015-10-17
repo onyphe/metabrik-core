@@ -1,8 +1,11 @@
 Revision history for Perl extension Metabrik.
 
 1.10
-   - FEATURE: core::shell: allows to pass complex structs arguments to run and set Commands
+   - FEATURE: core::context: allows to pass complex structs arguments to run and set Commands
      Example: run network::arp scan $info->{subnet}
+   - FEATURE: core::context: allows also to execute Perl code within an Argument of a 
+     run Command
+     Example: run client::dns ptr_lookup "[ map { @$_ } values %$RUN ]"
    - FEATURE: core::shell: allows to complete aliases (can be disabled via
      aliases_completion Attribute
    - FEATURE: shell::command: use_sudo Attribute to launch sudo on executing external command
