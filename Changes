@@ -1,6 +1,6 @@
 Revision history for Perl extension Metabrik.
 
-1.10
+1.10 Tue Oct 27 20:13:36 CET 2015
    - FEATURE: core::context: allows to pass complex structs arguments to run and set Commands
      Example: run network::arp scan $info->{subnet}
    - FEATURE: core::context: allows also to execute Perl code within an Argument of a 
@@ -28,7 +28,7 @@ Revision history for Perl extension Metabrik.
    - bugfix: Metabrik: error checking within new_from_brik_init Command
    - bugfix: Metabrik: logging correctly on class calls to _log_*()
 
-1.09
+1.09 N/A
    - FEATURE: core::shell/core::context: supports passing Perl code directly as Commands
               Arguments. Example: run database::sqlite create MyTable "[ qw(field1 field2) ]"
    - RENAME: core::shell: help_show_brik_attributes => help_show_base_attributes
