@@ -5,7 +5,7 @@ package Metabrik::Core::Context;
 use strict;
 use warnings;
 
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 use base qw(Metabrik);
 
@@ -29,6 +29,7 @@ sub brik_properties {
          available => [ ],
          is_available => [ qw(Brik) ],
          used => [ ],
+         get_used => [ qw(Brik) ],
          is_used => [ qw(Brik) ],
          not_used => [ ],
          is_not_used => [ qw(Brik) ],
@@ -490,6 +491,24 @@ sub used {
    });
 
    return $r;
+}
+
+sub get_used {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->log->error($self->brik_help_run('get_used'));
+   }
+
+   my $used = $self->used;
+
+   my $get = $used->{$brik};
+   if (! defined($get)) {
+      return $self->log->error("get_used: Brik [$brik] not used");
+   }
+
+   return $get;
 }
 
 sub is_used {
