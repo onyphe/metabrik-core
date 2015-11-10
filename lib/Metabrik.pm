@@ -83,10 +83,14 @@ sub brik_properties {
          brik_check_require_used => [ ],
          brik_check_require_binaries => [ ],
          brik_check_properties => [ ],
+         brik_has_binary => [ qw(binary) ],
+         brik_has_module => [ qw(module) ],
       },
       require_modules => { },
+      optional_modules => { },
       require_used => { },
       require_binaries => { },
+      optional_binaries => { },
    };
 }
 
@@ -292,8 +296,10 @@ sub brik_check_properties {
       attributes_default => 1,
       commands => 1,
       require_modules => 1,
+      optional_modules => 1,
       require_used => 1,
       require_binaries => 1,
+      optional_binaries => 1,
    );
    for my $key (keys %$properties) {
       if (! exists($valid_keys{$key})) {
@@ -386,8 +392,10 @@ sub brik_check_use_properties {
       attributes_default => 1,
       commands => 1,
       require_modules => 1,
+      optional_modules => 1,
       require_used => 1,
       require_binaries => 1,
+      optional_binaries => 1,
    );
    for my $key (keys %$use_properties) {
       if (! exists($valid_keys{$key})) {
@@ -774,7 +782,7 @@ sub brik_has_tag {
    my ($tag) = @_;
 
    if (! defined($tag)) {
-      return $self->_log_info($self->brik_help_run('brik_has_tag'));
+      return $self->_log_error($self->brik_help_run('brik_has_tag'));
    }
 
    my %h = map { $_ => 1 } @{$self->brik_tags};
@@ -888,7 +896,7 @@ sub brik_has_command {
    my ($command) = @_;
 
    if (! defined($command)) {
-      return $self->_log_info($self->brik_help_run('brik_has_command'));
+      return $self->_log_error($self->brik_help_run('brik_has_command'));
    }
 
    if (exists($self->brik_commands->{$command})) {
@@ -986,11 +994,45 @@ sub brik_has_attribute {
    my ($attribute) = @_;
 
    if (! defined($attribute)) {
-      return $self->_log_info($self->brik_help_run('brik_has_attribute'));
+      return $self->_log_error($self->brik_help_run('brik_has_attribute'));
    }
 
    if (exists($self->brik_attributes->{$attribute})) {
       return 1;
+   }
+
+   return 0;
+}
+
+sub brik_has_module {
+   my $self = shift;
+   my ($module) = @_;
+
+   if (! defined($module)) {
+      return $self->_log_error($self->brik_help_run('brik_has_module'));
+   }
+
+   eval("require $module;");
+   if ($@) {
+      return 0;
+   }
+
+   return 1;
+}
+
+sub brik_has_binary {
+   my $self = shift;
+   my ($binary) = @_;
+
+   if (! defined($binary)) {
+      return $self->_log_error($self->brik_help_run('brik_has_binary'));
+   }
+
+   my @path = split(':', $ENV{PATH});
+   for my $path (@path) {
+      if (-f "$path/$binary") {
+         return 1;
+      }
    }
 
    return 0;
