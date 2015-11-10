@@ -28,9 +28,19 @@ sub brik_version {
    return $VERSION.'.'.$revision;
 }
 
+sub brik_author {
+   my $self = shift;
+
+   my $author = $self->brik_properties->{author};
+
+   # Default to GomoR
+   return $author || 'GomoR <GomoR[at]metabrik.org>';
+}
+
 sub brik_properties {
    return {
       revision => '$Revision$',
+      author => 'GomoR <GomoR[at]metabrik.org>',
       tags => [ qw() ],
       attributes => {
          debug => [ qw(0|1) ],
@@ -46,6 +56,7 @@ sub brik_properties {
       },
       commands => {
          brik_version => [ ],
+         brik_author => [ ],
          brik_help_set => [ qw(Attribute) ],
          brik_help_run => [ qw(Command) ],
          brik_class => [ ],
@@ -275,6 +286,7 @@ sub brik_check_properties {
    # Check all keys are valid
    my %valid_keys = (
       revision => 1,
+      author => 1,
       tags => 1,
       attributes => 1,
       attributes_default => 1,
@@ -292,7 +304,7 @@ sub brik_check_properties {
          print("[-] brik_check_properties: brik_properties with key [$key] is not an ARRAYREF\n");
          $error++;
       }
-      elsif ($key ne 'revision' && $key ne 'tags' && ref($properties->{$key}) ne 'HASH') {
+      elsif ($key ne 'revision' && $key ne 'author' && $key ne 'tags' && ref($properties->{$key}) ne 'HASH') {
          print("[-] brik_check_properties: brik_properties with key [$key] is not a HASHREF\n");
          $error++;
       }
@@ -306,7 +318,7 @@ sub brik_check_properties {
          print("[-] brik_check_properties: brik_use_properties with key [$key] is not an ARRAYREF\n");
          $error++;
       }
-      elsif ($key ne 'revision' && $key ne 'tags' && ref($use_properties->{$key}) ne 'HASH') {
+      elsif ($key ne 'revision' && $key ne 'author' && $key ne 'tags' && ref($use_properties->{$key}) ne 'HASH') {
          print("[-] brik_check_properties: brik_use_properties with key [$key] is not a HASHREF\n");
          $error++;
       }
@@ -314,7 +326,7 @@ sub brik_check_properties {
 
    # Check HASHREFs contains pointers to ARRAYREFs
    for my $key (keys %$properties) {
-      next if ($key eq 'revision' || $key eq 'tags' || $key eq 'attributes_default');
+      next if ($key eq 'revision' || $key eq 'author' || $key eq 'tags' || $key eq 'attributes_default');
 
       for my $subkey (keys %{$properties->{$key}}) {
          if (ref($properties->{$key}->{$subkey}) ne 'ARRAY') {
@@ -324,7 +336,7 @@ sub brik_check_properties {
       }
    }
    for my $key (keys %$use_properties) {
-      next if ($key eq 'revision' || $key eq 'tags' || $key eq 'attributes_default');
+      next if ($key eq 'revision' || $key eq 'author' || $key eq 'tags' || $key eq 'attributes_default');
 
       for my $subkey (keys %{$use_properties->{$key}}) {
          if (ref($use_properties->{$key}->{$subkey}) ne 'ARRAY') {
@@ -368,6 +380,7 @@ sub brik_check_use_properties {
    # Check all keys are valid
    my %valid_keys = (
       revision => 1,
+      author => 1,
       tags => 1,
       attributes => 1,
       attributes_default => 1,
@@ -385,7 +398,7 @@ sub brik_check_use_properties {
          print("[-] brik_check_use_properties: brik_use_properties with key [$key] is not an ARRAYREF\n");
          $error++;
       }
-      elsif ($key ne 'revision' && $key ne 'tags' && ref($use_properties->{$key}) ne 'HASH') {
+      elsif ($key ne 'revision' && $key ne 'author' && $key ne 'tags' && ref($use_properties->{$key}) ne 'HASH') {
          print("[-] brik_check_use_properties: brik_use_properties with key [$key] is not a HASHREF\n");
          $error++;
       }
@@ -393,7 +406,7 @@ sub brik_check_use_properties {
 
    # Check HASHREFs contains pointers to ARRAYREFs
    for my $key (keys %$use_properties) {
-      next if ($key eq 'revision' || $key eq 'tags' || $key eq 'attributes_default');
+      next if ($key eq 'revision' || $key ne 'author' || $key eq 'tags' || $key eq 'attributes_default');
 
       for my $subkey (keys %{$use_properties->{$key}}) {
          if (ref($use_properties->{$key}->{$subkey}) ne 'ARRAY') {

@@ -24,12 +24,12 @@ sub brik_properties {
          level => 1,
       },
       commands => {
-         info => [ qw(string) ],
-         verbose => [ qw(string) ],
-         warning => [ qw(string) ],
-         error => [ qw(string) ],
-         fatal => [ qw(string) ],
-         debug => [ qw(string) ],
+         info => [ qw(string caller|OPTIONAL) ],
+         verbose => [ qw(string caller|OPTIONAL) ],
+         warning => [ qw(string caller|OPTIONAL) ],
+         error => [ qw(string caller|OPTIONAL) ],
+         fatal => [ qw(string caller|OPTIONAL) ],
+         debug => [ qw(string caller|OPTIONAL) ],
       },
       require_modules => {
          'Term::ANSIColor' => [ ],
