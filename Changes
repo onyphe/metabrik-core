@@ -1,11 +1,15 @@
 Revision history for Perl extension Metabrik.
 
 1.11
-   - FEATURE: Metabrik: brik_author Command
+   - FEATURE: core::shell: auto prefix by run if entered command is a used Brik
+              example:          perl::module install Class::Gomor
+              is equivalent to: run perl::module install Class::Gomor
+   - FEATURE: Metabrik: brik_author and brik_license Commands and Properties
+   - FEATURE: Metabrik: auto tagging of Briks based on Repository, Category and Name
    - FEATURE: Metabrik: optional_modules and optional_binaries Properties.
               Also added brik_has_binary and brik_has_module Commands.
    - new: core::context: get_used Command to return a reference to a used Brik
-   - new: Metabrik: brik_author Command
+   - new: brik::search: command Command to search a Brik by existing Commands
    - bugfix: shell::script: allow blank lines and comments
    - bugfix: Metabrik: return error and not info on bad usage for some brik_has_* Commands
 

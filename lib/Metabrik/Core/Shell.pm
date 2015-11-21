@@ -270,6 +270,20 @@ sub AUTOLOAD {
    return 1;
 }
 
+sub _word_may_be_brik {
+   my $self = shift;
+   my ($word) = @_;
+
+   my $context = $self->context;
+   my $used = $context->used;
+
+   for (keys %$used) {
+      return $used if /^$word/;
+   }
+
+   return 0;
+}
+
 # We overwrite inherited Term::Shell rl_complete() sub to have control
 sub rl_complete {
    my $self = shift;
@@ -277,8 +291,10 @@ sub rl_complete {
 
    my @comp = ();
 
-   # If it's a command, complete 'run_':
-   if ($start == 0 || substr($line, 0, $start) =~ /^\s*$/) {
+   # If it's a command, complete 'run_'.
+   # For that, command must not be blank and not start with '/'.
+   if (($start == 0 || substr($line, 0, $start) =~ /^\s*$/)
+   &&  ($word !~ m{/})) {
       $self->debug && $self->log->debug("rl_complete: word[$word] start[$start] line[$line]");
       @comp = $self->complete('', $word, $line, $start);
 
@@ -294,6 +310,12 @@ sub rl_complete {
          }
          else {
             @comp = $self->{_aliases}{"run_$comp[0]"};
+         }
+      }
+      # Or maybe it's a Brik, and we want to prefix it automagically with 'run' Command
+      elsif (my $available = $self->_word_may_be_brik($word)) {
+         for (keys %$available) {
+            push @comp, "run $_" if /^$word/;
          }
       }
    }
@@ -413,7 +435,7 @@ sub cmd_is_complete {
 
    my $document = PPI::Document->new(\$string);
    if (! $document) {
-      return $self->log->error("cmd_complete: cannot parse Perl string");
+      return $self->log->error("cmd_is_complete: cannot parse Perl string");
    }
 
    # Courtesy of Perl::Shell complete() function
@@ -1283,6 +1305,14 @@ sub comp_run {
 sub catch_run {
    my $self = shift;
    my (@args) = @_;
+
+   $self->debug && $self->log->debug("catch_run: args [@args]");
+
+   # If it starts with a '/', we really want to 'run shell::command system'
+   if (defined($args[0]) && $args[0] =~ m{/}) {
+      my $cmd = "run shell::command system";
+      return $self->cmd(join(' ', $cmd, @args));
+   }
 
    # Default to execute Perl commands
    return $self->run_code(@args);
