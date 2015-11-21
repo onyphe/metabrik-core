@@ -558,6 +558,9 @@ sub run_exit {
       $context->run('shell::history', 'write');
    } 
 
+   # Global clean-up
+   $context->brik_fini;
+
    return $self->stoploop;
 }
 
@@ -1212,9 +1215,21 @@ sub run_run {
       return $self->log->info("run <brik> <command> [ <arg1> <arg2> .. <argN> ]");
    }
 
-   my $r = $context->run($brik, $command, @args);
-   if (! defined($r)) {
-      return $self->log->error("run: unable to execute Command [$command] for Brik [$brik]");
+   my $r;
+   {
+      local $SIG{INT} = sub {
+         $self->debug && $self->log->debug("run_run: SIG received");
+         if ($self->global->exit_on_sigint) {
+            $self->debug && $self->log->debug("run_run: exiting");
+            $self->run_exit;
+         }
+         die("interrupted by user\n");
+      };
+
+      $r = $context->run($brik, $command, @args);
+      if (! defined($r)) {
+         return $self->log->error("run: unable to execute Command [$command] for Brik [$brik]");
+      }
    }
 
    if ($self->echo) {

@@ -847,6 +847,18 @@ sub restore_state {
    return $r;
 }
 
+sub brik_fini {
+   my $self = shift;
+
+   my $used = $self->used;
+   for my $brik (keys %$used) {
+      next if $brik eq 'core::context'; # Avoid recursive loop
+      $used->{$brik}->brik_fini;
+   }
+
+   return 1;
+}
+
 1;
 
 __END__

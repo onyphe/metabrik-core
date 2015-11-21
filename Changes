@@ -11,7 +11,9 @@ Revision history for Perl extension Metabrik.
    - new: core::context: get_used Command to return a reference to a used Brik
    - new: brik::search: command Command to search a Brik by existing Commands
    - bugfix: shell::script: allow blank lines and comments
+   - bugfix: core::shell: correctly stop a run Command on SIGINT
    - bugfix: Metabrik: return error and not info on bad usage for some brik_has_* Commands
+   - bugfix: Metabrik: correctly call brik_fini on core::context exiting
 
 1.10 Tue Oct 27 20:13:36 CET 2015
    - FEATURE: core::context: allows to pass complex structs arguments to run and set Commands

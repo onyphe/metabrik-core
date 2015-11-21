@@ -1103,17 +1103,12 @@ sub brik_self {
    return $self;
 }
 
-# fini() is run at DESTROY time
+# brik_fini Command is run when core::shell run_exit Command is called
+# It itselves call core::context brik_fini Command which loops over all used Briks
 sub brik_fini {
    my $self = shift;
 
    return $self;
-}
-
-sub DESTROY {
-   my $self = shift;
-
-   return $self->brik_fini(@_);
 }
 
 1;
