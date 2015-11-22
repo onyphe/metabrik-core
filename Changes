@@ -1,6 +1,6 @@
 Revision history for Perl extension Metabrik.
 
-1.11
+1.11 Sun Nov 22 17:46:43 CET 2015
    - FEATURE: core::shell: auto prefix by run if entered command is a used Brik
               example:          perl::module install Class::Gomor
               is equivalent to: run perl::module install Class::Gomor
