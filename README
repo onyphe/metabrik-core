@@ -1,6 +1,18 @@
 Metabrik
 ========
 
+   The Metabrik Platform bind togother a classic Shell with a Perl interpreter as
+   a REPL (Read-Eval-Print-Loop) and a ton of small  Briks.  Briks  are  reusable
+   components each performing a specific task. You  chain  Briks  together  using
+   Perl variables, they are used to pass output of a Brik Command  as  input  for
+   another Brik Command.
+
+   By chaining Briks togother, you easily create new powerful  tools,  just  like
+   the UNIX pipe.
+
+   Briks also share the same syntax so you don't have to scratch your  head  each
+   time you use yet-another-tool, and they also feature integrated help.
+
    To know more: http://www.metabrik.org/blog/
 
 INSTALLATION
