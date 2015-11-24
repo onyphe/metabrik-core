@@ -87,7 +87,10 @@ sub brik_properties {
          brik_inherited_attributes => [ ],  # Return only inherited Attributes
          brik_own_attributes => [ ],        # Return only own Attributes
          brik_has_attribute => [ qw(Attribute) ],
+         brik_preinit => [ qw(Arguments) ],
+         brik_init => [ qw(Arguments) ],
          brik_self => [ ],
+         brik_fini => [ qw(Arguments) ],
          brik_create_attributes => [ ],
          brik_set_default_attributes => [ ],
          brik_check_require_modules => [ ],
@@ -828,7 +831,7 @@ sub brik_commands {
             next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
             next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
             next if $command =~ /^_/; # Internal stuff
-            next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+            next if $command =~ /^(?:a|b|import|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
 
             #$self->_log_info("command[$command]");
 
@@ -850,7 +853,7 @@ sub brik_base_commands {
       next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
       next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
       next if $command =~ /^_/; # Internal stuff
-      next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+      next if $command =~ /^(?:a|b|import|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
 
       #$self->_log_info("command[$command]");
 
@@ -877,7 +880,7 @@ sub brik_inherited_commands {
             next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
             next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
             next if $command =~ /^_/; # Internal stuff
-            next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+            next if $command =~ /^(?:a|b|import|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
 
             $commands->{$command} = $class->brik_properties->{commands}->{$command};
          }
@@ -898,7 +901,7 @@ sub brik_own_commands {
          next unless $command =~ /^[a-z]/; # Brik Commands always begin with a minuscule
          next if $command =~ /^cg[A-Z]/; # Class::Gomor stuff
          next if $command =~ /^_/; # Internal stuff
-         next if $command =~ /^(?:a|b|import|brik_init|brik_preinit|brik_fini|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
+         next if $command =~ /^(?:a|b|import|new|SUPER::|BEGIN|isa|can|EXPORT|AA|AS|ISA|DESTROY|__ANON__)$/; # Perl stuff
 
          #$self->_log_info("command[$command]");
 
