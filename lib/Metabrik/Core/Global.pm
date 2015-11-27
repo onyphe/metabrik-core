@@ -39,6 +39,7 @@ sub brik_properties {
          auto_install_on_require => [ qw(0|1) ],
          exit_on_sigint => [ qw(0|1) ],
          pid => [ qw(metabrik_main_pid) ],
+         repository => [ qw(repository) ],
       },
       attributes_default => {
          device => 'eth0',
