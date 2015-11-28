@@ -4,6 +4,8 @@ Revision history for Perl extension Metabrik.
    - FEATURE: core::global: repository Attribute to store default Briks repository
    - UPDATE: Metabrik: brik_preinit, brik_init and brik_fini are now official Commands
    - bugfix: shell::rc, shell::script: add a trailing whitespace on multilines
+   - new: perl::module: use_test Attribute to activate test on module installation
+   - update: perl::module: install correctly supports ARRAY of modules to install
 
 1.11 Sun Nov 22 17:46:43 CET 2015
    - FEATURE: core::shell: auto prefix by run if entered command is a used Brik
