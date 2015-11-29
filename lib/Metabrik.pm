@@ -99,6 +99,8 @@ sub brik_properties {
          brik_check_properties => [ ],
          brik_has_binary => [ qw(binary) ],
          brik_has_module => [ qw(module) ],
+         brik_help_run_undef_arg => [ qw(Command Arg) ],
+         brik_help_run_invalid_arg => [ qw(Command Arg valid_list) ],
       },
       require_modules => { },
       optional_modules => { },
@@ -1112,6 +1114,40 @@ sub brik_fini {
    my $self = shift;
 
    return $self;
+}
+
+sub brik_help_run_undef_arg {
+   my $self = shift;
+   my ($command, $argument) = @_;
+
+   if (! defined($argument)) {
+      return $self->log->error($self->brik_help_run($command));
+   }
+
+   return 1;
+}
+
+sub brik_help_run_invalid_arg {
+   my $self = shift;
+   my ($command, $argument, @values) = @_;
+
+   my $ref = ref($argument);
+   my $values = { map { $_ => 1 } @values };
+   if (! exists($values->{$ref})) {
+      my $ok = '';
+      for my $v (@values) {
+         if (! length($v)) {
+            $ok .= "SCALAR, ";
+         }
+         else {
+            $ok .= "$v, ";
+         }
+      }
+      $ok =~ s/, $//;
+      return $self->log->error("$command: invalid Argument [$argument], must be from [$ok]");
+   }
+
+   return $ref;
 }
 
 1;
