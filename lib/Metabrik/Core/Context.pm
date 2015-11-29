@@ -17,6 +17,7 @@ sub brik_properties {
          _lp => [ qw(INTERNAL) ],
       },
       commands => {
+         new_brik_run => [ qw(Brik Command Args) ],
          use => [ qw(Brik) ],
          set => [ qw(Brik Attribute Value) ],
          get => [ qw(Brik Attribute) ],
@@ -39,8 +40,9 @@ sub brik_properties {
          restore_state => [ qw(Brik) ],
       },
       require_modules => {
-         'Lexical::Persistence' => [ ],
+         'Data::Dump' => [ qw(dump) ],
          'File::Find' => [ ],
+         'Lexical::Persistence' => [ ],
          'Module::Reload' => [ ],
          'Metabrik::Core::Global' => [ ],
          'Metabrik::Core::Log' => [ ],
@@ -149,6 +151,22 @@ sub new {
    }
 
    return $self->brik_preinit;
+}
+
+sub new_brik_run {
+   my $self = shift;
+   my ($brik, $command, @args) = @_;
+
+   my $con = Metabrik::Core::Context->new or return;
+
+   $con->use($brik) or return;
+   my $data = $con->run($brik, $command, @args) or return;
+   $con->brik_fini;
+
+   # Compatibility with file::dump Brik
+   print Data::Dump::dump($data)."\n";
+
+   return $con;
 }
 
 sub brik_init {
@@ -626,7 +644,24 @@ sub set {
          die("$MSG\n");
       }
 
-      if ($__ctx_value =~ /^\$\w+/) {
+      # Support variable lookups like '$array' as an Argument
+      # Example: set <Brik> <Attribute> $Arg
+      if ($__ctx_value =~ /^\$\w+/ || $__ctx_value =~ /^\@\$\w+/
+      ||  $__ctx_value =~ /^\@\w+/ || $__ctx_value =~ /^\%\$\w+/
+      ||  $__ctx_value =~ /^\%\w+/) {
+         eval {
+            $__ctx_value = $CON->_lp->do($__ctx_value);
+         };
+         if ($@) {
+            chomp($@);
+            $ERR = 1;
+            my $MSG = "set: Brik [$__ctx_brik] has invalid argument [$__ctx_value]";
+            die("$MSG\n");
+         }
+      }
+      # Support passing ARRAYs or HASHs or Perl code as an Argument
+      # Example: set <Brik> <Attribute> "[ qw(a b c) ]"
+      elsif ($__ctx_value =~ /^\[.*\]$/ || $__ctx_value =~ /^\{.*\}$/) {
          eval {
             $__ctx_value = $CON->_lp->do($__ctx_value);
          };
@@ -736,7 +771,7 @@ sub run {
       for (@__ctx_args) {
          # Support variable lookups like '$array' as an Argument
          # Example: run <Brik> <Command> $Arg1 Arg2
-         if (/^\$\w+/) {
+         if (/^\$\w+/ || /^\@\$\w+/ || /^\@\w+/ || /^\%\$\w+/ || /^\%\w+/) {
             eval {
                $_ = $CON->_lp->do($_);
             };
