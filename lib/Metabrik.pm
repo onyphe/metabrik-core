@@ -101,6 +101,9 @@ sub brik_properties {
          brik_has_module => [ qw(module) ],
          brik_help_run_undef_arg => [ qw(Command Arg) ],
          brik_help_run_invalid_arg => [ qw(Command Arg valid_list) ],
+         brik_help_run_empty_array_arg => [ qw(Command Arg) ],
+         brik_help_run_file_not_found => [ qw(Command Arg) ],
+         brik_help_run_directory_not_found => [ qw(Command Arg) ],
       },
       require_modules => { },
       optional_modules => { },
@@ -1148,6 +1151,39 @@ sub brik_help_run_invalid_arg {
    }
 
    return $ref;
+}
+
+sub brik_help_run_empty_array_arg {
+   my $self = shift;
+   my ($command, $argument) = @_;
+
+   if (@$argument <= 0) {
+      return $self->log->error("$command: ARRAY Argument [$argument] is empty");
+   }
+
+   return 1;
+}
+
+sub brik_help_run_file_not_found {
+   my $self = shift;
+   my ($command, $argument) = @_;
+
+   if (! -f $argument) {
+      return $self->log->error("$command: file Argument [$argument] not found");
+   }
+
+   return 1;
+}
+
+sub brik_help_run_directory_not_found { 
+   my $self = shift;
+   my ($command, $argument) = @_;
+
+   if (! -d $argument) {
+      return $self->log->error("$command: directory Argument [$argument] not found"); 
+   }
+
+   return 1;
 }
 
 1;
