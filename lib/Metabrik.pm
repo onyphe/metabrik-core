@@ -1134,19 +1134,10 @@ sub brik_help_run_invalid_arg {
    my $self = shift;
    my ($command, $argument, @values) = @_;
 
-   my $ref = ref($argument);
+   my $ref = ref($argument) || 'SCALAR';
    my $values = { map { $_ => 1 } @values };
    if (! exists($values->{$ref})) {
-      my $ok = '';
-      for my $v (@values) {
-         if (! length($v)) {
-            $ok .= "SCALAR, ";
-         }
-         else {
-            $ok .= "$v, ";
-         }
-      }
-      $ok =~ s/, $//;
+      my $ok = join(', ', @values);
       return $self->log->error("$command: invalid Argument [$argument], must be from [$ok]");
    }
 
