@@ -12,7 +12,7 @@ use base qw(Metabrik);
 sub brik_properties {
    return {
       revision => '$Revision$',
-      tags => [ qw(core context main) ],
+      tags => [ qw(main core) ],
       attributes => {
          _lp => [ qw(INTERNAL) ],
       },

@@ -16,7 +16,7 @@ use IO::All;
 sub brik_properties {
    return {
       revision => '$Revision$',
-      tags => [ qw(core main shell) ],
+      tags => [ qw(main core) ],
       attributes => {
          echo => [ qw(0|1) ],
          help_show_base_attributes => [ qw(0|1) ],

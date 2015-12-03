@@ -51,7 +51,7 @@ sub brik_properties {
       revision => '$Revision$',
       author => 'GomoR <GomoR[at]metabrik.org>',
       license => 'http://opensource.org/licenses/BSD-3-Clause',
-      tags => [ qw() ],
+      tags => [ ],
       attributes => {
          debug => [ qw(0|1) ],
          init_done => [ qw(0|1) ],
