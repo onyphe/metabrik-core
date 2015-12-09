@@ -582,14 +582,14 @@ sub run_alias {
    if (! defined($alias)) {
       for my $this (sort { $a cmp $b } keys %$aliases) {
          ($alias = $this) =~ s/^run_//;
-         $self->log->info(sprintf("%-10s \"%s\"", $alias, $aliases->{$this}));
+         printf("alias %-10s \"%s\"\n", $alias, $aliases->{$this});
       }
 
       return 1;
    }
    elsif (length($alias) && @cmd == 0) {
       $alias =~ s/^run_//;
-      $self->log->info(sprintf("%-10s \"%s\"", $alias, $aliases->{"run_$alias"}));
+      printf("alias %-10s \"%s\"\n", $alias, $aliases->{"run_$alias"});
 
       return 1;
    }
