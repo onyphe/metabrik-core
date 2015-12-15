@@ -1,15 +1,16 @@
 Revision history for Perl extension Metabrik.
 
-1.12
+1.20
    - FEATURE: core::context: allow one-liners with a Brik Command. Example:
      perl -MMetabrik::Core::Context -e 'Metabrik::Core::Context->new_brik_run("client::dns", "mx_lookup", "gmail.com")'
    - FEATURE: core::context: allow to pass Code, ARRAY or HASH as Argument to set Command
    - FEATURE: core::global: repository Attribute to store default Briks repository
+   - FEATURE: autoupdate: with with brik::tool from Repository
    - UPDATE: Metabrik: brik_preinit, brik_init and brik_fini are now official Commands
-   - new: perl::module: use_test Attribute to activate test on module installation
    - new: Metabrik: brik_help_run_undef_arg, brik_help_run_invalid_arg, brik_help_run_empty_array_arg, brik_help_run_file_not_found and brik_help_run_directory_not_found Commands
-   - bugfix: shell::rc, shell::script: add a trailing whitespace on multilines
+   - new: perl::module: use_test Attribute to activate test on module installation
    - update: perl::module: install correctly supports ARRAY of modules to install
+   - bugfix: shell::rc, shell::script: add a trailing whitespace on multilines
 
 1.11 Sun Nov 22 17:46:43 CET 2015
    - FEATURE: core::shell: auto prefix by run if entered command is a used Brik

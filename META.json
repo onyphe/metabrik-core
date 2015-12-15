@@ -42,45 +42,45 @@
    "provides" : {
       "Metabrik" : {
          "file" : "lib/Metabrik.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Brik::Search" : {
          "file" : "lib/Metabrik/Brik/Search.pm"
       },
       "Metabrik::Core::Context" : {
          "file" : "lib/Metabrik/Core/Context.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Core::Global" : {
          "file" : "lib/Metabrik/Core/Global.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Core::Log" : {
          "file" : "lib/Metabrik/Core/Log.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Core::Shell" : {
          "file" : "lib/Metabrik/Core/Shell.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Perl::Module" : {
          "file" : "lib/Metabrik/Perl/Module.pm"
       },
       "Metabrik::Shell::Command" : {
          "file" : "lib/Metabrik/Shell/Command.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Shell::History" : {
          "file" : "lib/Metabrik/Shell/History.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Shell::Rc" : {
          "file" : "lib/Metabrik/Shell/Rc.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       },
       "Metabrik::Shell::Script" : {
          "file" : "lib/Metabrik/Shell/Script.pm",
-         "version" : "1.12"
+         "version" : "1.20"
       }
    },
    "release_status" : "stable",
@@ -89,5 +89,5 @@
          "http://opensource.org/licenses/BSD-3-Clause"
       ]
    },
-   "version" : "1.12"
+   "version" : "1.20"
 }
