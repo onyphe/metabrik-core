@@ -7,17 +7,11 @@ examples/dot-metabrik_rc-sample
 examples/multiline.meta
 examples/netmask.meta
 INSTALL
-lib/Metabrik/Brik/Search.pm
 lib/Metabrik/Core/Context.pm
 lib/Metabrik/Core/Global.pm
 lib/Metabrik/Core/Log.pm
 lib/Metabrik/Core/Shell.pm
-lib/Metabrik/Perl/Module.pm
 lib/Metabrik.pm
-lib/Metabrik/Shell/Command.pm
-lib/Metabrik/Shell/History.pm
-lib/Metabrik/Shell/Rc.pm
-lib/Metabrik/Shell/Script.pm
 LICENSE
 Makefile.PL
 MANIFEST
@@ -25,4 +19,5 @@ META.json
 META.yml
 README
 t/01-use.t
-t/02-use-briks.t
+t/02-pod-coverage.t
+t/03-test-pod.t
