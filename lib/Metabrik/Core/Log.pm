@@ -175,6 +175,52 @@ __END__
 
 Metabrik::Core::Log - core::log Brik
 
+=head1 SYNOPSIS
+
+   use Metabrik::Core::Log;
+
+   my $LOG = Metabrik::Core::Log->new;
+
+=head1 DESCRIPTION
+
+This Brik is the default logging mechanism: output on console. You could write a different logging Brik as long as it respects the API as described in the B<METHODS> paragraph below. You don't need to use this Brik directly. It is auto-loaded by B<core::context> Brik and is stored in its B<log> Attribute.
+
+=head1 ATTRIBUTES
+
+At B<The Metabrik Shell>, just type:
+
+L<get core::log>
+
+=head1 COMMANDS
+
+At B<The Metabrik Shell>, just type:
+
+L<help core::log>
+
+=head1 METHODS
+
+=over 4
+
+=item B<brik_properties>
+
+=item B<debug>
+
+=item B<error>
+
+=item B<fatal>
+
+=item B<info>
+
+=item B<verbose>
+
+=item B<warning>
+
+=back
+
+=head1 SEE ALSO
+
+L<Metabrik>
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2014-2015, Patrice E<lt>GomoRE<gt> Auffret

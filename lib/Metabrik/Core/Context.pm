@@ -902,6 +902,92 @@ __END__
 
 Metabrik::Core::Context - core::context Brik
 
+=head1 SYNOPSIS
+
+   use Metabrik::Core::Context;   
+
+   my $CON = Metabrik::Core::Context->new or die("core::context");
+
+=head1 DESCRIPTION
+
+This Brik keeps track of everything that happens within B<Metabrik>. That includes persistence of Perl variables and loaded Briks along with their set Attributes for instance.
+
+This is the only Brik that is mandatory to B<use> when writing a Tool, and it will auto-load B<core::log>, B<core::global> and B<core::shell> for you. When these Briks are loaded from B<core::context>, some global variables are set as pointers to them: B<$CON>, B<$GLO>, B<$LOG>, and B<$SHE> to point to respectively B<core::context>, B<core::global>, B<core::log> and B<core::shell> Briks.
+
+=head1 ATTRIBUTES
+
+At B<The Metabrik Shell>, just type:
+
+L<get core::context>
+
+=head1 COMMANDS
+
+At B<The Metabrik Shell>, just type:
+
+L<help core::context>
+
+=head1 METHODS
+
+=over 4
+
+=item B<brik_properties>
+
+=item B<new>
+
+=item B<new_brik_run>
+
+=item B<brik_init>
+
+=item B<available>
+
+=item B<call>
+
+=item B<do>
+
+=item B<find_available>
+
+=item B<get>
+
+=item B<get_used>
+
+=item B<is_available>
+
+=item B<is_not_used>
+
+=item B<is_used>
+
+=item B<log>
+
+=item B<not_used>
+
+=item B<restore_state>
+
+=item B<reuse>
+
+=item B<run>
+
+=item B<save_state>
+
+=item B<set>
+
+=item B<status>
+
+=item B<update_available>
+
+=item B<use>
+
+=item B<used>
+
+=item B<variables>
+
+=item B<brik_fini>
+
+=back
+
+=head1 SEE ALSO
+
+L<Metabrik>
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2014-2015, Patrice E<lt>GomoRE<gt> Auffret

@@ -1321,6 +1321,8 @@ sub catch_run {
    my $self = shift;
    my (@args) = @_;
 
+   my $context = $self->context;
+
    $self->debug && $self->log->debug("catch_run: args [@args]");
 
    # If it starts with a '/', we really want to 'run shell::command system'
@@ -1545,6 +1547,120 @@ __END__
 =head1 NAME
 
 Metabrik::Core::Shell - core::shell Brik
+
+=head1 SYNOPSIS
+
+   use Metabrik::Core::Shell;
+
+   my $SHE = Metabrik::Core::Shell->new;
+
+=head1 DESCRIPTION 
+
+This Brik is B<The Metabrik Shell>, where you will be able to play with B<use>, B<set>, B<get> and B<run> Commands from available Briks. You don't need to use this Brik directly. It is auto-loaded by B<core::context> Brik and is stored in its B<shell> Attribute.
+
+=head1 ATTRIBUTES
+
+At B<The Metabrik Shell>, just type:
+
+L<get core::shell>
+
+=head1 COMMANDS
+
+At B<The Metabrik Shell>, just type:
+
+L<help core::shell>
+
+=head1 METHODS
+
+=over 4
+
+=item B<brik_properties>
+
+=item B<brik_init>
+
+=item B<catch_comp>
+
+=item B<catch_comp_sub>
+
+=item B<catch_run>
+
+=item B<cmd_is_complete>
+
+=item B<cmd_to_code>
+
+=item B<cmdloop>
+
+=item B<comp_alias>
+
+=item B<comp_cd>
+
+=item B<comp_code>
+
+=item B<comp_exit>
+
+=item B<comp_get>
+
+=item B<comp_help>
+
+=item B<comp_run>
+
+=item B<comp_set>
+
+=item B<comp_use>
+
+=item B<get_available_help>
+
+=item B<get_comp_attributes>
+
+=item B<get_comp_commands>
+
+=item B<get_help_attributes>
+
+=item B<get_help_commands>
+
+=back
+
+=head1 PRIVATE METHODS
+
+=over 4
+
+=item B<new>
+
+=item B<init>
+
+=item B<splash>
+
+=item B<process_line>
+
+=item B<pwd>
+
+=item B<prompt_str>
+
+=item B<rl_complete>
+
+=item B<run_alias>
+
+=item B<run_cd>
+
+=item B<run_code>
+
+=item B<run_exit>
+
+=item B<run_get>
+
+=item B<run_help>
+
+=item B<run_run>
+
+=item B<run_set>
+
+=item B<run_use>
+
+=back
+
+=head1 SEE ALSO
+
+L<Metabrik>
 
 =head1 COPYRIGHT AND LICENSE
 

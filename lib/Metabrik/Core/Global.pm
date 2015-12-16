@@ -91,6 +91,46 @@ __END__
 
 Metabrik::Core::Global - core::global Brik
 
+=head1 SYNOPSIS
+
+   use Metabrik::Core::Global;
+
+   my $GLO = Metabrik::Core::Global->new;
+
+=head1 DESCRIPTION
+
+This Brik holds some global Attributes like timeout values, paths or default network interface. You don't need to use this Brik directly. It is auto-loaded by B<core::context> Brik and is stored in its B<global> Attribute.
+
+=head1 ATTRIBUTES
+
+At B<The Metabrik Shell>, just type:
+
+L<get core::global>
+
+=head1 COMMANDS
+
+At B<The Metabrik Shell>, just type:
+
+L<help core::global>
+
+=head1 METHODS
+
+=over 4
+
+=item B<brik_properties>
+
+Class Properties for the Brik. See B<Metabrik>.
+
+=item B<brik_use_properties>
+
+Instanciated Properties when the Brik is first used. See B<use> Command.
+
+=back
+
+=head1 SEE ALSO
+
+L<Metabrik>
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2014-2015, Patrice E<lt>GomoRE<gt> Auffret

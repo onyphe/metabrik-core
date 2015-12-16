@@ -1185,6 +1185,126 @@ __END__
 
 Metabrik - There is Brik for that.
 
+=head1 SYNOPSIS
+
+   use base qw(Metabrik);
+
+=head1 DESCRIPTION
+
+This is the B<Metabrik> Superclass. Every Brik derives from this one at the very least.
+
+=head1 ATTRIBUTES
+
+At B<The Metabrik Shell>, just type:
+
+L<get core::global>
+
+=head1 COMMANDS
+
+At B<The Metabrik Shell>, just type:
+
+L<help core::global>
+
+=head1 METHODS
+
+=over 4
+
+=item B<brik_properties>
+
+=item B<brik_use_properties>
+
+=item B<new>
+
+=item B<new_from_brik>
+
+=item B<new_from_brik_init>
+
+=item B<brik_self>
+
+=item B<brik_preinit>
+
+=item B<brik_init>
+
+=item B<brik_attributes>
+
+=item B<brik_author>
+
+=item B<brik_category>
+
+=item B<brik_class>
+
+=item B<brik_classes>
+
+=item B<brik_commands>
+
+=item B<brik_license>
+
+=item B<brik_name>
+
+=item B<brik_tags>
+
+=item B<brik_version>
+
+=item B<brik_base_attributes>
+
+=item B<brik_base_commands>
+
+=item B<brik_check_properties>
+
+=item B<brik_check_require_binaries>
+
+=item B<brik_check_require_modules>
+
+=item B<brik_check_require_used>
+
+=item B<brik_check_use_properties>
+
+=item B<brik_create_attributes>
+
+=item B<brik_has_attribute>
+
+=item B<brik_has_binary>
+
+=item B<brik_has_command>
+
+=item B<brik_has_module>
+
+=item B<brik_has_tag>
+
+=item B<brik_help_run>
+
+=item B<brik_help_run_directory_not_found>
+
+=item B<brik_help_run_empty_array_arg>
+
+=item B<brik_help_run_file_not_found>
+
+=item B<brik_help_run_invalid_arg>
+
+=item B<brik_help_run_undef_arg>
+
+=item B<brik_help_set>
+
+=item B<brik_inherited_attributes>
+
+=item B<brik_inherited_commands>
+
+=item B<brik_own_attributes>
+
+=item B<brik_own_commands>
+
+=item B<brik_repository>
+
+=item B<brik_set_default_attributes>
+
+=item B<brik_fini>
+
+=back
+
+=head1 SEE ALSO
+
+L<Metabrik>
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (c) 2014-2015, Patrice E<lt>GomoRE<gt> Auffret

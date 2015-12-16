@@ -6,6 +6,8 @@ Revision history for Perl extension Metabrik.
    - FEATURE: core::context: allow to pass Code, ARRAY or HASH as Argument to set Command
    - FEATURE: core::global: repository Attribute to store default Briks repository
    - FEATURE: autoupdate: with with brik::tool from Repository
+   - FEATURE: pod: most of the documentation is written
+   - UPDATE: Metabrik: only core::* Briks now, all others moved to Repository
    - UPDATE: Metabrik: brik_preinit, brik_init and brik_fini are now official Commands
    - new: Metabrik: brik_help_run_undef_arg, brik_help_run_invalid_arg, brik_help_run_empty_array_arg, brik_help_run_file_not_found and brik_help_run_directory_not_found Commands
    - new: perl::module: use_test Attribute to activate test on module installation

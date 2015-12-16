@@ -26,22 +26,39 @@ INSTALLATION
 
 DEPENDENCIES
 
-   This module requires these other modules and libraries:
+   This module requires these other programs and modules:
+
+   A. For Debian-based systems
+
+   apt-get
+   build-essential
+   cpanminus
+   libreadline-dev
+   mercurial
+   sudo
+
+   B. For FreeBSD systems
+
+   pkg
+   devel/mercurial
+   devel/p5-App-cpanminus
+   security/sudo
+
+   C. For all systems
 
    Perl v5.6.1
-   local::lib
    Class::Gomor
-   IO::All
+   Cwd
    Data::Dump
-   Lexical::Persistence
+   File::Find
    File::HomeDir
-   Term::Shell
+   IO::All
+   Lexical::Persistence
+   Module::Reload
+   PPI
    Term::ANSIColor
    Term::ReadLine::Gnu
-   File::Find
-   IPC::Run3
-   Cwd
-   PPI
+   Term::Shell
 
 COPYRIGHT AND LICENSE
 
