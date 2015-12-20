@@ -5,7 +5,7 @@ Revision history for Perl extension Metabrik.
      perl -MMetabrik::Core::Context -e 'Metabrik::Core::Context->new_brik_run("client::dns", "mx_lookup", "gmail.com")'
    - FEATURE: core::context: allow to pass Code, ARRAY or HASH as Argument to set Command
    - FEATURE: core::global: repository Attribute to store default Briks repository
-   - FEATURE: autoupdate: with with brik::tool from Repository
+   - FEATURE: easy update: thanks to brik::tool from Repository
    - FEATURE: pod: most of the documentation is written
    - FEATURE: Metabrik: need_packages and need_services Properties to easy installation of 
               needed packages and services to start.

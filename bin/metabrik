@@ -58,13 +58,11 @@ if (defined($lopts{script})) {
       $context->use('shell::rc')
          or die("[F] metabrik: use: shell::rc: failed\n");
 
-      $context->set('shell::rc', 'file', $ENV{HOME}."/.metabrik_script_rc");
+      $context->set('shell::rc', 'input', $ENV{HOME}."/.metabrik_script_rc");
       $context->set('shell::rc', 'debug', $lopts{debug});
 
-      $context->run('shell::rc', 'load')
-         or die("[F] metabrik: run: shell::rc: load: failed\n");
-      $context->run('shell::rc', 'exec', '$RUN')
-         or die("[F] metabrik: run: shell::rc: exec: failed\n");
+      $context->run('shell::rc', 'load_and_exec')
+         or die("[F] metabrik: run: shell::rc: load_and_exec: failed\n");
    }
    else {
       print("[!] metabrik: script-rc: file not found: $lopts{script_rc}\n");
@@ -73,25 +71,21 @@ if (defined($lopts{script})) {
    $context->use('shell::script')
       or die("[F] metabrik: use: shell::script: failed\n");
 
+   $context->set('shell::script', 'input', $lopts{script});
    $context->set('shell::script', 'debug', $lopts{debug});
-   $context->set('shell::script', 'file', $lopts{script});
 
-   $context->run('shell::script', 'load')
-      or die("[F] metabrik: run: shell::script: load: failed\n");
-   $context->run('shell::script', 'exec', '$RUN')
-      or die("[F] metabrik: run: shell::script: exec: failed\n");
+   $context->run('shell::script', 'load_and_exec')
+      or die("[F] metabrik: run: shell::script: load_and_exec: failed\n");
 }
 else {
    $context->use('shell::rc')
       or die("[F] metabrik: use: shell::rc: failed\n");
 
-   $context->set('shell::rc', 'file', $lopts{rc});
+   $context->set('shell::rc', 'input', $lopts{rc});
    $context->set('shell::rc', 'debug', $lopts{debug});
 
-   $context->run('shell::rc', 'load')
-      or die("[F] metabrik: run: shell::rc: load: failed\n");
-   $context->run('shell::rc', 'exec', '$RUN')
-      or die("[F] metabrik: run: shell::rc: exec: failed\n");
+   $context->run('shell::rc', 'load_and_exec')
+      or die("[F] metabrik: run: shell::rc: load_and_exec: failed\n");
 
    unless ($lopts{no_splash}) {
       $context->run('core::shell', 'splash')
