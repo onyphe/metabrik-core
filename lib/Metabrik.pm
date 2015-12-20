@@ -94,7 +94,6 @@ sub brik_properties {
          brik_create_attributes => [ ],
          brik_set_default_attributes => [ ],
          brik_check_require_modules => [ ],
-         brik_check_require_used => [ ],
          brik_check_require_binaries => [ ],
          brik_check_properties => [ ],
          brik_has_binary => [ qw(binary) ],
@@ -107,9 +106,10 @@ sub brik_properties {
       },
       require_modules => { },
       optional_modules => { },
-      require_used => { },
       require_binaries => { },
       optional_binaries => { },
+      need_packages => { },
+      need_services => { },
    };
 }
 
@@ -317,9 +317,10 @@ sub brik_check_properties {
       commands => 1,
       require_modules => 1,
       optional_modules => 1,
-      require_used => 1,
       require_binaries => 1,
       optional_binaries => 1,
+      need_packages => 1,
+      need_services => 1,
    );
    for my $key (keys %$properties) {
       if (! exists($valid_keys{$key})) {
@@ -414,9 +415,10 @@ sub brik_check_use_properties {
       commands => 1,
       require_modules => 1,
       optional_modules => 1,
-      require_used => 1,
       require_binaries => 1,
       optional_binaries => 1,
+      need_packages => 1,
+      need_services => 1,
    );
    for my $key (keys %$use_properties) {
       if (! exists($valid_keys{$key})) {
@@ -465,9 +467,6 @@ sub new {
    return unless $r;
 
    $r = $self->brik_check_require_modules;
-   return unless $r;
-
-   $r = $self->brik_check_require_used;
    return unless $r;
 
    $r = $self->brik_check_require_binaries;
@@ -601,7 +600,7 @@ sub brik_check_require_modules {
          if ($@) {
             chomp($@);
             $self->_log_error("brik_check_require_modules: you have to install ".
-               "Module [$module]");
+               "module [$module]");
             $self->_log_debug("brik_check_require_modules: $@");
             $error++;
             next;
@@ -613,62 +612,11 @@ sub brik_check_require_modules {
             if ($@) {
             chomp($@);
                $self->_log_error("brik_check_require_modules: unable to import ".
-                  "functions [@imports] from Module [$module]");
+                  "functions [@imports] from module [$module]");
                $self->_log_debug("brik_check_require_modules: $@");
                $error++;
                next;
             }
-         }
-      }
-   }
-
-   return $error ? 0 : 1;
-}
-
-sub brik_check_require_used {
-   my $self = shift;
-   my ($require_used) = @_;
-
-   # Not all modules are capable of checking context against used briks
-   # For instance, core::context Brik itselves.
-   my $context = $self->context;
-   if (! defined($context) || ! $context->can('used')) {
-      return 1;
-   }
-
-   my @require_used_list = ();
-   if (defined($require_used)) {
-      push @require_used_list, $require_used;
-   }
-   else {
-      my $classes = $self->brik_classes;
-      for my $class (@$classes) {
-         push @require_used_list, $class->brik_properties->{require_used};
-      }
-   }
-
-   my $used = $context->used;
-
-   my $error = 0;
-   for my $require_used (@require_used_list) {
-      for my $brik (keys %$require_used) {
-         next if $context->is_used($brik);
-
-         if ($self->global->auto_use_on_require) {
-            my $r = $context->use($brik);
-            if (! $r) {
-               $self->_log_warning("brik_check_require_used: use: Brik [$brik] failed");
-               $error++;
-               next;
-            }
-            else {
-               $self->_log_verbose("brik_check_require_used: use: Brik [$brik] success");
-            }
-         }
-         else {
-            $self->_log_error("brik_check_require_used: you must use Brik [$brik] first");
-            $error++;
-            next;
          }
       }
    }
@@ -1254,8 +1202,6 @@ L<help core::global>
 =item B<brik_check_require_binaries>
 
 =item B<brik_check_require_modules>
-
-=item B<brik_check_require_used>
 
 =item B<brik_check_use_properties>
 
