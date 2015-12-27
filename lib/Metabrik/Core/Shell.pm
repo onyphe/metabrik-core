@@ -7,7 +7,7 @@ package Metabrik::Core::Shell;
 use strict;
 use warnings;
 
-our $VERSION = '1.20';
+our $VERSION = '1.20.0';
 
 use base qw(Term::Shell Metabrik);
 
@@ -616,21 +616,21 @@ sub run_cd {
    my ($dir, @args) = @_;
 
    if (defined($dir)) {
-      if ($dir =~ /^~$/) {
+      if ($dir =~ m{^~}) {
          #$dir = $self->path_home;
-         $dir = $self->{path_home};
+         $dir =~ s{^~}{$self->{path_home}};
       }
       if (! -d $dir) {
-         return $self->log->error("cd: $dir: can't cd to this");
+         return $self->log->error("cd: directory [$dir] does not exist");
       }
       chdir($dir)
-         or return $self->log->error("cd: $dir: $!");
+         or return $self->log->error("cd: chdir failed for directory [$dir]: $!");
       $self->_update_path_cwd;
    }
    else {
       #chdir($self->path_home);
       chdir($self->{path_home})
-         or return $self->log->error("cd: $dir: $!");
+         or return $self->log->error("cd: chdir failed for directory [$dir]: $!");
       $self->_update_path_cwd;
    }
 
@@ -1412,14 +1412,14 @@ sub catch_comp_sub {
    my $count = scalar(@words);
    my $last = $words[-1];
 
-   $self->debug && $self->log->debug("catch_comp: words[@words] | word[$word] line[$line] start[$start] | last[$last]");
+   $self->debug && $self->log->debug("catch_comp_sub: words[@words] | word[$word] line[$line] start[$start] | last[$last]");
 
    # Be default, we will read the current directory
    if (! length($word)) {
       $word = '.';
    }
 
-   $self->debug && $self->log->debug("catch_comp: DEFAULT: words[@words] | word[$word] line[$line] start[$start] | last[$last]");
+   $self->debug && $self->log->debug("catch_comp_sub: DEFAULT: words[@words] | word[$word] line[$line] start[$start] | last[$last]");
 
    my @comp = ();
 
@@ -1456,6 +1456,14 @@ sub catch_comp_sub {
          if ($this =~ /^$word/) {
             push @comp, $this;
          }
+      }
+   }
+
+   # If there are some whitespace, we put between quotes
+   for (@comp) {
+      if (m{\s+}) {
+         s/^/"/;
+         s/$/"/;
       }
    }
 
@@ -1532,6 +1540,14 @@ sub catch_comp {
          if ($this =~ /^$start/) {
             push @comp, $this;
          }
+      }
+   }
+
+   # If there are some whitespace, we put between quotes
+   for (@comp) {
+      if (m{\s+}) {
+         s/^/"/;
+         s/$/"/;
       }
    }
 

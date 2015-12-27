@@ -5,7 +5,7 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.20';
+our $VERSION = '1.20.0';
 
 use base qw(Class::Gomor::Hash);
 
@@ -96,6 +96,7 @@ sub brik_properties {
          brik_check_require_modules => [ ],
          brik_check_require_binaries => [ ],
          brik_check_properties => [ ],
+         brik_checks => [ ],
          brik_has_binary => [ qw(binary) ],
          brik_has_module => [ qw(module) ],
          brik_help_run_undef_arg => [ qw(Command Arg) ],
@@ -103,6 +104,7 @@ sub brik_properties {
          brik_help_run_empty_array_arg => [ qw(Command Arg) ],
          brik_help_run_file_not_found => [ qw(Command Arg) ],
          brik_help_run_directory_not_found => [ qw(Command Arg) ],
+         brik_help_run_must_be_root => [ qw(Command) ],
       },
       require_modules => { },
       optional_modules => { },
@@ -455,10 +457,8 @@ sub brik_check_use_properties {
    return 1;
 }
 
-sub new {
-   my $self = shift->SUPER::new(
-      @_,
-   );
+sub brik_checks {
+   my $self = shift;
 
    my $r = $self->brik_check_properties;
    return unless $r;
@@ -472,7 +472,31 @@ sub new {
    $r = $self->brik_check_require_binaries;
    return unless $r;
 
-   $r = $self->brik_create_attributes;
+   return $self;
+}
+
+sub new {
+   my $self = shift->SUPER::new(
+      @_,
+   );
+
+   my $r = $self->brik_create_attributes;
+   return unless $r;
+
+   $r = $self->brik_set_default_attributes;
+   return unless $r;
+
+   $self->brik_checks or return;
+
+   return $self->brik_preinit;
+}
+
+sub new_no_checks {
+   my $self = shift->SUPER::new(
+      @_,
+   );
+
+   my $r = $self->brik_create_attributes;
    return unless $r;
 
    $r = $self->brik_set_default_attributes;
@@ -490,15 +514,36 @@ sub new_from_brik {
    }
 
    my $log = $brik->log;
-   my $global = $brik->global;
-   my $context = $brik->context;
-   my $shell = $brik->shell;
+   my $glo = $brik->global;
+   my $con = $brik->context;
+   my $she = $brik->shell;
 
    return $self->new(
       log => $log,
-      global => $global,
-      context => $context,
-      shell => $shell,
+      global => $glo,
+      context => $con,
+      shell => $she,
+   );
+}
+
+sub new_from_brik_no_checks {
+   my $self = shift;
+   my ($brik) = @_;
+
+   if (! defined($brik)) {
+      return $self->_log_error("new_from_brik_no_checks: you must give a Brik object as argument");
+   }
+
+   my $log = $brik->log;
+   my $glo = $brik->global;
+   my $con = $brik->context;
+   my $she = $brik->shell;
+
+   return $self->new_no_checks(
+      log => $log,
+      global => $glo,
+      context => $con,
+      shell => $she,
    );
 }
 
@@ -509,6 +554,17 @@ sub new_from_brik_init {
       or return $self->_log_error("new_from_brik_init: new_from_brik failed");
    $brik->brik_init
       or return $self->_log_error("new_from_brik_init: brik_init failed");
+
+   return $brik;
+}
+
+sub new_from_brik_init_no_checks {
+   my $self = shift;
+
+   my $brik = $self->new_from_brik_no_checks(@_)
+      or return $self->_log_error("new_from_brik_init_no_checks: new_from_brik_no_checks failed");
+   $brik->brik_init
+      or return $self->_log_error("new_from_brik_init_no_checks: brik_init failed");
 
    return $brik;
 }
@@ -1125,6 +1181,17 @@ sub brik_help_run_directory_not_found {
    return 1;
 }
 
+sub brik_help_run_must_be_root {
+   my $self = shift;
+   my ($command) = @_;
+
+   if ($< != 0) {
+      return $self->log->error("$command: must be root to run Command [$command]"); 
+   }
+
+   return 1;
+}
+
 1;
 
 __END__
@@ -1167,6 +1234,12 @@ L<help core::global>
 
 =item B<new_from_brik_init>
 
+=item B<new_no_checks>
+
+=item B<new_from_brik_no_checks>
+
+=item B<new_from_brik_init_no_checks>
+
 =item B<brik_self>
 
 =item B<brik_preinit>
@@ -1205,6 +1278,8 @@ L<help core::global>
 
 =item B<brik_check_use_properties>
 
+=item B<brik_checks>
+
 =item B<brik_create_attributes>
 
 =item B<brik_has_attribute>
@@ -1224,6 +1299,8 @@ L<help core::global>
 =item B<brik_help_run_empty_array_arg>
 
 =item B<brik_help_run_file_not_found>
+
+=item B<brik_help_run_must_be_root>
 
 =item B<brik_help_run_invalid_arg>
 
