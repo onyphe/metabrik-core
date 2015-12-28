@@ -100,6 +100,7 @@ sub brik_properties {
          brik_has_binary => [ qw(binary) ],
          brik_has_module => [ qw(module) ],
          brik_help_run_undef_arg => [ qw(Command Arg) ],
+         brik_help_set_undef_arg => [ qw(Command Arg) ],
          brik_help_run_invalid_arg => [ qw(Command Arg valid_list) ],
          brik_help_run_empty_array_arg => [ qw(Command Arg) ],
          brik_help_run_file_not_found => [ qw(Command Arg) ],
@@ -1134,6 +1135,17 @@ sub brik_help_run_undef_arg {
    return 1;
 }
 
+sub brik_help_set_undef_arg {
+   my $self = shift;
+   my ($command, $argument) = @_;
+
+   if (! defined($argument)) {
+      return $self->log->error($self->brik_help_set($command));
+   }
+
+   return 1;
+}
+
 sub brik_help_run_invalid_arg {
    my $self = shift;
    my ($command, $argument, @values) = @_;
@@ -1305,6 +1317,8 @@ L<help core::global>
 =item B<brik_help_run_invalid_arg>
 
 =item B<brik_help_run_undef_arg>
+
+=item B<brik_help_set_undef_arg>
 
 =item B<brik_help_set>
 
