@@ -1128,8 +1128,12 @@ sub brik_help_run_undef_arg {
    my $self = shift;
    my ($command, $argument) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if (! defined($argument)) {
-      return $self->log->error($self->brik_help_run($command));
+      return $self->log->error("$brik: ".$self->brik_help_run($command));
    }
 
    return 1;
@@ -1139,8 +1143,12 @@ sub brik_help_set_undef_arg {
    my $self = shift;
    my ($command, $argument) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if (! defined($argument)) {
-      return $self->log->error($self->brik_help_set($command));
+      return $self->log->error("$brik: ".$self->brik_help_set($command));
    }
 
    return 1;
@@ -1150,11 +1158,15 @@ sub brik_help_run_invalid_arg {
    my $self = shift;
    my ($command, $argument, @values) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    my $ref = ref($argument) || 'SCALAR';
    my $values = { map { $_ => 1 } @values };
    if (! exists($values->{$ref})) {
       my $ok = join(', ', @values);
-      return $self->log->error("$command: invalid Argument [$argument], must be from [$ok]");
+      return $self->log->error("$brik: $command: invalid Argument [$argument], must be from [$ok]");
    }
 
    return $ref;
@@ -1164,8 +1176,12 @@ sub brik_help_run_empty_array_arg {
    my $self = shift;
    my ($command, $argument) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if (@$argument <= 0) {
-      return $self->log->error("$command: ARRAY Argument [$argument] is empty");
+      return $self->log->error("$brik: $command: ARRAY Argument [$argument] is empty");
    }
 
    return 1;
@@ -1175,8 +1191,12 @@ sub brik_help_run_file_not_found {
    my $self = shift;
    my ($command, $argument) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if (! -f $argument) {
-      return $self->log->error("$command: file Argument [$argument] not found");
+      return $self->log->error("$brik: $command: file Argument [$argument] not found");
    }
 
    return 1;
@@ -1186,8 +1206,12 @@ sub brik_help_run_directory_not_found {
    my $self = shift;
    my ($command, $argument) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if (! -d $argument) {
-      return $self->log->error("$command: directory Argument [$argument] not found"); 
+      return $self->log->error("$brik: $command: directory Argument [$argument] not found"); 
    }
 
    return 1;
@@ -1197,8 +1221,12 @@ sub brik_help_run_must_be_root {
    my $self = shift;
    my ($command) = @_;
 
+   my ($package, $filename, $line) = caller();
+   my $brik = lc($package);
+   $brik =~ s/^metabrik:://;
+
    if ($< != 0) {
-      return $self->log->error("$command: must be root to run Command [$command]"); 
+      return $self->log->error("$brik: $command: must be root to run Command [$command]"); 
    }
 
    return 1;
