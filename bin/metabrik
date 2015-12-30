@@ -15,7 +15,7 @@ BEGIN {
    eval("use Metabrik::Core::Context;");
    if ($@) {
       die("[F] metabrik: you have to set PERL5LIB environment variable like:\n\n".
-          'shell$ export PERL5LIB=/path/to/metabrik/core/lib'.
+          'shell$ export PERL5LIB=/path/to/metabrik/core/lib:PERL5LIB=/path/to/metabrik/repository/lib:'.
           "\n\n".
           "ERROR: $@\n"
       );
@@ -41,59 +41,72 @@ GetOptions(
    "no-splash" => \$lopts{no_splash},
 ) or usage();
 
-my $context = Metabrik::Core::Context->new;
+my $con = Metabrik::Core::Context->new;
 
-$context->brik_init
+$con->brik_init
    or die("[F] metabrik: context init: failed\n");
 
-$context->set('core::log', 'level', $lopts{verbose});
+$con->set('core::log', 'level', $lopts{verbose});
 
-$context->set('core::log', 'debug', $lopts{debug});
-$context->set('core::context', 'debug', $lopts{debug});
-$context->set('core::shell', 'debug', $lopts{debug});
-$context->set('core::global', 'debug', $lopts{debug});
+$con->set('core::log', 'debug', $lopts{debug});
+$con->set('core::context', 'debug', $lopts{debug});
+$con->set('core::shell', 'debug', $lopts{debug});
+$con->set('core::global', 'debug', $lopts{debug});
 
 if (defined($lopts{script})) {
-   if (-f $lopts{script_rc}) {
-      $context->use('shell::rc')
-         or die("[F] metabrik: use: shell::rc: failed\n");
+   if ($con->is_available('shell::script')) {
+      if (-f $lopts{script_rc}) {
+         if ($con->is_available('shell::rc')) {
+            $con->use('shell::rc')
+               or die("[F] metabrik: use: shell::rc: failed\n");
 
-      $context->set('shell::rc', 'input', $ENV{HOME}."/.metabrik_script_rc");
-      $context->set('shell::rc', 'debug', $lopts{debug});
+            $con->set('shell::rc', 'input', $ENV{HOME}."/.metabrik_script_rc");
+            $con->set('shell::rc', 'debug', $lopts{debug});
 
-      $context->run('shell::rc', 'load_and_exec')
-         or die("[F] metabrik: run: shell::rc: load_and_exec: failed\n");
+            $con->run('shell::rc', 'load_and_execute')
+               or die("[F] metabrik: run: shell::rc: load_and_execute: failed\n");
+         }
+         else {
+            print("[!] metabrik: script-rc: shell::rc: Brik not found, cannot use it\n");
+         }
+      }
+      else {
+         print("[!] metabrik: script-rc: shell::rc: file not found: $lopts{script_rc}\n");
+      }
+
+      $con->use('shell::script')
+         or die("[F] metabrik: use: shell::script: failed\n");
+
+      $con->set('shell::script', 'input', $lopts{script});
+      $con->set('shell::script', 'debug', $lopts{debug});
+
+      $con->run('shell::script', 'load_and_execute')
+         or die("[F] metabrik: run: shell::script: load_and_execute: failed\n");
    }
    else {
-      print("[!] metabrik: script-rc: file not found: $lopts{script_rc}\n");
+      die("[F] metabrik: script: shell::script: Brik not available, cannot use it\n");
    }
-
-   $context->use('shell::script')
-      or die("[F] metabrik: use: shell::script: failed\n");
-
-   $context->set('shell::script', 'input', $lopts{script});
-   $context->set('shell::script', 'debug', $lopts{debug});
-
-   $context->run('shell::script', 'load_and_exec')
-      or die("[F] metabrik: run: shell::script: load_and_exec: failed\n");
 }
-else {
-   $context->use('shell::rc')
+elsif ($con->is_available('shell::rc')) {
+   $con->use('shell::rc')
       or die("[F] metabrik: use: shell::rc: failed\n");
 
-   $context->set('shell::rc', 'input', $lopts{rc});
-   $context->set('shell::rc', 'debug', $lopts{debug});
+   $con->set('shell::rc', 'input', $lopts{rc});
+   $con->set('shell::rc', 'debug', $lopts{debug});
 
-   $context->run('shell::rc', 'load_and_exec')
-      or die("[F] metabrik: run: shell::rc: load_and_exec: failed\n");
-
-   unless ($lopts{no_splash}) {
-      $context->run('core::shell', 'splash')
-         or die("[F] metabrik: run: core::shell: splash: failed\n");
-   }
-
-   $context->run('core::shell', 'cmdloop');
+   $con->run('shell::rc', 'load_and_execute')
+      or die("[F] metabrik: run: shell::rc: load_and_execute: failed\n");
 }
+else {
+   print("[!] metabrik: rc: shell::rc: Brik not found, cannot use it\n");
+}
+
+unless ($lopts{no_splash}) {
+   $con->run('core::shell', 'splash')
+      or die("[F] metabrik: run: core::shell: splash: failed\n");
+}
+
+$con->run('core::shell', 'cmdloop');
 
 exit(0);
 
