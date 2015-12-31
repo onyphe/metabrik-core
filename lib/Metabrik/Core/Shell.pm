@@ -1327,7 +1327,7 @@ sub catch_run {
 
    # If it starts with a '/', we really want to 'run shell::command system'
    if ($context->is_used('shell::command')) {
-      if (defined($args[0]) && $args[0] =~ m{/}) {
+      if (defined($args[0]) && $args[0] =~ m{^\s*/}) {
          my $cmd = "run shell::command system";
          return $self->cmd(join(' ', $cmd, @args));
       }
