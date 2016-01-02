@@ -13,8 +13,13 @@ Revision history for Perl extension Metabrik.
    - UPDATE: Metabrik: brik_preinit, brik_init and brik_fini are now official Commands
    - new: Metabrik: brik_help_run_undef_arg, brik_help_run_invalid_arg, brik_help_run_empty_array_arg, brik_help_run_file_not_found, brik_help_set_undef_arg, brik_help_run_must_be_root and brik_help_run_directory_not_found Commands
    - new: perl::module: use_test Attribute to activate test on module installation
+   - new: Metabrik: brik_checks and brik_help_run_must_be_root Commands
+   - new: Metabrik: new_no_checks, new_from_brik_no_checks and new_from_brik_init_no_checks methods
    - update: perl::module: install correctly supports ARRAY of modules to install
    - bugfix: shell::rc, shell::script: add a trailing whitespace on multilines
+   - bugfix: core::shell: when a / was in a command line, it was not interpreted as Perl code
+   - bugfix: core::shell: correctly complete ~ in path when using cd Command
+   - bugfix: core::shell: put args between double-quotes when needed (like for cd Command)
 
 1.11 Sun Nov 22 17:46:43 CET 2015
    - FEATURE: core::shell: auto prefix by run if entered command is a used Brik
