@@ -1,6 +1,6 @@
 Revision history for Perl extension Metabrik.
 
-1.20.0
+1.20.0 Sat Jan  2 18:49:52 CET 2016
    - FEATURE: core::context: allow one-liners with a Brik Command. Example:
      perl -MMetabrik::Core::Context -e 'Metabrik::Core::Context->new_brik_run("client::dns", "mx_lookup", "gmail.com")'
    - FEATURE: core::context: allow to pass Code, ARRAY or HASH as Argument to set Command
