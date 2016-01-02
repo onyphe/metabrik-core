@@ -5,7 +5,9 @@ package Metabrik::Core::Context;
 use strict;
 use warnings;
 
-our $VERSION = '1.20.0';
+# Breaking.Feature.Fix
+our $VERSION = '1.20';
+our $FIX = '0';
 
 use base qw(Metabrik);
 

@@ -15,19 +15,19 @@ name: Metabrik
 provides:
   Metabrik:
     file: lib/Metabrik.pm
-    version: v1.20.0
+    version: '1.20'
   Metabrik::Core::Context:
     file: lib/Metabrik/Core/Context.pm
-    version: v1.20.0
+    version: '1.20'
   Metabrik::Core::Global:
     file: lib/Metabrik/Core/Global.pm
-    version: v1.20.0
+    version: '1.20'
   Metabrik::Core::Log:
     file: lib/Metabrik/Core/Log.pm
-    version: v1.20.0
+    version: '1.20'
   Metabrik::Core::Shell:
     file: lib/Metabrik/Core/Shell.pm
-    version: v1.20.0
+    version: '1.20'
 requires:
   Class::Gomor: '0'
   Cwd: '0'
@@ -44,4 +44,4 @@ requires:
   perl: v5.6.1
 resources:
   license: http://opensource.org/licenses/BSD-3-Clause
-version: v1.20.0
+version: '1.20'

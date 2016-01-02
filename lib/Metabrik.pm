@@ -5,7 +5,9 @@ package Metabrik;
 use strict;
 use warnings;
 
-our $VERSION = '1.20.0';
+# Breaking.Feature.Fix
+our $VERSION = '1.20';
+our $FIX = '0';
 
 use base qw(Class::Gomor::Hash);
 
@@ -25,7 +27,7 @@ sub brik_version {
    my $revision = $self->brik_properties->{revision};
    $revision =~ s/^.*\s([a-f0-9]+)\s.*$/$1/;
 
-   return $VERSION.'.'.$revision;
+   return $VERSION.'.'.$FIX.'-'.$revision;
 }
 
 sub brik_author {
