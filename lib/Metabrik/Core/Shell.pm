@@ -266,6 +266,9 @@ sub AUTOLOAD {
          return $self->cmd(join(' ', $cmd, @args));
       }
    }
+   else {
+      $self->log->verbose("AUTOLOAD: Brik [shell::command] not loaded, skipping");
+   }
 
    return 1;
 }
