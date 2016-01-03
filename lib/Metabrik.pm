@@ -167,7 +167,13 @@ sub brik_help_run {
       if (exists($commands->{$command})) {
          my $help = sprintf("run %s %s ", $name, $command);
          for (@{$commands->{$command}}) {
-            $help .= "<$_> ";
+            if (m{\|OPTIONAL}) {
+               s/\|OPTIONAL\s*$//;
+               $help .= "[ <$_> ] ";
+            }
+            else {
+               $help .= "<$_> ";
+            }
          }
          return $help;
       }
