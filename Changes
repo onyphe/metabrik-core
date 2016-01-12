@@ -1,5 +1,9 @@
 Revision history for Perl extension Metabrik.
 
+1.20.1 Tue Jan 12 20:18:55 CET 2016
+   - bugfix: disabled code to rewrite aliases to complete command: broken with 
+             Term::ReadLine::Gnu >= 1.27
+
 1.20.0 Sat Jan  2 18:49:52 CET 2016
    - FEATURE: core::context: allow one-liners with a Brik Command. Example:
      perl -MMetabrik::Core::Context -e 'Metabrik::Core::Context->new_brik_run("client::dns", "mx_lookup", "gmail.com")'

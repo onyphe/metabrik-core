@@ -305,24 +305,25 @@ sub rl_complete {
 
       $self->debug && $self->log->debug("rl_complete: comp[@comp]");
 
+      # XXX: broken feature since Term::ReadLine::Gnu 1.27
       # If we found something and it's an alias, we complete with the original command
-      if (defined($comp[0]) && $self->comp_aliases && exists($self->{_aliases}{"run_".$comp[0]})) {
-         $self->debug && $self->log->debug("rl_complete: original[".$self->{_aliases}{"run_$comp[0]"}."]");
+      #if (defined($comp[0]) && $self->comp_aliases && exists($self->{_aliases}{"run_".$comp[0]})) {
+         #$self->debug && $self->log->debug("rl_complete: original[".$self->{_aliases}{"run_$comp[0]"}."]");
 
-         my @words = split(/\s+/, $self->{_aliases}{"run_$comp[0]"});
-         if (exists($self->{_aliases}{"run_$words[0]"})) {
-            @comp = $self->{_aliases}{"run_".$words[0]};
-         }
-         else {
-            @comp = $self->{_aliases}{"run_$comp[0]"};
-         }
-      }
-      # Or maybe it's a Brik, and we want to prefix it automagically with 'run' Command
-      elsif (my $available = $self->_word_may_be_brik($word)) {
-         for (keys %$available) {
-            push @comp, "run $_" if /^$word/;
-         }
-      }
+         #my @words = split(/\s+/, $self->{_aliases}{"run_$comp[0]"});
+         #if (exists($self->{_aliases}{"run_$words[0]"})) {
+            #@comp = $self->{_aliases}{"run_".$words[0]};
+         #}
+         #else {
+            #@comp = $self->{_aliases}{"run_$comp[0]"};
+         #}
+      #}
+      ## Or maybe it's a Brik, and we want to prefix it automagically with 'run' Command
+      #elsif (my $available = $self->_word_may_be_brik($word)) {
+         #for (keys %$available) {
+            #push @comp, "run $_" if /^$word/;
+         #}
+      #}
    }
    # If it's a subcommand, send it to any custom completion function for the
    # function:
@@ -332,7 +333,7 @@ sub rl_complete {
       @comp = $self->complete($command, $word, $line, $start);
    }
 
-   $self->debug && $self->log->debug("rl_complete: return comp[@comp]");
+   $self->debug && $self->log->debug("rl_complete: return comp[@comp] count[".scalar(@comp)."]");
 
    return @comp;
 }
