@@ -73,7 +73,7 @@ sub brik_properties {
          show_inherited_commands => 0,
          show_inherited_all => 0,
          show_all => 0,
-         aliases_completion => 1,
+         aliases_completion => 0,
       },
       commands => {
          splash => [ ],
@@ -1522,10 +1522,11 @@ sub catch_comp {
          }
       }
    }
+   # XXX: broken feature since Term::ReadLine::Gnu 1.27
    # If we just finished completing an alias, we return the full command
-   elsif (exists($self->{_aliases}{"run_$last"})) {
-      push @comp, $self->{_aliases}{"run_$last"};
-   }
+   #elsif (exists($self->{_aliases}{"run_$last"})) {
+      #push @comp, $self->{_aliases}{"run_$last"};
+   #}
    # Otherwise, we complete relative filenames
    else {
       my $path = '.';
