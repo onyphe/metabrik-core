@@ -39,6 +39,18 @@ sub brik_properties {
    };
 }
 
+sub brik_init {
+   my $self = shift;
+
+   # Makes STDOUT file handle unbuffered
+   my $current = select;
+   select(STDOUT);
+   $|++;
+   select($current);
+
+   return $self->SUPER::brik_init;
+}
+
 sub _msg {
    my $self = shift;
    my ($brik, $msg) = @_;
@@ -202,6 +214,8 @@ L<help core::log>
 =head1 METHODS
 
 =over 4
+
+=item B<brik_init>
 
 =item B<brik_properties>
 

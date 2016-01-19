@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.20.3 Tue Jan 19 14:17:32 CET 2016
+   - bugfix: makes logging to STDOUT unbuffered by default when using core::log
+
 1.20.2 Wed Jan 13 18:41:49 CET 2016
    - bugfix: now truly disable all code to rewrite aliases to complete command: broken with 
              Term::ReadLine::Gnu >= 1.27

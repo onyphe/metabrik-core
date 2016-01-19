@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.20';
-our $FIX = '2';
+our $FIX = '3';
 
 use base qw(Class::Gomor::Hash);
 
