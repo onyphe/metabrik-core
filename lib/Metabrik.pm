@@ -138,7 +138,7 @@ sub brik_help_set {
       my $attributes = $class->brik_attributes;
 
       if (exists($attributes->{$attribute})) {
-         my $help = sprintf("set %s %s ", $name, $attribute);
+         my $help = sprintf("%s ", $attribute);
          for (@{$attributes->{$attribute}}) {
             $help .= "<$_> ";
          }
@@ -165,7 +165,7 @@ sub brik_help_run {
       my $commands = $class->brik_commands;
 
       if (exists($commands->{$command})) {
-         my $help = sprintf("run %s %s ", $name, $command);
+         my $help = sprintf("%s ", $command);
          for (@{$commands->{$command}}) {
             if (m{\|OPTIONAL}) {
                s/\|OPTIONAL\s*$//;
