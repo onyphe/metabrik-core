@@ -972,12 +972,12 @@ sub run_help {
          my $commands = $self->get_help_commands($arg1);
 
          for my $attribute (sort { $a cmp $b } keys %$attributes) {
-            my $help = $used_brik->brik_help_set($attribute);
+            my $help = "set $arg1 ".$used_brik->brik_help_set($attribute);
             $self->log->info($help) if defined($help);
          }
 
          for my $command (sort { $a cmp $b } keys %$commands) {
-            my $help = $used_brik->brik_help_run($command);
+            my $help = "run $arg1 ".$used_brik->brik_help_run($command);
             $self->log->info($help) if defined($help);
          }
       }

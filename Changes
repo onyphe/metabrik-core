@@ -1,5 +1,10 @@
 Revision history for Perl extension Metabrik.
 
+1.20.4 Tue Jan 26 21:01:10 CET 2016
+   - update: metabrik: do not prefix help strings with Brik name nor Command name when user 
+             fails to use a Command the right wat
+   - bugfix: core::shell: display Brik name and Command name when user calls the help Command
+
 1.20.3 Tue Jan 19 14:17:32 CET 2016
    - bugfix: makes logging to STDOUT unbuffered by default when using core::log
 
