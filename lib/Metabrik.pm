@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.20';
-our $FIX = '4';
+our $FIX = '5';
 
 use base qw(Class::Gomor::Hash);
 
@@ -1187,6 +1187,10 @@ sub brik_help_run_empty_array_arg {
    my ($package, $filename, $line) = caller();
    my $brik = lc($package);
    $brik =~ s/^metabrik:://;
+
+   if (ref($argument) ne 'ARRAY') {
+      return $self->log->error("$brik: $command: Argument [$argument] is not an ARRAY");
+   }
 
    if (@$argument <= 0) {
       return $self->log->error("$brik: $command: ARRAY Argument [$argument] is empty");

@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.20.5 Fri Jan 29 18:57:06 CET 2016
+   - bugfix: Metabrik: brik_help_run_empty_array_arg Command to check if Argument is an ARRAY
+
 1.20.4 Tue Jan 26 21:01:10 CET 2016
    - update: metabrik: do not prefix help strings with Brik name nor Command name when user 
              fails to use a Command the right wat
