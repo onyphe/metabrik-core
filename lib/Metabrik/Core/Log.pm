@@ -9,7 +9,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.20';
-our $FIX = '0';
+our $FIX = '6';
 
 use base qw(Metabrik);
 
@@ -39,6 +39,27 @@ sub brik_properties {
    };
 }
 
+sub brik_preinit {
+   my $self = shift;
+
+   my $context = $self->context;
+
+   # We replace the current logging Brik by this one,
+   # but only after core::context has been created and initialized.
+   if (defined($context)) {
+      $context->{log} = $self;
+      for my $this (keys %{$context->used}) {
+         $context->{used}->{$this}->{log} = $self;
+      }
+
+      # We have to init this new log Brik, because previous one
+      # was already inited at this stage. We have to keep the same init context.
+      $self->brik_init or return $self->log->error("brik_preinit: brik_init error");
+   }
+
+   return $self->SUPER::brik_preinit(@_);
+}
+
 sub brik_init {
    my $self = shift;
 
@@ -48,7 +69,7 @@ sub brik_init {
    $|++;
    select($current);
 
-   return $self->SUPER::brik_init;
+   return $self->SUPER::brik_init(@_);
 }
 
 sub _msg {
@@ -214,6 +235,8 @@ L<help core::log>
 =head1 METHODS
 
 =over 4
+
+=item B<brik_preinit>
 
 =item B<brik_init>
 
