@@ -721,7 +721,7 @@ sub brik_check_require_binaries {
    my $error = 0;
    for my $binary (keys %binaries_found) {
       if (! $binaries_found{$binary}) {
-         $self->_log_error("brik_check_require_binaries: binary [$binary] not found in \$PATH");
+         $self->_log_error("brik_check_require_binaries: binary [$binary] not found in PATH");
          $error++;
       }
    }
