@@ -1,6 +1,8 @@
 Revision history for Perl extension Metabrik.
 
 1.20.6
+   - bugfix: core::shell: run_run Command to call execute Command from shell::history and not 
+             exec Command
    - update: core::log: brik_preinit() moved from Repository log::* so replacing a log Brik
              by another one becomes transparent for users.
 

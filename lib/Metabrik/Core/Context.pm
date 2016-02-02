@@ -737,6 +737,11 @@ sub run {
       return $self->log->error($self->brik_help_run('run'));
    }
 
+   if ($self->debug) {
+      my ($module, $file, $line) = caller();
+      $self->log->debug("run: called by module [$module] from [$file] line[$line]");
+   }
+
    my $r = $self->call(sub {
       my %args = @_;
 

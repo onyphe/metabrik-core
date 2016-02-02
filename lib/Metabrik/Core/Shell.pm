@@ -1232,6 +1232,17 @@ sub run_run {
          die("interrupted by user\n");
       };
 
+      if ($self->debug) {
+         my ($module, $file, $line) = caller();
+         $self->log->debug("run_run: called by module [$module] from [$file] line[$line]");
+      }
+
+      # Hack for Term::Shell: we have to convert its exec function to our execute Command
+      my ($module) = caller();
+      if ($module eq 'Term::Shell' && $command eq 'exec') {
+         $command = 'execute';
+      }
+
       $r = $context->run($brik, $command, @args);
       if (! defined($r)) {
          return $self->log->error("run: unable to execute Command [$command] for Brik [$brik]");
