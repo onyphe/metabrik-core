@@ -469,17 +469,10 @@ sub brik_check_use_properties {
 sub brik_checks {
    my $self = shift;
 
-   my $r = $self->brik_check_properties;
-   return unless $r;
-
-   $r = $self->brik_check_use_properties;
-   return unless $r;
-
-   $r = $self->brik_check_require_modules;
-   return unless $r;
-
-   $r = $self->brik_check_require_binaries;
-   return unless $r;
+   $self->brik_check_properties or return;
+   $self->brik_check_use_properties or return;
+   $self->brik_check_require_modules or return;
+   $self->brik_check_require_binaries or return;
 
    return $self;
 }
@@ -490,12 +483,19 @@ sub new {
    );
 
    my $r = $self->brik_create_attributes;
-   return unless $r;
+   if (! defined($r)) {
+      return $self->_log_error("new: brik_create_attributes failed");
+   }
 
    $r = $self->brik_set_default_attributes;
-   return unless $r;
+   if (! defined($r)) {
+      return $self->_log_error("new: brik_set_default_attributes failed");
+   }
 
-   $self->brik_checks or return;
+   $r = $self->brik_checks;
+   if (! defined($r)) {
+      return $self->_log_error("new: brik_checks failed");
+   }
 
    return $self->brik_preinit;
 }
@@ -506,10 +506,14 @@ sub new_no_checks {
    );
 
    my $r = $self->brik_create_attributes;
-   return unless $r;
+   if (! defined($r)) {
+      return $self->_log_error("new_no_checks: brik_create_attributes failed");
+   }
 
    $r = $self->brik_set_default_attributes;
-   return unless $r;
+   if (! defined($r)) {
+      return $self->_log_error("new_no_checks: brik_set_default_attributes failed");
+   }
 
    return $self->brik_preinit;
 }
@@ -526,6 +530,19 @@ sub new_from_brik {
    my $glo = $brik->global;
    my $con = $brik->context;
    my $she = $brik->shell;
+
+   if (! defined($log)) {
+      return $self->_log_error("new_from_brik: log Attribute is undef");
+   }
+   if (! defined($glo)) {
+      return $self->_log_error("new_from_brik: glo Attribute is undef");
+   }
+   if (! defined($con)) {
+      return $self->_log_error("new_from_brik: con Attribute is undef");
+   }
+   if (! defined($she)) {
+      return $self->_log_error("new_from_brik: she Attribute is undef");
+   }
 
    return $self->new(
       log => $log,
@@ -547,6 +564,19 @@ sub new_from_brik_no_checks {
    my $glo = $brik->global;
    my $con = $brik->context;
    my $she = $brik->shell;
+
+   if (! defined($log)) {
+      return $self->_log_error("new_from_brik_no_checks: log Attribute is undef");
+   }
+   if (! defined($glo)) {
+      return $self->_log_error("new_from_brik_no_checks: glo Attribute is undef");
+   }
+   if (! defined($con)) {
+      return $self->_log_error("new_from_brik_no_checks: con Attribute is undef");
+   }
+   if (! defined($she)) {
+      return $self->_log_error("new_from_brik_no_checks: she Attribute is undef");
+   }
 
    return $self->new_no_checks(
       log => $log,

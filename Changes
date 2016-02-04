@@ -5,6 +5,7 @@ Revision history for Perl extension Metabrik.
              exec Command
    - update: core::log: brik_preinit() moved from Repository log::* so replacing a log Brik
              by another one becomes transparent for users.
+   - update: Metabrik: more checks and verbose on Brik creation failure (when new() calls fail)
 
 1.20.5 Fri Jan 29 18:57:06 CET 2016
    - bugfix: Metabrik: brik_help_run_empty_array_arg Command to check if Argument is an ARRAY
