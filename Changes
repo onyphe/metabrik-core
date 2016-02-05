@@ -1,6 +1,7 @@
 Revision history for Perl extension Metabrik.
 
-1.20.6
+1.21.0 Fri Feb  5 07:50:14 CET 2016
+   - feature: core::shell: ps1 Attribute to customize prompt (limited)
    - bugfix: core::shell: run_run Command to call execute Command from shell::history and not 
              exec Command
    - update: core::log: brik_preinit() moved from Repository log::* so replacing a log Brik

@@ -8,8 +8,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.20';
-our $FIX = '6';
+our $VERSION = '1.21';
+our $FIX = '0';
 
 use base qw(Term::Shell Metabrik);
 
@@ -43,6 +43,7 @@ sub brik_properties {
          show_inherited_all => [ qw(0|1) ],
          show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
          aliases_completion => [ qw(0|1) ], # Complete aliases to show original Command
+         ps1 => [ qw(prompt) ],
          # These are used by Term::Shell
          #path_home => [ qw(directory) ],
          #path_cwd => [ qw(directory) ],
@@ -387,11 +388,12 @@ sub _update_prompt {
       $self->{prompt} = $prompt;
    }
    else {
+      my $ps1 = $self->ps1;
       #my $cwd = $self->path_cwd;
       my $cwd = $self->{path_cwd};
 
-      my $prompt = "Meta:$cwd> ";
-      #my $prompt = "Meta> ";
+      my $prompt = defined($ps1) ? "$ps1:$cwd> " : "Meta:$cwd> ";
+
       if ($^O =~ /win32/i) {
          $prompt =~ s/> /\$ /;
       }
@@ -1609,6 +1611,8 @@ L<help core::shell>
 =over 4
 
 =item B<brik_properties>
+
+=item B<brik_use_properties>
 
 =item B<brik_init>
 
