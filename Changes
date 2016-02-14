@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.21.1
+   - bugfix: core::shell: $HOME set to /tmp if not defined
+
 1.21.0 Fri Feb  5 07:50:14 CET 2016
    - feature: core::shell: ps1 Attribute to customize prompt (limited)
    - bugfix: core::shell: run_run Command to call execute Command from shell::history and not 

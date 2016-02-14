@@ -9,7 +9,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.21';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Term::Shell Metabrik);
 
@@ -358,7 +358,7 @@ sub _update_path_home {
    my $self = shift;
 
    #$self->path_home(_convert_path(home()));
-   $self->{path_home} = _convert_path(File::HomeDir->my_home);
+   $self->{path_home} = _convert_path(File::HomeDir->my_home || '/tmp');
 
    return 1;
 }
@@ -366,10 +366,10 @@ sub _update_path_home {
 sub _update_path_cwd {
    my $self = shift;
 
-   my $cwd = _convert_path(Cwd::getcwd());
+   my $cwd = _convert_path(Cwd::getcwd() || '/tmp');
    $self->debug && $self->log->debug("cwd [$cwd]");
    #my $home = $self->path_home;
-   my $home = $self->{path_home};
+   my $home = $self->{path_home} || '/tmp';
    $self->debug && $self->log->debug("home [$home]");
    $cwd =~ s/^$home/~/;
 
@@ -1611,8 +1611,6 @@ L<help core::shell>
 =over 4
 
 =item B<brik_properties>
-
-=item B<brik_use_properties>
 
 =item B<brik_init>
 
