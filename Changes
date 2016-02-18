@@ -2,6 +2,9 @@ Revision history for Perl extension Metabrik.
 
 1.21.1
    - bugfix: core::shell: $HOME set to /tmp if not defined
+   - bugfix: core::log: must preinit before init for default Attributes values to be properly set
+   - bugfix: metabrik: checks properties and default Attribute values in brik_preinit:
+             $self->datadir can now be used from within brik_use_properties()
 
 1.21.0 Fri Feb  5 07:50:14 CET 2016
    - feature: core::shell: ps1 Attribute to customize prompt (limited)
