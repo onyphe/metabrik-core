@@ -42,6 +42,9 @@ sub brik_properties {
 sub brik_preinit {
    my $self = shift;
 
+   # We will do a brik_init here, so we have to force the brik_preinit before.
+   $self->SUPER::brik_preinit(@_) or return;
+
    my $context = $self->context;
 
    # We replace the current logging Brik by this one,
@@ -57,7 +60,7 @@ sub brik_preinit {
       $self->brik_init or return $self->log->error("brik_preinit: brik_init error");
    }
 
-   return $self->SUPER::brik_preinit(@_);
+   return $self;
 }
 
 sub brik_init {

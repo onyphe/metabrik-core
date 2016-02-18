@@ -98,6 +98,7 @@ sub brik_properties {
          brik_check_require_modules => [ ],
          brik_check_require_binaries => [ ],
          brik_check_properties => [ ],
+         brik_check_use_properties => [ ],
          brik_checks => [ ],
          brik_has_binary => [ qw(binary) ],
          brik_has_module => [ qw(module) ],
@@ -182,6 +183,18 @@ sub brik_help_run {
    return;
 }
 
+sub _msg {
+   my $self = shift;
+   my ($class, $msg) = @_;
+
+   $msg ||= 'undef';
+
+   $class = lc($class);
+   $class =~ s/^metabrik:://i;
+
+   return lc($class).": $msg";
+}
+
 sub _log_info {
    my $self = shift;
    my ($msg) = @_;
@@ -210,7 +223,8 @@ sub _log_error {
       return $self->log->error($msg, $class);
    }
    else {
-      print("[-] $class: $msg\n");
+      my $str = $self->_msg($class, $msg);
+      print "[-] $str\n";
    }
 
    return;
@@ -228,7 +242,8 @@ sub _log_fatal {
       return $self->log->fatal($msg, $class);
    }
    else {
-      die("[F] $class: $msg\n");
+      my $str = $self->_msg($class, $msg);
+      die("[F] $str\n");
    }
 
    return;
@@ -246,7 +261,8 @@ sub _log_warning {
       return $self->log->warning($msg, $class);
    }
    else {
-      print("[!] $class: $msg\n");
+      my $str = $self->_msg($class, $msg);
+      print("[!] $str\n");
    }
 
    return 1;
@@ -264,7 +280,8 @@ sub _log_verbose {
       return $self->log->verbose($msg, $class);
    }
    else {
-      print("[*] $class: $msg\n");
+      my $str = $self->_msg($class, $msg);
+      print("[*] $str\n");
    }
 
    return 1;
@@ -286,7 +303,8 @@ sub _log_debug {
       return $self->log->debug($msg, $class);
    }
    else {
-      print("[D] $class: $msg\n");
+      my $str = $self->_msg($class, $msg);
+      print("[D] $str\n");
    }
 
    return 1;
@@ -294,7 +312,7 @@ sub _log_debug {
 
 sub brik_check_properties {
    my $self = shift;
-   my ($properties, $use_properties) = @_;
+   my ($properties) = @_;
 
    my $name = $self->brik_name;
    if (! $self->can('brik_properties')) {
@@ -302,7 +320,6 @@ sub brik_check_properties {
    }
 
    $properties ||= $self->brik_properties;
-   $use_properties ||= $self->brik_use_properties;
 
    my $error = 0;
 
@@ -347,20 +364,6 @@ sub brik_check_properties {
          $error++;
       }
    }
-   for my $key (keys %$use_properties) {
-      if (! exists($valid_keys{$key})) {
-         print("[-] brik_check_properties: brik_use_properties has invalid key [$key]\n");
-         $error++;
-      }
-      elsif ($key eq 'tags' && ref($use_properties->{$key}) ne 'ARRAY') {
-         print("[-] brik_check_properties: brik_use_properties with key [$key] is not an ARRAYREF\n");
-         $error++;
-      }
-      elsif ($key ne 'revision' && $key ne 'author' && $key ne 'license' && $key ne 'tags' && ref($use_properties->{$key}) ne 'HASH') {
-         print("[-] brik_check_properties: brik_use_properties with key [$key] is not a HASHREF\n");
-         $error++;
-      }
-   }
 
    # Check HASHREFs contains pointers to ARRAYREFs
    for my $key (keys %$properties) {
@@ -369,16 +372,6 @@ sub brik_check_properties {
       for my $subkey (keys %{$properties->{$key}}) {
          if (ref($properties->{$key}->{$subkey}) ne 'ARRAY') {
             print("[-] brik_check_properties: brik_properties with key [$key] and subkey [$subkey] is not an ARRAYREF\n");
-            $error++;
-         }
-      }
-   }
-   for my $key (keys %$use_properties) {
-      next if ($key eq 'revision' || $key eq 'author' || $key eq 'license' || $key eq 'tags' || $key eq 'attributes_default');
-
-      for my $subkey (keys %{$use_properties->{$key}}) {
-         if (ref($use_properties->{$key}->{$subkey}) ne 'ARRAY') {
-            print("[-] brik_check_properties: brik_use_properties with key [$key] and subkey [$subkey] is not an ARRAYREF\n");
             $error++;
          }
       }
@@ -487,16 +480,6 @@ sub new {
       return $self->_log_error("new: brik_create_attributes failed");
    }
 
-   $r = $self->brik_set_default_attributes;
-   if (! defined($r)) {
-      return $self->_log_error("new: brik_set_default_attributes failed");
-   }
-
-   $r = $self->brik_checks;
-   if (! defined($r)) {
-      return $self->_log_error("new: brik_checks failed");
-   }
-
    return $self->brik_preinit;
 }
 
@@ -508,11 +491,6 @@ sub new_no_checks {
    my $r = $self->brik_create_attributes;
    if (! defined($r)) {
       return $self->_log_error("new_no_checks: brik_create_attributes failed");
-   }
-
-   $r = $self->brik_set_default_attributes;
-   if (! defined($r)) {
-      return $self->_log_error("new_no_checks: brik_set_default_attributes failed");
    }
 
    return $self->brik_preinit;
@@ -657,6 +635,45 @@ sub brik_set_default_attributes {
          }
       }
    }
+
+   # Special case: automatic setting of some defaults (datadir)
+   # No inheritance here, it is just for currently instanciated Brik.
+   my $global = $self->global;
+   if (defined($global)
+   &&  exists($self->brik_properties->{attributes})
+   &&  exists($self->brik_properties->{attributes}->{datadir})) {
+      my $datadir = $self->datadir;
+
+      my $dir;
+      # If datadir is set by user, we use it blindly.
+      # Usually, only core::global will have it set.
+      if (defined($datadir)) {
+         $dir = $datadir;
+      }
+      # Else, we build it.
+      else {
+         my $global_datadir = $self->global->datadir;
+         $dir = $global_datadir;
+
+         (my $subdir = $self->brik_name) =~ s/::/-/g;
+         if (length($subdir)) {
+            $dir .= '/'.$subdir;
+         }
+
+         $self->datadir($dir);
+      }
+
+      if (! -d $dir) {
+         mkdir($dir)
+            or return $self->_log_error("brik_set_default_attributes: mkdir [$dir] failed: $!");
+      }
+   }
+
+   return 1;
+}
+
+sub brik_set_use_default_attributes {
+   my $self = shift;
 
    # Set default Attributes from brik_use_properties, no hierarchy, just inheritance
    my $class = $self->brik_class;
@@ -1111,32 +1128,24 @@ sub brik_has_binary {
 sub brik_preinit {
    my $self = shift;
 
-   if ($self->brik_has_attribute('datadir')) {
-      my $datadir = $self->datadir;
+   my $r = $self->brik_set_default_attributes;
+   if (! defined($r)) {
+      return $self->_log_error("brik_preinit: brik_set_default_attributes failed");
+   }
 
-      my $dir;
-      # If datadir is set by user, we use it blindly.
-      # Usually, only core::global will have it set.
-      if (defined($datadir)) {
-         $dir = $datadir;
-      }
-      # Else, we build it.
-      else {
-         my $global_datadir = $self->global->datadir;
-         $dir = $global_datadir;
+   # We have to put it here, cause brik_use_properties method is called, and 
+   # we want some default attributes to be set defore that (datadir special case)
+   # brik_preinit method is called by new(), so no problem, it will be checked.
+   $r = $self->brik_checks;
+   if (! defined($r)) {
+      return $self->_log_error("brik_preinit: brik_checks failed");
+   }
 
-         (my $subdir = $self->brik_name) =~ s/::/-/g;
-         if (length($subdir)) {
-            $dir .= '/'.$subdir;
-         }
-
-         $self->datadir($dir);
-      }
-
-      if (! -d $dir) {
-         mkdir($dir)
-            or return $self->_log_error("brik_preinit: mkdir [$dir] failed: $!");
-      }
+   # Now, we can set default Attributes from brik_use_properties, all brik_properties
+   # Attributes should be inited with defaults.
+   $r = $self->brik_set_use_default_attributes;
+   if (! defined($r)) {
+      return $self->_log_error("brik_preinit: brik_set_use_default_attributes failed");
    }
 
    return $self;
@@ -1403,6 +1412,8 @@ L<help core::global>
 =item B<brik_repository>
 
 =item B<brik_set_default_attributes>
+
+=item B<brik_set_use_default_attributes>
 
 =item B<brik_fini>
 
