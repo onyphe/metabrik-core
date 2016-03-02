@@ -1,6 +1,6 @@
 Revision history for Perl extension Metabrik.
 
-1.21.1
+1.21.1 Wed Mar  2 07:46:01 CET 2016
    - bugfix: core::shell: $HOME set to /tmp if not defined
    - bugfix: core::log: must preinit before init for default Attributes values to be properly set
    - bugfix: metabrik: checks properties and default Attribute values in brik_preinit:
