@@ -7,13 +7,15 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.21';
-our $FIX = '1';
+our $FIX = '2';
 
 use base qw(Class::Gomor::Hash);
 
 our @AS = qw(
    debug
    init_done
+   preinit_done
+   check_use_properties_done
    context
    global
    log
@@ -389,6 +391,9 @@ sub brik_check_use_properties {
    my $self = shift;
    my ($use_properties) = @_;
 
+   # Do it once.
+   return 1 if $self->check_use_properties_done;
+
    my $name = $self->brik_name;
    if (! $self->can('brik_use_properties')) {
       return 1;
@@ -455,6 +460,8 @@ sub brik_check_use_properties {
       print("[-] brik_check_use_properties: Brik [$name] has invalid properties ($error error(s) found)\n");
       return 0;
    }
+
+   $self->check_use_properties_done(1);
 
    return 1;
 }
@@ -1128,6 +1135,9 @@ sub brik_has_binary {
 sub brik_preinit {
    my $self = shift;
 
+   # Do it once.
+   return $self if $self->preinit_done;
+
    my $r = $self->brik_set_default_attributes;
    if (! defined($r)) {
       return $self->_log_error("brik_preinit: brik_set_default_attributes failed");
@@ -1147,6 +1157,8 @@ sub brik_preinit {
    if (! defined($r)) {
       return $self->_log_error("brik_preinit: brik_set_use_default_attributes failed");
    }
+
+   $self->preinit_done(1);
 
    return $self;
 }
