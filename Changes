@@ -1,6 +1,13 @@
 Revision history for Perl extension Metabrik.
 
-1.21.2
+1.22.0
+   - feature: core::log: allow_log_override Attribute to allow overriding default log Brik
+              Turned off by default to avoid messing with logging.
+   - feature: core::log: caller_info_prefix, caller_verbose_prefix, ..., caller_debug_prefix 
+              Attributes to prefix log messages by Brik name (or not).
+   - new: core::log: message Command
+
+1.21.2 N/A
    - bugfix: Metabrik: preinit and check_use_properties to be run only one time per Brik
 
 1.21.1 Wed Mar  2 07:46:01 CET 2016

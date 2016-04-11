@@ -8,8 +8,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.21';
-our $FIX = '1';
+our $VERSION = '1.22';
+our $FIX = '0';
 
 use base qw(Metabrik);
 

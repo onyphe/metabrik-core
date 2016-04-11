@@ -8,8 +8,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.21';
-our $FIX = '1';
+our $VERSION = '1.22';
+our $FIX = '0';
 
 use base qw(Metabrik);
 
@@ -20,12 +20,27 @@ sub brik_properties {
       attributes => {
          color => [ qw(0|1) ],
          level => [ qw(0|1|2|3) ],
+         caller_info_prefix => [ qw(0|1) ],
+         caller_verbose_prefix => [ qw(0|1) ],
+         caller_warning_prefix => [ qw(0|1) ],
+         caller_error_prefix => [ qw(0|1) ],
+         caller_fatal_prefix => [ qw(0|1) ],
+         caller_debug_prefix => [ qw(0|1) ],
+         allow_log_override => [ qw(0|1) ],
       },
       attributes_default => {
          color => 1,
          level => 1,
+         caller_info_prefix => 0,
+         caller_verbose_prefix => 1,
+         caller_warning_prefix => 1,
+         caller_error_prefix => 1,
+         caller_fatal_prefix => 1,
+         caller_debug_prefix => 1,
+         allow_log_override => 0,
       },
       commands => {
+         message => [ qw(string caller|OPTIONAL) ],
          info => [ qw(string caller|OPTIONAL) ],
          verbose => [ qw(string caller|OPTIONAL) ],
          warning => [ qw(string caller|OPTIONAL) ],
@@ -49,7 +64,8 @@ sub brik_preinit {
 
    # We replace the current logging Brik by this one,
    # but only after core::context has been created and initialized.
-   if (defined($context)) {
+   # Ask currently logging Brik if it allows to be overriden
+   if (defined($context) && $context->log->allow_log_override) {
       $context->{log} = $self;
       for my $this (keys %{$context->used}) {
          $context->{used}->{$this}->{log} = $self;
@@ -75,29 +91,48 @@ sub brik_init {
    return $self->SUPER::brik_init(@_);
 }
 
-sub _msg {
+sub message {
    my $self = shift;
-   my ($brik, $msg) = @_;
+   my ($text, $caller) = @_;
 
-   $msg ||= 'undef';
+   $text ||= 'undef';
 
-   $brik =~ s/^metabrik:://i;
+   my $message = '';
+   if (defined($caller)) {
+      $caller =~ s/^metabrik:://i;
+      $caller = lc($caller);
+      $message .= lc($caller).': ';
+   }
 
-   return lc($brik).": $msg\n";
+   return $message."$text\n";
+}
+
+sub _print_prefix {
+   my $self = shift;
+   my ($str, $color) = @_;
+
+   if ($self->color) {
+      print $color, "$str ", Term::ANSIColor::RESET();
+   }
+   else {
+      print "$str ";
+   }
+
+   return 1;
 }
 
 sub warning {
    my $self = shift;
    my ($msg, $caller) = @_;
 
-   if ($self->color) {
-      print Term::ANSIColor::MAGENTA(), "[!] ", Term::ANSIColor::RESET();
+   $self->_print_prefix("[!]", Term::ANSIColor::MAGENTA());
+
+   if ($self->caller_warning_prefix) {
+      print $self->message($msg, ($caller) ||= caller());
    }
    else {
-      print "[!] ";
+      print $self->message($msg);
    }
-
-   print $self->_msg(($caller) ||= caller(), $msg);
 
    return 1;
 }
@@ -106,14 +141,14 @@ sub error {
    my $self = shift;
    my ($msg, $caller) = @_;
 
-   if ($self->color) {
-      print Term::ANSIColor::RED(), "[-] ", Term::ANSIColor::RESET();
+   $self->_print_prefix("[-]", Term::ANSIColor::RED());
+
+   if ($self->caller_error_prefix) {
+      print $self->message($msg, ($caller) ||= caller());
    }
    else {
-      print "[-] ";
+      print $self->message($msg);
    }
-
-   print $self->_msg(($caller) ||= caller(), $msg);
 
    # Returning undef is my official way of stating an error occured:
    # Number 0 is for stating a false condition occured, not not error.
@@ -124,14 +159,14 @@ sub fatal {
    my $self = shift;
    my ($msg, $caller) = @_;
 
-   if ($self->color) {
-      print Term::ANSIColor::RED(), "[F] ", Term::ANSIColor::RESET();
+   $self->_print_prefix("[F]", Term::ANSIColor::RED());
+
+   if ($self->caller_fatal_prefix) {
+      die($self->message($msg, ($caller) ||= caller()));
    }
    else {
-      print "[F] ";
+      die($self->message($msg));
    }
-
-   die($self->_msg(($caller) ||= caller(), $msg));
 }
 
 sub info {
@@ -140,16 +175,14 @@ sub info {
 
    return 1 unless $self->level > 0;
 
-   if ($self->color) {
-      print Term::ANSIColor::GREEN(), "[+] ", Term::ANSIColor::RESET();
+   $self->_print_prefix("[+]", Term::ANSIColor::GREEN());
+
+   if ($self->caller_info_prefix) {
+      print $self->message($msg, ($caller) ||= caller());
    }
    else {
-      print "[+] ";
+      print $self->message($msg);
    }
-
-   $msg ||= 'undef';
-
-   print "$msg\n";
 
    return 1;
 }
@@ -160,14 +193,14 @@ sub verbose {
 
    return 1 unless $self->level > 1;
 
-   if ($self->color) {
-      print Term::ANSIColor::YELLOW(), "[*] ", Term::ANSIColor::RESET();
+   $self->_print_prefix("[*]", Term::ANSIColor::YELLOW());
+
+   if ($self->caller_verbose_prefix) {
+      print $self->message($msg, ($caller) ||= caller());
    }
    else {
-      print "[*] ";
+      print $self->message($msg);
    }
-
-   print $self->_msg(($caller) ||= caller(), $msg);
 
    return 1;
 }
@@ -191,14 +224,14 @@ sub debug {
       else {
          return 1 unless $self->level > 2;
 
-         if ($self->color) {
-            print Term::ANSIColor::CYAN(), "[D] ", Term::ANSIColor::RESET();
+         $self->_print_prefix("[D]", Term::ANSIColor::CYAN());
+
+         if ($self->caller_debug_prefix) {
+            print $self->message($msg, ($caller) ||= caller());
          }
          else {
-            print "[D] ";
+            print $self->message($msg);
          }
-
-         print $self->_msg(($caller) ||= caller(), $msg);
       }
    }
 
@@ -245,17 +278,19 @@ L<help core::log>
 
 =item B<brik_properties>
 
-=item B<debug>
-
-=item B<error>
-
-=item B<fatal>
+=item B<message>
 
 =item B<info>
 
 =item B<verbose>
 
 =item B<warning>
+
+=item B<error>
+
+=item B<fatal>
+
+=item B<debug>
 
 =back
 
