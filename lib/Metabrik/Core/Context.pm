@@ -160,6 +160,9 @@ sub new_brik_run {
    my ($brik, $command, @args) = @_;
 
    my $con = Metabrik::Core::Context->new or return;
+   # We have to init because some Briks like brik::tool will search context information
+   # like available Briks, for instance.
+   $con->brik_init or return;
 
    $con->use($brik) or return;
    my $data = $con->run($brik, $command, @args) or return;
@@ -911,9 +914,14 @@ Metabrik::Core::Context - core::context Brik
 
 =head1 SYNOPSIS
 
+   # From a Perl program
    use Metabrik::Core::Context;   
 
-   my $CON = Metabrik::Core::Context->new or die("core::context");
+   my $con = Metabrik::Core::Context->new or die("core::context");
+
+   # Or from a shell, to call a Command with a one-liner
+   perl -MMetabrik::Core::Context -e 'Metabrik::Core::Context->new_brik_run( \
+      "brik::tool", "install", "lookup::iplocation")'
 
 =head1 DESCRIPTION
 
