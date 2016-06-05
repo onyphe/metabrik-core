@@ -1,5 +1,7 @@
 Revision history for Perl extension Metabrik.
 
+1.22.1 
+
 1.22.0 Fri Apr 15 18:09:26 CEST 2016
    - feature: core::log: allow_log_override Attribute to allow overriding default log Brik
               Turned off by default to avoid messing with logging.
