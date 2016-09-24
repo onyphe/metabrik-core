@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.22';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Metabrik);
 
@@ -409,6 +409,8 @@ sub use {
          die("$MSG\n");
       }
 
+      $USE = $__ctx_brik;
+
       my $__ctx_new = $__ctx_module->new(
          context => $CON,
          global => $CON->{global},
@@ -421,8 +423,6 @@ sub use {
          my $MSG = "use: unable to use Brik [$__ctx_brik]";
          die("$MSG\n");
       }
-
-      $USE = $__ctx_brik;
 
       return $CON->{used}->{$__ctx_brik} = $__ctx_new;
    }, brik => $brik);

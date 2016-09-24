@@ -9,7 +9,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.22';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Term::Shell Metabrik);
 
@@ -476,6 +476,20 @@ sub cmd_to_code {
    return $line;
 }
 
+sub cmd {
+   my $self = shift;
+   my ($cmd) = @_;
+
+   # If there is a command like `exit 1', we exit and return the code number
+   if ($cmd =~ m{^\s*exit(?:\s+(\d+))}) {
+      $self->log->verbose("cmd: exiting [$cmd]");
+      $self->run_exit;
+      exit($1);
+   }
+
+   return $self->SUPER::cmd($cmd);
+}
+
 sub process_line {
    my $self = shift;
    my ($line, $lines) = @_;
@@ -504,7 +518,9 @@ sub process_line {
 
    $self->debug && $self->log->debug("process_line: lines[@$lines]");
 
-   $self->cmd(join('', @$lines));
+   my $cmd = join('', @$lines);
+
+   $self->cmd($cmd);
 
    $self->_update_prompt;
 
