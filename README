@@ -52,6 +52,7 @@ DEPENDENCIES
    Data::Dump
    File::Find
    File::HomeDir
+   File::Path
    IO::All
    Lexical::Persistence
    Module::Reload

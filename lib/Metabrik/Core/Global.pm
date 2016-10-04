@@ -8,8 +8,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.22';
-our $FIX = '1';
+our $VERSION = '1.23';
+our $FIX = '0';
 
 use base qw(Metabrik);
 
@@ -48,6 +48,9 @@ sub brik_properties {
          exit_on_sigint => 0,
          pid => $$,
       },
+      require_modules => {
+         'File::Path' => [ qw(make_path) ],
+      },
    };
 }
 
@@ -56,11 +59,18 @@ sub brik_use_properties {
 
    my $homedir = $ENV{HOME} || '/tmp';
    my $datadir = $homedir.'/metabrik';
+   my $repository = $homedir.'/metabrik/repository';
+
+   eval("use File::Path qw(make_path);");
+   File::Path::make_path($homedir, $datadir, $repository, {
+      mode => 0755,
+   });
 
    return {
       attributes_default => {
          homedir => $homedir,
          datadir => $datadir,
+         repository => $repository,
       },
    };
 }

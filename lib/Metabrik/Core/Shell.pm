@@ -8,8 +8,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.22';
-our $FIX = '1';
+our $VERSION = '1.23';
+our $FIX = '0';
 
 use base qw(Term::Shell Metabrik);
 
@@ -44,6 +44,7 @@ sub brik_properties {
          show_all => [ qw(0|1) ],  # Both Attributes and Commands for base and inherited
          aliases_completion => [ qw(0|1) ], # Complete aliases to show original Command
          ps1 => [ qw(prompt) ],
+         capture_mode => [ qw(0|1) ],
          # These are used by Term::Shell
          #path_home => [ qw(directory) ],
          #path_cwd => [ qw(directory) ],
@@ -75,10 +76,12 @@ sub brik_properties {
          show_inherited_all => 0,
          show_all => 0,
          aliases_completion => 0,
+         capture_mode => 1,
       },
       commands => {
          splash => [ ],
          pwd => [ ],
+         full_pwd => [ ],
          get_available_help => [ ],
          get_help_attributes => [ qw(Brik) ],
          get_help_commands => [ qw(Brik) ],
@@ -215,6 +218,19 @@ sub pwd {
    return $self->{path_cwd};
 }
 
+sub full_pwd {
+   my $self = shift;
+
+   my $global = $self->global;
+
+   my $pwd = $self->pwd;
+   my $homedir = $global->homedir;
+
+   $pwd =~ s{^~}{$homedir};
+
+   return $pwd;
+}
+
 sub get_available_help {
    my $self = shift;
 
@@ -262,10 +278,11 @@ sub AUTOLOAD {
    my $context = $self->context;
 
    if ($context->is_used('shell::command')) {
+      my $sc_command = $self->capture_mode ? 'capture' : 'system';
       (my $exec = $command) =~ s/^run_//;
       my $executables = $self->{_executables};
       if (exists($executables->{$exec})) {
-         my $cmd = "run shell::command system $exec";
+         my $cmd = "run shell::command $sc_command $exec";
          return $self->cmd(join(' ', $cmd, @args));
       }
    }
@@ -1362,8 +1379,9 @@ sub catch_run {
 
    # If it starts with a '/', we really want to 'run shell::command system'
    if ($context->is_used('shell::command')) {
+      my $sc_command = $self->capture_mode ? 'capture' : 'system';
       if (defined($args[0]) && $args[0] =~ m{^\s*/}) {
-         my $cmd = "run shell::command system";
+         my $cmd = "run shell::command $sc_command";
          return $self->cmd(join(' ', $cmd, @args));
       }
    }

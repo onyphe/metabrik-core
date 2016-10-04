@@ -6,8 +6,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.22';
-our $FIX = '1';
+our $VERSION = '1.23';
+our $FIX = '0';
 
 use base qw(Metabrik);
 
@@ -660,7 +660,7 @@ sub set {
          if ($@) {
             chomp($@);
             $ERR = 1;
-            my $MSG = "set: Brik [$__ctx_brik] has invalid argument [$__ctx_value]";
+            my $MSG = "set: Brik [$__ctx_brik] has invalid Argument [$__ctx_value]";
             die("$MSG\n");
          }
       }
@@ -673,7 +673,7 @@ sub set {
          if ($@) {
             chomp($@);
             $ERR = 1;
-            my $MSG = "set: Brik [$__ctx_brik] has invalid argument [$__ctx_value]";
+            my $MSG = "set: Brik [$__ctx_brik] has invalid Argument [$__ctx_value]";
             die("$MSG\n");
          }
       }
@@ -788,7 +788,7 @@ sub run {
             if ($@) {
                chomp($@);
                $ERR = 1;
-               my $MSG = "run: Brik [$__ctx_brik] has invalid argument [$_]";
+               my $MSG = "run: Brik [$__ctx_brik] has invalid Argument [$_]";
                die("$MSG\n");
             }
          }
@@ -801,7 +801,7 @@ sub run {
             if ($@) {
                chomp($@);
                $ERR = 1;
-               my $MSG = "run: Brik [$__ctx_brik] has invalid argument [$_]";
+               my $MSG = "run: Brik [$__ctx_brik] has invalid Argument [$_]";
                die("$MSG\n");
             }
          }

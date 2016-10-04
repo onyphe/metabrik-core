@@ -23,7 +23,7 @@ Follow https://www.macports.org/install.php .
 2.3. Install required Perl modules
 
 # cpanm local::lib Data::Dump PPI Exporter::Tiny Class::Gomor \
-     Term::ReadLine::Gnu File::HomeDir IO::All Term::Shell \
+     Term::ReadLine::Gnu File::HomeDir File::Path IO::All Term::Shell \
      File::Find Term::ANSIColor Net::Libdnet Lexical::Persistence \
      Module::Reload
 

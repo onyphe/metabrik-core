@@ -18,6 +18,7 @@ WriteMakefile(
       'Data::Dump' => 0,
       'File::Find' => 0,
       'File::HomeDir' => 0,
+      'File::Path' => 0,
       'IO::All' => 0,
       'Lexical::Persistence' => 0,
       'Module::Reload' => 0,

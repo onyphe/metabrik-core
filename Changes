@@ -1,8 +1,15 @@
 Revision history for Perl extension Metabrik.
 
-1.22.1 
+1.23.0 Tue  4 Oct 06:53:06 CEST 2016
+   - feature: core::shell: capture_mode new Attribute, default to true.
+              Captures every external Commands output by default.
+   - feature: core::shell: full_pwd new Command.
+              Returns the full path to current working directory.
    - bugfix: core::context: sets $USE variable on use when a Brik requires dependencies
    - bugfix: core::shell: handles correctly the exit Command so it returns a code number
+   - bugfix: core::global: sets repository Attribute default value
+   - bugfix: core::global: creates directories for default Attributes 
+             homedir, datadir and repository
 
 1.22.0 Fri Apr 15 18:09:26 CEST 2016
    - feature: core::log: allow_log_override Attribute to allow overriding default log Brik
