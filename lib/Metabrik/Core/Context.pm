@@ -439,6 +439,9 @@ sub reuse {
    for my $entry (map { [ $_, $INC{$_} ] } keys %INC) {
       my ($module, $file) = @$entry;
 
+      # Some entries don't have a file (XS related)
+      next unless defined($file);
+
       if ($file eq $INC{"Module/Reload.pm"}) {
          next;   # Too confusing
       }
