@@ -630,7 +630,12 @@ sub run_alias {
    }
    elsif (length($alias) && @cmd == 0) {
       $alias =~ s/^run_//;
-      printf("alias %-10s \"%s\"\n", $alias, $aliases->{"run_$alias"});
+      if (exists($aliases->{"run_$alias"})) {
+         printf("alias %-10s \"%s\"\n", $alias, $aliases->{"run_$alias"});
+      }
+      else {
+         $self->log->info("alias: no alias by that name [$alias]");
+      }
 
       return 1;
    }
