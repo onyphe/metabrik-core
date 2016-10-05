@@ -4,7 +4,7 @@
       "GomoR <gomor_at_metabrik.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4216",
+   "generated_by" : "Module::Build version 0.4214",
    "license" : [
       "bsd"
    ],
@@ -63,9 +63,9 @@
    "release_status" : "stable",
    "resources" : {
       "license" : [
-         "http://opensource.org/licenses/BSD-3-Clause"
+         "http://opensource.org/licenses/bsd-license.php"
       ]
    },
    "version" : "1.23",
-   "x_serialization_backend" : "JSON::PP version 2.27300"
+   "x_serialization_backend" : "JSON::PP version 2.27203"
 }

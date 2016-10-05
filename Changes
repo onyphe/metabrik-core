@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.23.1 
+   - bugfix: metabrik: add default repository to %INC so users can use it by.
+
 1.23.0 Tue  4 Oct 06:53:06 CEST 2016
    - feature: core::shell: capture_mode new Attribute, default to true.
               Captures every external Commands output by default.
