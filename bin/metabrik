@@ -8,9 +8,9 @@ use warnings;
 use FindBin;
 
 BEGIN {
-   push @INC, "$FindBin::Bin/../lib"; # Metabrik Perl modules
-   push @INC, "$FindBin::Bin/../../repository/lib"; # Metabrik main repository for Briks
-   push @INC, "$ENV{HOME}/metabrik/repository/lib"; # Metabrik personal repository for Briks
+   @INC = ( "$ENV{HOME}/metabrik/repository/lib", @INC ); # Metabrik personal repository for Briks takes precedence
+   push @INC, "$FindBin::Bin/../lib";                     # Metabrik Perl modules
+   push @INC, "$FindBin::Bin/../../repository/lib";       # Metabrik main repository for Briks
 
    # Everything should be fine now, but we prefer to check anyway.
    eval("use Metabrik::Core::Context;");
