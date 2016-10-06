@@ -1,6 +1,9 @@
 Revision history for Perl extension Metabrik.
 
-1.23.1 
+1.24.0 Thu  6 Oct 19:10:40 CEST 2016
+   - feature: metabrik: make local repository takes precedence over system repositories
+
+1.23.1 N/A
    - bugfix: metabrik: add default repository to %INC so users can use it
    - bugfix: core::context: check validity of %INC entries before reloading in reuse Command
    - bugfix: core::shell: check an alias exists before trying to display it

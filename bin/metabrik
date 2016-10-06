@@ -8,7 +8,8 @@ use warnings;
 use FindBin;
 
 BEGIN {
-   @INC = ( "$ENV{HOME}/metabrik/repository/lib", @INC ); # Metabrik personal repository for Briks takes precedence
+   @INC = ( "$ENV{HOME}/metabrik/repository/lib", @INC ); # Metabrik personal repository 
+                                                          # for Briks takes precedence
    push @INC, "$FindBin::Bin/../lib";                     # Metabrik Perl modules
    push @INC, "$FindBin::Bin/../../repository/lib";       # Metabrik main repository for Briks
 
@@ -16,8 +17,8 @@ BEGIN {
    eval("use Metabrik::Core::Context;");
    if ($@) {
       die("[F] metabrik: you have to set PERL5LIB environment variable like:\n\n".
-          'shell$ export PERL5LIB=/path/to/metabrik/core/lib:PERL5LIB=/path/to/metabrik/repository/lib:'.
-          "\n\n".
+          'shell$ export PERL5LIB=/path/to/metabrik/core/lib:PERL5LIB='.
+          '/path/to/metabrik/repository/lib:'."\n\n".
           "ERROR: $@\n"
       );
    }
