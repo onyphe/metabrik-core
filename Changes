@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.24.1 Sat  8 Oct 16:02:36 CEST 2016
+   - bugfix: documentation for new cmd and full_pwd Commands in core::shell
+
 1.24.0 Thu  6 Oct 19:10:40 CEST 2016
    - feature: metabrik: make local repository takes precedence over system repositories
 

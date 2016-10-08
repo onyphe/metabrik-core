@@ -9,7 +9,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.24';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Term::Shell Metabrik);
 
@@ -1703,11 +1703,15 @@ L<help core::shell>
 
 =item B<init>
 
+=item B<cmd>
+
 =item B<splash>
 
 =item B<process_line>
 
 =item B<pwd>
+
+=item B<full_pwd>
 
 =item B<prompt_str>
 
