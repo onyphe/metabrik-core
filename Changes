@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.25.0 Tue 11 Oct 19:03:53 CEST 2016
+   - bugfix: brik::tool update feature broke. We had to update version for that.
+
 1.24.1 Sat  8 Oct 16:02:36 CEST 2016
    - bugfix: documentation for new cmd and full_pwd Commands in core::shell
 
