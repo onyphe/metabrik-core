@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.25';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Metabrik);
 
@@ -477,7 +477,7 @@ sub reuse {
    }
 
    for (@reloaded) {
-      $self->log->verbose("reuse: module [$_] successfully reloaded");
+      $self->log->info("reuse: module [$_] successfully reloaded");
    }
 
    return 1;

@@ -9,7 +9,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.25';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Term::Shell Metabrik);
 
@@ -76,7 +76,10 @@ sub brik_properties {
          show_inherited_all => 0,
          show_all => 0,
          aliases_completion => 0,
-         capture_mode => 1,
+         #capture_mode => 1,
+         capture_mode => 0,  # Do not capture by default.
+                             # It makes users uncertain of what is happening
+                             # when executing any external command.
       },
       commands => {
          splash => [ ],

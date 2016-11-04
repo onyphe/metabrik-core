@@ -1,5 +1,10 @@
 Revision history for Perl extension Metabrik.
 
+1.25.1 Fri  4 Nov 07:14:33 CET 2016
+   - update: core::context: print reused Brik as info in reuse Command
+   - update: core::shell: capture_mode turned off by default:
+             it makes users uncertain of what is happening when executing external commands.
+
 1.25.0 Tue 11 Oct 19:03:53 CEST 2016
    - bugfix: brik::tool update feature broke. We had to update version for that.
 
