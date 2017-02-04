@@ -1,5 +1,8 @@
 Revision history for Perl extension Metabrik.
 
+1.26.0 Sat  4 Feb 17:27:20 CET 2017
+   - new: metabrik: brik_preinit_no_checks and brik_init_no_checks Commands
+
 1.25.1 Fri  4 Nov 07:14:33 CET 2016
    - update: core::context: print reused Brik as info in reuse Command
    - update: core::shell: capture_mode turned off by default:

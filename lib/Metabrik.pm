@@ -6,8 +6,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.25';
-our $FIX = '1';
+our $VERSION = '1.26';
+our $FIX = '0';
 
 use base qw(Class::Gomor::Hash);
 
@@ -92,7 +92,9 @@ sub brik_properties {
          brik_own_attributes => [ ],        # Return only own Attributes
          brik_has_attribute => [ qw(Attribute) ],
          brik_preinit => [ qw(Arguments) ],
+         brik_preinit_no_checks => [ qw(Arguments) ],
          brik_init => [ qw(Arguments) ],
+         brik_init_no_checks => [ qw(Arguments) ],
          brik_self => [ ],
          brik_fini => [ qw(Arguments) ],
          brik_create_attributes => [ ],
@@ -500,7 +502,7 @@ sub new_no_checks {
       return $self->_log_error("new_no_checks: brik_create_attributes failed");
    }
 
-   return $self->brik_preinit;
+   return $self->brik_preinit_no_checks;
 }
 
 sub new_from_brik {
@@ -587,8 +589,8 @@ sub new_from_brik_init_no_checks {
 
    my $brik = $self->new_from_brik_no_checks(@_)
       or return $self->_log_error("new_from_brik_init_no_checks: new_from_brik_no_checks failed");
-   $brik->brik_init
-      or return $self->_log_error("new_from_brik_init_no_checks: brik_init failed");
+   $brik->brik_init_no_checks
+      or return $self->_log_error("new_from_brik_init_no_checks: brik_init_no_checks failed");
 
    return $brik;
 }
@@ -1163,7 +1165,36 @@ sub brik_preinit {
    return $self;
 }
 
+sub brik_preinit_no_checks {
+   my $self = shift;
+
+   # Do it once.
+   return $self if $self->preinit_done;
+
+   my $r = $self->brik_set_default_attributes;
+   if (! defined($r)) {
+      return $self->_log_error("brik_preinit: brik_set_default_attributes failed");
+   }
+
+   # Now, we can set default Attributes from brik_use_properties, all brik_properties
+   # Attributes should be inited with defaults.
+   $r = $self->brik_set_use_default_attributes;
+   if (! defined($r)) {
+      return $self->_log_error("brik_preinit: brik_set_use_default_attributes failed");
+   }
+
+   $self->preinit_done(1);
+
+   return $self;
+}
+
 sub brik_init {
+   my $self = shift;
+
+   return $self->init_done(1);
+}
+
+sub brik_init_no_checks {
    my $self = shift;
 
    return $self->init_done(1);
