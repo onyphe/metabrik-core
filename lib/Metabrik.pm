@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.26';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Class::Gomor::Hash);
 
@@ -1378,7 +1378,11 @@ L<help core::global>
 
 =item B<brik_preinit>
 
+=item B<brik_preinit_no_checks>
+
 =item B<brik_init>
+
+=item B<brik_init_no_checks>
 
 =item B<brik_attributes>
 
