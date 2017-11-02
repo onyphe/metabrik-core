@@ -6,8 +6,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.26';
-our $FIX = '1';
+our $VERSION = '1.27';
+our $FIX = '0';
 
 use base qw(Metabrik);
 
@@ -314,7 +314,7 @@ sub find_available {
    my %available = ();
    for my $this (@$found) {
       my $brik = $this;
-      $brik =~ s/\//::/g;
+      $brik =~ s{/}{::}g;
       $brik =~ s/^.*::Metabrik::(.*?)$/$1/;
       $brik =~ s/.pm$//;
       if (length($brik)) {
@@ -567,8 +567,12 @@ sub not_used {
       my $category = '';
       my $name = '';
 
+      # Only baseclass Brik is considered
+      if (@toks == 1) {
+         $category = $this;
+      }
       # No repository defined
-      if (@toks == 2) {
+      elsif (@toks == 2) {
          ($category, $name) = $this =~ /^(.*?)::(.*)/;
       }
       elsif (@toks > 2) {
@@ -581,6 +585,8 @@ sub not_used {
       }
       $class .= ucfirst($category).'::';
       $class .= ucfirst($name);
+
+      $class =~ s{::$}{};
 
       $r->{$this} = $class;
    }
