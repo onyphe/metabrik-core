@@ -381,6 +381,15 @@ sub new {
       {
          no strict 'refs';
 
+         *{'Metabrik::Core::Loglite::allow_log_override'} = sub {
+            my $self = shift;
+            my ($value) = @_;
+            if (defined($value)) {
+               $self->{allow_log_override} = $value;
+            }
+            return $self->{allow_log_override};
+         };
+
          *{'Metabrik::Core::Loglite::level'} = sub {
             my $self = shift;
             my ($value) = @_;
