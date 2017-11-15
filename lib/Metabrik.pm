@@ -381,6 +381,8 @@ sub new {
       {
          no strict 'refs';
 
+         push @{'Metabrik::Core::Loglite::ISA'}, 'Metabrik';
+
          *{'Metabrik::Core::Loglite::allow_log_override'} = sub {
             my $self = shift;
             my ($value) = @_;
