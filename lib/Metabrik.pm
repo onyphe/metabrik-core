@@ -465,7 +465,10 @@ sub new {
          };
       }
 
-      $self->log(bless({ level => 1, color => 0 }, 'Metabrik::Core::Loglite'));
+      $self->log(bless(
+          { level => 1, color => 0, allow_log_override => 0 },
+          'Metabrik::Core::Loglite',
+      ));
    }
 
    return $self->brik_preinit;
