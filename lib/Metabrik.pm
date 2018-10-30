@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.30';
+our $VERSION = '1.31';
 our $FIX = '0';
 
 use base qw(Class::Gomor::Hash);
@@ -666,6 +666,11 @@ sub brik_set_default_attributes {
       else {
          $dir = $global_datadir || (defined($ENV{HOME}) && $ENV{HOME}."/metabrik")
                                 || "/tmp/metabrik";
+         if (! -d $dir) {
+            mkdir($dir)
+               or return $self->log->error("brik_set_default_attributes: mkdir ".
+                  "[$dir] failed: $!");
+         }
 
          (my $subdir = $self->brik_name) =~ s/::/-/g;
          if (length($subdir)) {
@@ -677,7 +682,8 @@ sub brik_set_default_attributes {
 
       if (! -d $dir) {
          mkdir($dir)
-            or return $self->log->error("brik_set_default_attributes: mkdir [$dir] failed: $!");
+            or return $self->log->error("brik_set_default_attributes: mkdir [$dir] ".
+               "failed: $!");
       }
    }
 
