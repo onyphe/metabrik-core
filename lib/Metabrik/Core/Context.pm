@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.40';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Metabrik);
 

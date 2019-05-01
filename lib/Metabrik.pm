@@ -7,7 +7,7 @@ use warnings;
 
 # Breaking.Feature.Fix
 our $VERSION = '1.40';
-our $FIX = '0';
+our $FIX = '1';
 
 use base qw(Class::Gomor::Hash);
 
@@ -422,7 +422,7 @@ sub new {
          *{'Metabrik::Core::Loglite::error'} = sub {
             my $self = shift;
             my ($msg) = @_;
-            return 1 if ($self->level < 1);
+            return if ($self->level < 1);
             $msg = _msg($self, $msg);
             print("[-] $msg\n");
             return;
