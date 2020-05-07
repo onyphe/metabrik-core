@@ -6,8 +6,8 @@ use strict;
 use warnings;
 
 # Breaking.Feature.Fix
-our $VERSION = '1.40';
-our $FIX = '1';
+our $VERSION = '1.41';
+our $FIX = '0';
 
 use base qw(Metabrik);
 
@@ -982,7 +982,7 @@ L<Metabrik>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2014-2019, Patrice E<lt>GomoRE<gt> Auffret
+Copyright (c) 2014-2020, Patrice E<lt>GomoRE<gt> Auffret
 
 You may distribute this module under the terms of The BSD 3-Clause License.
 See LICENSE file in the source distribution archive.
